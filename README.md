@@ -1,4 +1,4 @@
-**Until further notice, head over to [this repo](https://github.com/teambit/bit.envs)**
+**Until further notice all issues and PRs are to be opened in [this repo](https://github.com/teambit/bit.envs)**
 
 # Bit Component Environments
 
