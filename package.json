@@ -1,0 +1,33 @@
+{
+  "name": "bit-envs",
+  "version": "0.0.1",
+  "description": "Environment extensions for bit.",
+  "main": "./dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc -d",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teambit/bit-envs.git"
+  },
+  "author": "Doron Tsur, doron@bitsrc.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teambit/bit-envs/issues"
+  },
+  "homepage": "https://github.com/teambit/bit-envs#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.4",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "typescript": "^2.9.2",
+    "source-map-support": "^0.5.6",
+    "ts-node": "^7.0.0"
+  },
+  "dependencies": {}
+}
