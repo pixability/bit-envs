@@ -38,9 +38,3 @@ module.exports = {
   }
 };
 
-// assign entires with the one with the main file of component
-// resolve dependencies from loaders
-// init function will return configuration object {write:true} - done
-// actual bundling should be with in memory fs
-// use can be string or array, loader can only be string - done
-// `It's no longer allowed to omit the '-loader' suffix when specifying loader names.`

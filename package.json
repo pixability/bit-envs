@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/teambit/bit-envs.git"
   },
-  "author": "Doron Tsur, doron@bitsrc.io",
+  "author": "Doron Tsur <doron@bitsrc.io> (https://github.com/qballer)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/teambit/bit-envs/issues"
@@ -24,18 +24,22 @@
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/fs-extra": "^5.0.4",
+    "@types/memory-fs": "^0.3.1",
     "@types/mocha": "^5.2.4",
     "@types/node": "^10.5.2",
     "@types/vinyl": "^2.0.2",
+    "@types/webpack": "^4.4.7",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
     "ts-node": "^7.0.0",
-    "typescript": "^2.9.2",
-    "vinyl": "^2.2.0"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
-    "fs-extra": "^6.0.1"
+    "fs-extra": "^6.0.1",
+    "memory-fs": "^0.4.1",
+    "webpack": "^4.16.1",
+    "vinyl": "^2.2.0"
   }
 }
