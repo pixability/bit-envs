@@ -61,7 +61,7 @@ describe('Webpack', function () {
             })
         })
 
-        it.only('should support filename without ending', function() {
+        it('should support filename without ending', function() {
             const configName = 'webpack2.config.js'
             const beforeChanges = actionInfo!.configFiles
             const compiler = CreateWebpackCompiler(configName)
@@ -72,6 +72,10 @@ describe('Webpack', function () {
                 const lib = eval(bundle.contents!.toString())
                 expect(lib.run()).to.equal(0)
             })
+        })
+
+        it('should return multiple assets', function() {
+
         })
     })
 

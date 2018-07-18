@@ -2,6 +2,7 @@
     "main": "./dist/index",
     "devDependencies": {
         "css-loader": "^1.0.0",
+        "file-loader": "^1.1.11",
         "rimraf": "^2.6.2",
         "style-loader": "^0.21.0",
         "ts-loader": "^4.4.2",

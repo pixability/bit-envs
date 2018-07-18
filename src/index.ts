@@ -3,6 +3,7 @@ import path, {sep} from 'path'
 import webpack from 'webpack'
 import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
+import _get from 'lodash.get'
 
 export interface API {
     getLogger: () => any
@@ -67,12 +68,14 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
                 MetaWebpack.logger.log('Could not find package.json.')
                 return packages
             }
-            ((config && config.module && config.module.rules) || []).forEach(function (rule: { use?: string, loader?: string }) {
+
+            _get(config, 'module.rules', []).forEach(function (rule: { use?: string, loader?: string }) {
                 if (Array.isArray(rule.use)) {
                     rule.use.forEach(function (internalUse) {
                         fillDependencyVersion(packageJson, internalUse.loader, packages)
                     })
                 }
+
                 if (rule.use && typeof rule.use === 'string') {
                     fillDependencyVersion(packageJson, rule.use, packages)
                 }
@@ -88,8 +91,9 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
 }
 
 function fillDependencyVersion(packageJson: any, name: string, toFill: any) {
-    // check dependencies priority
-    const version = packageJson.devDependencies[name] || packageJson.dependencies[name] || packageJson.peerDependencies[name]
+    const version = _get(packageJson, `dependencies[${name}]`)    ||
+                    _get(packageJson, `devDependencies[${name}]`) ||
+                    _get(packageJson, `peerDependencies[${name}]`)
     if (version) {
         toFill[name] = version
     }
@@ -152,5 +156,4 @@ export default CreateWebpackCompiler()
 // use can be string or array, loader can only be string - done
 // dont have to mention file ending - done
 // can I mention multiple files
-// findConfigFile test
-
+// should return all assets
