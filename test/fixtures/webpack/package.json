@@ -12,5 +12,10 @@
     "scripts": {
         "build": "webpack-cli --progress",
         "clean": "rimraf dist/*"
+    },
+    "dependencies": {
+        "@types/react": "^16.4.6",
+        "react": "^16.4.1",
+        "react-dom": "^16.4.1"
     }
 }

@@ -10,6 +10,7 @@ const baseFixturePath = path.resolve(__dirname, './fixtures/webpack')
 
 describe('Webpack', function () {
     before(function(){
+        // move to setup
         this.timeout(1000 * 1000 * 1000)
         const cwd = process.cwd()
         process.chdir(baseFixturePath)
@@ -55,8 +56,8 @@ describe('Webpack', function () {
             process.chdir(cwd)
         })
         it('action', function() {
-            return compiler!.action(actionInfo!).then(function(bundle) {
-                const lib = eval(bundle.contents!.toString())
+            return compiler!.action(actionInfo!).then(function(assets) {
+                const lib = eval(assets[0]  .contents!.toString())
                 expect(lib.run()).to.equal(0)
             })
         })
@@ -67,15 +68,23 @@ describe('Webpack', function () {
             const compiler = CreateWebpackCompiler(configName)
             compiler.init({api: createApi()})
             actionInfo!.configFiles = [createConfigFile(configName)]
-            return compiler!.action(actionInfo!).then(function(bundle) {
+            return compiler!.action(actionInfo!).then(function(assets) {
                 actionInfo!.configFiles = beforeChanges
-                const lib = eval(bundle.contents!.toString())
+                const lib = eval(assets[0].contents!.toString())
                 expect(lib.run()).to.equal(0)
             })
         })
 
         it('should return multiple assets', function() {
-
+            const configName = 'webpack3.config.js'
+            const beforeChanges = actionInfo!.configFiles
+            const compiler = CreateWebpackCompiler(configName)
+            compiler.init({api: createApi()})
+            actionInfo!.configFiles = [createConfigFile(configName)]
+            return compiler!.action(actionInfo!).then(function(assets) {
+                actionInfo!.configFiles = beforeChanges
+                expect(assets.length).to.be.greaterThan(1)
+            })
         })
     })
 

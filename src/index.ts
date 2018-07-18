@@ -23,7 +23,7 @@ export interface ExtensionApiOptions {
 
 export interface CompilerExtension {
     init: ({ api }: { api: API }) => Options
-    action: (info: ExtensionApiOptions) => Promise<Vinyl>
+    action: (info: ExtensionApiOptions) => Promise<Array<Vinyl>>
     getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
     logger?: any
 }
@@ -51,13 +51,14 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
                     resolve(compilation.assets)
                 })
             }))
-            .then(function(bundles:any) {
-                const bundleName  = Object.keys(bundles)[0]
-                return new Vinyl({
-                    path: bundles[bundleName].existsAt,
-                    contents: Buffer.from(bundles[bundleName]._value)
-                })
-
+            .then(function(assets:any) {
+                return Object.keys(assets)
+                    .map((name)=>{
+                        return new Vinyl({
+                            path: assets[name].existsAt,
+                            contents: Buffer.from(assets[name]._value)
+                        })
+                    })
             })
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
@@ -133,7 +134,6 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
         const entires = Object.keys(configuration.entry)
         let correctEntry = {}
         for (let i=0; i<entires.length; ++i) {
-            // can entry be glob or filename without ending
              const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
             if (configuration.entry[entires[i]].endsWith(mainFile) ||
                  configuration.entry[entires[i]].endsWith(entryNamNoEnding)){
@@ -149,11 +149,4 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
     }
 }
 export default CreateWebpackCompiler()
-// assign entires with the one with the main file of component - done
-// resolve dependencies from loaders - done
-// init function will return configuration object {write:true} - done
-// actual bundling should output with in memory fs - done
-// use can be string or array, loader can only be string - done
-// dont have to mention file ending - done
-// can I mention multiple files
-// should return all assets
+

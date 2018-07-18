@@ -24,11 +24,10 @@ module.exports = {
             }
         }]
     }, {
-        test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+        test: /\.(jpg|png)$/,
         loader: 'url-loader',
         query: {
             limit: 10000,
-            name: 'static/media/[name].[hash:8].[ext]'
         }
     }]
   },
