@@ -1,5 +1,5 @@
 import fs from 'fs-extra'
-import path from 'path'
+import path, {sep} from 'path'
 import webpack from 'webpack'
 import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
@@ -10,7 +10,7 @@ export interface API {
 export interface Options {
     write: boolean
 }
-
+// spilt interfaces
 export interface ExtensionApiOptions {
     files?: any
     rawConfig?: any
@@ -34,7 +34,23 @@ export function CreateWebpackCompiler() {
             return { write: true }
         },
         action: function (info: ExtensionApiOptions) {
-            const configuration = require(info.configFiles[0].path)
+            const configuration = require(findConfigFile(info.configFiles).path)
+            if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
+                const entires = Object.keys(configuration.entry)
+                let correctEntry = {}
+                for (let i=0; i<entires.length; ++i) {
+                    // can entry be glob or filename without ending
+                    if (configuration.entry[entires[i]].endsWith(info.context.componentObject.mainFile)){
+                        correctEntry = {[entires[i]]:configuration.entry[entires[i]]}
+                        break;
+                    }
+                }
+                if (!Object.keys(correctEntry).length) {
+                    MetaWebpack.logger.log('Couldnt find entry')
+                    throw new Error('Couldnt find entry')
+                }
+                configuration.entry = correctEntry
+            }
             const compiler = webpack(configuration)
             const fs = new MemoryFS()
             compiler.outputFileSystem = (fs as any)
@@ -44,7 +60,7 @@ export function CreateWebpackCompiler() {
                     if (err || compilation.errors.length > 0) {
                         MetaWebpack.logger.log(err || compilation.errors)
                         reject(err || compilation.errors)
-                        return;
+                        return
                     }
                     resolve(compilation.assets)
                 })
@@ -53,14 +69,14 @@ export function CreateWebpackCompiler() {
                 const bundleName  = Object.keys(bundles)[0]
                 return new Vinyl({
                     path: bundles[bundleName].existsAt,
-                    content: bundles[bundleName]._value
+                    contents: Buffer.from(bundles[bundleName]._value)
                 })
 
             })
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
             const packages: { [key: string]: string } = {}
-            const config: any = require(info.configFiles[0].path)
+            const config: any = require(findConfigFile(info.configFiles).path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
                 return packages
@@ -71,11 +87,11 @@ export function CreateWebpackCompiler() {
                         fillDependencyVersion(packageJson, internalUse.loader, packages)
                     })
                 }
-                if (!!rule.use && typeof rule.use === 'string') {
+                if (rule.use && typeof rule.use === 'string') {
                     fillDependencyVersion(packageJson, rule.use, packages)
                 }
 
-                if (!!rule.loader && typeof rule.loader === 'string') {
+                if (rule.loader && typeof rule.loader === 'string') {
                     fillDependencyVersion(packageJson, rule.loader, packages)
                 }
             })
@@ -86,6 +102,7 @@ export function CreateWebpackCompiler() {
 }
 
 function fillDependencyVersion(packageJson: any, name: string, toFill: any) {
+    // check dependencies priority
     const version = packageJson.devDependencies[name] || packageJson.dependencies[name] || packageJson.peerDependencies[name]
     if (version) {
         toFill[name] = version
@@ -110,10 +127,20 @@ function loadPackageJsonFromPathSync(packageJsonPath: string) {
     return fs.pathExistsSync(packageJsonPath) ? fs.readJsonSync(packageJsonPath) : undefined
 }
 
+function findConfigFile(configs:Array<any>){
+    const file = configs.find((config:any) => {
+        const splitPath = config.path.split(sep)
+        return splitPath[splitPath.length -1] === 'webpack.config.js'
+    })
+    if (!file){
+        throw new Error('Could not find webpack.config.js')
+    }
+    return file
+}
 export default CreateWebpackCompiler()
 // assign entires with the one with the main file of component
 // resolve dependencies from loaders - done
 // init function will return configuration object {write:true} - done
-// actual bundling should output with in memory fs
+// actual bundling should output with in memory fs - done
 // use can be string or array, loader can only be string - done
 

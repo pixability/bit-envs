@@ -1,99 +1,111 @@
 import {expect} from 'chai'
-import {CreateWebpackCompiler} from '../src'
+import {CreateWebpackCompiler, CompilerExtension} from '../src'
 import Vinyl from 'vinyl'
 import path from 'path'
 import fs from 'fs'
+import child_process from 'child_process'
 
 const baseFixturePath = path.resolve(__dirname, './fixtures/webpack')
-//todo: npm install fixture before starting
 //todo: clean after tests
 
 describe('Webpack', function () {
+    before(function(){
+        this.timeout(1000 * 1000 * 1000)
+        const cwd = process.cwd()
+        process.chdir(baseFixturePath)
+        child_process.execSync('npm i')
+        process.chdir(cwd)
+    })
     it('init', function (){
         const compiler = CreateWebpackCompiler()
         let options = compiler.init({
-            api: {
-                getLogger: () => ({log:console.log})
-            }
+            api: createApi()
         })
         expect(!!compiler.logger).to.be.true
         expect(options.write).to.be.true
     })
     it('action', function() {
         const compiler = CreateWebpackCompiler()
-        const files = fs.readdirSync(baseFixturePath)
-            .filter(function(fileName){
-                return !fs.lstatSync(path.resolve(baseFixturePath, `./${fileName}`)).isDirectory()
-            })
-            .map(function(fileName){
-                const pathToFile = path.resolve(baseFixturePath, `./${fileName}`)
-                return new Vinyl({
-                    path: pathToFile,
-                    content: fs.readFileSync(pathToFile)
-                })
-            })
-        const configPath = path.resolve(baseFixturePath, './webpack.config.js')
-        const config = new Vinyl({
-            path: configPath,
-            content: fs.readFileSync(configPath)
-        })
+        const files = createFiles()
+        const config = createConfigFile()
         const cwd = process.cwd()
         process.chdir(baseFixturePath)
-        return compiler.action({files, configFiles:[config], context: {
+        compiler.init({api: createApi()})
+        return compiler.action({ files, configFiles:[config], context: {
             componentDir: '',
             componentObject: {
                 mainFile: 'index.ts'
             },
-            rootDistFolder: {}
+            rootDistFolder: path.resolve(baseFixturePath, './dist')
         }}).then(function(bundle){
             process.chdir(cwd)
-            const lib = eval(bundle.content)
+            const lib = eval(bundle.contents!.toString())
             expect(lib.run()).to.equal(0)
         })
-
     })
 
     describe('getDynamicPackageDependencies', function() {
-        let helpers:any = {
-            compiler: null,
-            config: null,
-            context: null,
-            packageJSON: null
-        }
+        let compiler:CompilerExtension|null = null
+        let config:any = null
+        let context:any =  null
+        let packageJSON:any =  null
         const getVersion = function(packageJSON:any, name:string) {
             return packageJSON.devDependencies[name]
         }
         before('setting up test compiler', function() {
-            const configPath = path.resolve(baseFixturePath, './webpack.config.js')
-            helpers.compiler = CreateWebpackCompiler()
-            helpers.config = new Vinyl({
-                path: configPath,
-                content: fs.readFileSync(configPath)
-            })
-            helpers.context = {
+            compiler = CreateWebpackCompiler()
+            config = createConfigFile()
+            context = {
                 componentDir: baseFixturePath
             }
-            helpers.packageJSON = require(path.resolve(baseFixturePath, './package.json'))
+            packageJSON = require(path.resolve(baseFixturePath, './package.json'))
 
         })
         it('should support use as string', function() {
-            const result = helpers.compiler.getDynamicPackageDependencies({configFiles:[helpers.config], context:helpers.context})
+            const result = compiler!.getDynamicPackageDependencies({configFiles:[config], context:context})
             expect(result).to.contain({
-                'ts-loader': getVersion(helpers.packageJSON, 'ts-loader')
+                'ts-loader': getVersion(packageJSON, 'ts-loader')
             })
         })
         it('should support use as array', function() {
-            const result = helpers.compiler.getDynamicPackageDependencies({configFiles:[helpers.config], context:helpers.context})
+            const result = compiler!.getDynamicPackageDependencies({configFiles:[config], context:context})
             expect(result).to.contain({
-                'style-loader': getVersion(helpers.packageJSON, 'style-loader'),
-                'css-loader': getVersion(helpers.packageJSON, 'css-loader')
+                'style-loader': getVersion(packageJSON, 'style-loader'),
+                'css-loader': getVersion(packageJSON, 'css-loader')
             })
         })
         it('should support loader as string', function() {
-            const result = helpers.compiler.getDynamicPackageDependencies({configFiles:[helpers.config], context:helpers.context})
+            const result = compiler!.getDynamicPackageDependencies({configFiles:[config], context:context})
             expect(result).to.contain({
-                'url-loader':getVersion(helpers.packageJSON, 'url-loader')
+                'url-loader':getVersion(packageJSON, 'url-loader')
             })
         })
     })
 })
+
+function createFiles() {
+    return fs.readdirSync(baseFixturePath)
+    .filter(function(fileName){
+        return !fs.lstatSync(path.resolve(baseFixturePath, `./${fileName}`)).isDirectory()
+    })
+    .map(function(fileName){
+        const pathToFile = path.resolve(baseFixturePath, `./${fileName}`)
+        return new Vinyl({
+            path: pathToFile,
+            content: fs.readFileSync(pathToFile)
+        })
+    })
+}
+function createConfigFile() {
+    const configPath = path.resolve(baseFixturePath, './webpack.config.js')
+    return new Vinyl({
+        path: configPath,
+        contents: Buffer.from(fs.readFileSync(configPath))
+    })
+}
+
+function createApi(){
+    return {
+        getLogger: () => ({log:console.log})
+    }
+}

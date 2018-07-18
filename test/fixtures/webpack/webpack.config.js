@@ -2,7 +2,10 @@ const path = require('path');
 
 module.exports = {
   mode: "production",
-  entry: './index.ts',
+  entry: {
+      secondary: './add',
+      main: './index'
+  },
   module: {
     rules: [
       {
@@ -33,8 +36,9 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'commonjs2'
   }
 };
 

@@ -9,7 +9,7 @@
         "webpack-cli": "^3.0.8"
     },
     "scripts": {
-        "build": "webpack --progress",
+        "build": "webpack-cli --progress",
         "clean": "rimraf dist/*"
     }
 }
