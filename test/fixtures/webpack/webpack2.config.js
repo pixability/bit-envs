@@ -4,7 +4,7 @@ module.exports = {
   mode: "production",
   entry: {
       secondary: './add',
-      main: './index.ts'
+      main: './index'
   },
   module: {
     rules: [

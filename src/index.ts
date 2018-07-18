@@ -27,30 +27,15 @@ export interface CompilerExtension {
     logger?: any
 }
 
-export function CreateWebpackCompiler() {
+export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
     const MetaWebpack: CompilerExtension = {
         init: ({ api }: { api: any }) => {
             MetaWebpack.logger = api.getLogger()
             return { write: true }
         },
         action: function (info: ExtensionApiOptions) {
-            const configuration = require(findConfigFile(info.configFiles).path)
-            if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
-                const entires = Object.keys(configuration.entry)
-                let correctEntry = {}
-                for (let i=0; i<entires.length; ++i) {
-                    // can entry be glob or filename without ending
-                    if (configuration.entry[entires[i]].endsWith(info.context.componentObject.mainFile)){
-                        correctEntry = {[entires[i]]:configuration.entry[entires[i]]}
-                        break;
-                    }
-                }
-                if (!Object.keys(correctEntry).length) {
-                    MetaWebpack.logger.log('Couldnt find entry')
-                    throw new Error('Couldnt find entry')
-                }
-                configuration.entry = correctEntry
-            }
+            const configuration = require(findConfigFile(info.configFiles, mainConfigName).path)
+            adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, MetaWebpack.logger)
             const compiler = webpack(configuration)
             const fs = new MemoryFS()
             compiler.outputFileSystem = (fs as any)
@@ -76,9 +61,10 @@ export function CreateWebpackCompiler() {
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
             const packages: { [key: string]: string } = {}
-            const config: any = require(findConfigFile(info.configFiles).path)
+            const config: any = require(findConfigFile(info.configFiles, mainConfigName).path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
+                MetaWebpack.logger.log('Could not find package.json.')
                 return packages
             }
             ((config && config.module && config.module.rules) || []).forEach(function (rule: { use?: string, loader?: string }) {
@@ -127,20 +113,44 @@ function loadPackageJsonFromPathSync(packageJsonPath: string) {
     return fs.pathExistsSync(packageJsonPath) ? fs.readJsonSync(packageJsonPath) : undefined
 }
 
-function findConfigFile(configs:Array<any>){
+function findConfigFile(configs:Array<any> , name:string){
     const file = configs.find((config:any) => {
         const splitPath = config.path.split(sep)
-        return splitPath[splitPath.length -1] === 'webpack.config.js'
+        return splitPath[splitPath.length -1] === name
     })
     if (!file){
-        throw new Error('Could not find webpack.config.js')
+        throw new Error(`Could not find ${name}`)
     }
     return file
 }
+
+function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:any){
+    if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
+        const entires = Object.keys(configuration.entry)
+        let correctEntry = {}
+        for (let i=0; i<entires.length; ++i) {
+            // can entry be glob or filename without ending
+             const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
+            if (configuration.entry[entires[i]].endsWith(mainFile) ||
+                 configuration.entry[entires[i]].endsWith(entryNamNoEnding)){
+                correctEntry = {[entires[i]]:configuration.entry[entires[i]]}
+                break;
+            }
+        }
+        if (!Object.keys(correctEntry).length) {
+            logger.log('Could not find entry')
+            throw new Error('Could not find entry')
+        }
+        configuration.entry = correctEntry
+    }
+}
 export default CreateWebpackCompiler()
-// assign entires with the one with the main file of component
+// assign entires with the one with the main file of component - done
 // resolve dependencies from loaders - done
 // init function will return configuration object {write:true} - done
 // actual bundling should output with in memory fs - done
 // use can be string or array, loader can only be string - done
+// dont have to mention file ending - done
+// can I mention multiple files
+// findConfigFile test
 

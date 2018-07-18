@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {CreateWebpackCompiler, CompilerExtension} from '../src'
+import {CreateWebpackCompiler, CompilerExtension, ExtensionApiOptions} from '../src'
 import Vinyl from 'vinyl'
 import path from 'path'
 import fs from 'fs'
@@ -24,25 +24,57 @@ describe('Webpack', function () {
         expect(!!compiler.logger).to.be.true
         expect(options.write).to.be.true
     })
-    it('action', function() {
-        const compiler = CreateWebpackCompiler()
-        const files = createFiles()
-        const config = createConfigFile()
-        const cwd = process.cwd()
-        process.chdir(baseFixturePath)
-        compiler.init({api: createApi()})
-        return compiler.action({ files, configFiles:[config], context: {
-            componentDir: '',
-            componentObject: {
-                mainFile: 'index.ts'
-            },
-            rootDistFolder: path.resolve(baseFixturePath, './dist')
-        }}).then(function(bundle){
+    describe('action', function() {
+        let compiler:CompilerExtension|null = null
+        let actionInfo:ExtensionApiOptions|null = null
+        let config = null
+        let cwd = ''
+        before(function(){
+            compiler = CreateWebpackCompiler()
+            const files = createFiles()
+            config = createConfigFile()
+            actionInfo = {
+                files,
+                configFiles:[config],
+                context: {
+                    componentDir: '',
+                    componentObject: {
+                        mainFile: 'index.ts'
+                    },
+                    rootDistFolder: path.resolve(baseFixturePath, './dist')
+                }
+            }
+            compiler!.init({api: createApi()})
+
+        })
+        beforeEach(function(){
+            cwd = process.cwd()
+            process.chdir(baseFixturePath)
+        })
+        afterEach(function(){
             process.chdir(cwd)
-            const lib = eval(bundle.contents!.toString())
-            expect(lib.run()).to.equal(0)
+        })
+        it('action', function() {
+            return compiler!.action(actionInfo!).then(function(bundle) {
+                const lib = eval(bundle.contents!.toString())
+                expect(lib.run()).to.equal(0)
+            })
+        })
+
+        it.only('should support filename without ending', function() {
+            const configName = 'webpack2.config.js'
+            const beforeChanges = actionInfo!.configFiles
+            const compiler = CreateWebpackCompiler(configName)
+            compiler.init({api: createApi()})
+            actionInfo!.configFiles = [createConfigFile(configName)]
+            return compiler!.action(actionInfo!).then(function(bundle) {
+                actionInfo!.configFiles = beforeChanges
+                const lib = eval(bundle.contents!.toString())
+                expect(lib.run()).to.equal(0)
+            })
         })
     })
+
 
     describe('getDynamicPackageDependencies', function() {
         let compiler:CompilerExtension|null = null
@@ -96,8 +128,8 @@ function createFiles() {
         })
     })
 }
-function createConfigFile() {
-    const configPath = path.resolve(baseFixturePath, './webpack.config.js')
+function createConfigFile(relativePathToConfig = './webpack.config.js') {
+    const configPath = path.resolve(baseFixturePath, relativePathToConfig)
     return new Vinyl({
         path: configPath,
         contents: Buffer.from(fs.readFileSync(configPath))
