@@ -25,9 +25,9 @@ workflows:
   version: 2
   build_and_test:
     - build
-      - test_unit:
-          requires:
-            - build
-      - test_e2e:
-          requires:
-            - build
+    - test_unit:
+        requires:
+          - build
+    - test_e2e:
+        requires:
+          - build
