@@ -2,7 +2,6 @@ import {expect} from 'chai'
 import child_process from 'child_process'
 import path from 'path'
 import fs from 'fs-extra'
-import {} from 'bit-bin/e2e/e2e-helper'
 const baseFixturePath = path.resolve(__dirname, './fixtures/webpack-e2e')
 
 describe('E2E', function() {

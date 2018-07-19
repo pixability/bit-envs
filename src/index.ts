@@ -1,1 +1,1 @@
-export {default as compiler, CreateWebpackCompiler} from './webpack'
+export {default as webpackCompiler, CreateWebpackCompiler} from './webpack'

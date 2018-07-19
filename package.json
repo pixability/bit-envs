@@ -10,7 +10,9 @@
     "build": "tsc -d",
     "test": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.spec.ts",
     "test:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
-    "test:ci":"npm run test && npm run test:e2e",
+    "test:circle": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register --reporter mocha-circleci-reporter test/*.spec.ts",
+    "test:circle:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register --reporter mocha-circleci-reporter test/*.e2e.ts",
+    "test:ci": "npm run test && npm run test:e2e",
     "clean": "rimraf ./dist/*"
   },
   "repository": {
@@ -35,6 +37,7 @@
     "bit-bin": "^13.0.3",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "mocha-circleci-reporter": "0.0.3",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
     "ts-node": "^7.0.0",

@@ -37,7 +37,6 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
             return { write: true }
         },
         action: function (info: ExtensionApiOptions) {
-            debugger
             const configuration = require(findConfigFile(info.configFiles, mainConfigName).path)
             adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, MetaWebpack.logger)
             const compiler = webpack(configuration)
