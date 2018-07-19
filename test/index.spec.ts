@@ -1,5 +1,6 @@
 import {expect} from 'chai'
-import {CreateWebpackCompiler, CompilerExtension, ExtensionApiOptions} from '../src'
+import {CreateWebpackCompiler} from '../src'
+import {CompilerExtension, ExtensionApiOptions} from '../src/webpack'
 import Vinyl from 'vinyl'
 import path from 'path'
 import fs from 'fs'
