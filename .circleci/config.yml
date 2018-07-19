@@ -13,13 +13,11 @@ jobs:
     docker:
       - image: circleci/node:6.10.3
     steps:
-      - checkout
       - run: npm run test:circle
   test_e2e:
     docker:
       - image: circleci/node:6.10.3
     steps:
-      - checkout
       - run: npm run test:circle:e2e
 workflows:
   version: 2
