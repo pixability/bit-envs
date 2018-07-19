@@ -32,3 +32,4 @@ We actively welcome your pull requests.
 
 By contributing to Bit, you agree that your contributions will be licensed
 under its [Apache2 license](LICENSE).
+
