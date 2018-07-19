@@ -1,6 +1,3 @@
-import {add} from './add'
-import {sub} from './sub'
-
 import React, {Component} from 'react';
 const img =require('file-loader!./1.png')
 // console.log(add(sub(1,2),1))
