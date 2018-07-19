@@ -14,15 +14,15 @@ jobs:
           paths:
             - bit-envs
   test_unit:
-    working_directory: ~/bit-envs
     docker:
       - image: circleci/node:6.10.3
+      working_directory: ~/bit-envs
     steps:
       - run: npm run test:circle
   test_e2e:
-    working_directory: ~/bit-envs
     docker:
       - image: circleci/node:6.10.3
+    working_directory: ~/bit-envs
     steps:
       - run: npm run test:circle:e2e
 workflows:
