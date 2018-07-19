@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc -d",
     "test": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.spec.ts",
-    "test-e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
+    "test:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
+    "test:ci":"npm run test && npm run test:e2e",
     "clean": "rimraf ./dist/*"
   },
   "repository": {
