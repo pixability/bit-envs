@@ -1,4 +1,5 @@
 # mocha.opts
---require ts-node/register/transpile-only 
---require source-map-support/register 
+--require ts-node/register/transpile-only
+--require test/setup.ts
+--require source-map-support/register
 test/*.spec.ts

@@ -10,14 +10,6 @@ const baseFixturePath = path.resolve(__dirname, './fixtures/webpack')
 //todo: clean after tests
 
 describe('Webpack', function () {
-    before(function(){
-        // move to setup
-        this.timeout(1000 * 1000 * 1000)
-        const cwd = process.cwd()
-        process.chdir(baseFixturePath)
-        child_process.execSync('npm i')
-        process.chdir(cwd)
-    })
     it('init', function (){
         const compiler = CreateWebpackCompiler()
         let options = compiler.init({
@@ -56,7 +48,8 @@ describe('Webpack', function () {
         afterEach(function(){
             process.chdir(cwd)
         })
-        it('action', function() {
+        it('basic bundling', function() {
+            this.timeout(5 * 1000)
             return compiler!.action(actionInfo!).then(function(assets) {
                 const lib = eval(assets[0]  .contents!.toString())
                 expect(lib.run()).to.equal(0)

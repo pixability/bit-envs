@@ -30,6 +30,7 @@
     "@types/node": "^10.5.2",
     "@types/vinyl": "^2.0.2",
     "@types/webpack": "^4.4.7",
+    "bit-bin": "^13.0.3",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",

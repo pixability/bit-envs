@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-const img =require('file-loader!./1.png')
-
+const img = require('file-loader!./1.png')
 
 export default class MainComponent extends Component {
   render() {
