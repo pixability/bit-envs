@@ -1,0 +1,53 @@
+{
+  "name": "bit-envs",
+  "version": "0.0.1",
+  "description": "Environment extensions for bit.",
+  "main": "./dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc -d",
+    "test": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.spec.ts",
+    "test:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
+    "test:circle": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register --reporter mocha-circleci-reporter test/*.spec.ts",
+    "test:circle:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register --reporter mocha-circleci-reporter test/*.e2e.ts",
+    "test:ci": "npm run test && npm run test:e2e",
+    "clean": "rimraf ./dist/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teambit/bit-envs.git"
+  },
+  "author": "Doron Tsur <doron@bitsrc.io> (https://github.com/qballer)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/teambit/bit-envs/issues"
+  },
+  "homepage": "https://github.com/teambit/bit-envs#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/fs-extra": "^5.0.4",
+    "@types/lodash.get": "^4.4.3",
+    "@types/memory-fs": "^0.3.1",
+    "@types/mocha": "^5.2.4",
+    "@types/node": "^10.5.2",
+    "@types/vinyl": "^2.0.2",
+    "@types/webpack": "^4.4.7",
+    "bit-bin": "^13.0.3",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "mocha-circleci-reporter": "0.0.3",
+    "rimraf": "^2.6.2",
+    "source-map-support": "^0.5.6",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "fs-extra": "^6.0.1",
+    "lodash.get": "^4.4.2",
+    "memory-fs": "^0.4.1",
+    "vinyl": "^2.2.0",
+    "webpack": "^4.16.1"
+  }
+}

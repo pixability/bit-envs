@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  main_flow:
+    docker:
+      - image: circleci/node:6.10.3
+    working_directory: ~/bit-envs
+    steps:
+      - checkout
+      - run: npm i
+      - run: node_modules/.bin/bit config set analytics_reporting false
+      - run: node_modules/.bin/bit config set error_reporting false
+      - run: npm run test:circle
+      - run: npm run test:circle:e2e
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - main_flow
