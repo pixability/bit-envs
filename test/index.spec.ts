@@ -51,7 +51,7 @@ describe('Webpack', function () {
         it('basic bundling', function() {
             this.timeout(5 * 1000)
             return compiler!.action(actionInfo!).then(function(assets) {
-                const lib = eval(assets[0]  .contents!.toString())
+                const lib = eval(assets.files[0].contents!.toString())
                 expect(lib.run()).to.equal(0)
             })
         })
@@ -64,7 +64,7 @@ describe('Webpack', function () {
             actionInfo!.configFiles = [createConfigFile(configName)]
             return compiler!.action(actionInfo!).then(function(assets) {
                 actionInfo!.configFiles = beforeChanges
-                const lib = eval(assets[0].contents!.toString())
+                const lib = eval(assets.files[0].contents!.toString())
                 expect(lib.run()).to.equal(0)
             })
         })
@@ -77,7 +77,7 @@ describe('Webpack', function () {
             actionInfo!.configFiles = [createConfigFile(configName)]
             return compiler!.action(actionInfo!).then(function(assets) {
                 actionInfo!.configFiles = beforeChanges
-                expect(assets.length).to.be.greaterThan(1)
+                expect(assets.files.length).to.be.greaterThan(1)
             })
         })
     })

@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc -d",
-    "test": "mocha",
+    "test": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.spec.ts",
+    "test-e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
     "clean": "rimraf ./dist/*"
   },
   "repository": {

@@ -25,7 +25,7 @@ export interface ExtensionApiOptions {
 
 export interface CompilerExtension {
     init: ({ api }: { api: API }) => Options
-    action: (info: ExtensionApiOptions) => Promise<Array<Vinyl>>
+    action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
     getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
     logger?: any
 }
@@ -37,6 +37,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
             return { write: true }
         },
         action: function (info: ExtensionApiOptions) {
+            debugger
             const configuration = require(findConfigFile(info.configFiles, mainConfigName).path)
             adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, MetaWebpack.logger)
             const compiler = webpack(configuration)
@@ -54,8 +55,8 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
                 })
             }))
             .then(function(assets:any) {
-                return Object.keys(assets)
-                    .map((name)=>{
+                return {
+                    files:Object.keys(assets).map((name)=>{
                         return new Vinyl({
                             base: info.context.rootDistFolder,
                             baseName: name,
@@ -63,6 +64,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
                             contents: Buffer.from(assets[name]._value)
                         })
                     })
+                }
             })
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
@@ -153,4 +155,3 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
     }
 }
 export default CreateWebpackCompiler()
-
