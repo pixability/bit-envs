@@ -9,12 +9,18 @@ jobs:
       - run: node_modules/.bin/bit config set analytics_reporting false
       - run: node_modules/.bin/bit config set error_reporting false
       - run: npm run build
+    - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - bit-envs
   test_unit:
+    working_directory: ~/bit-envs
     docker:
       - image: circleci/node:6.10.3
     steps:
       - run: npm run test:circle
   test_e2e:
+    working_directory: ~/bit-envs
     docker:
       - image: circleci/node:6.10.3
     steps:
