@@ -6,6 +6,7 @@ jobs:
     working_directory: ~/bit-envs
     steps:
       - checkout
+      - run: echo "starting main process"
       - run: npm i
       - run: node_modules/.bin/bit config set analytics_reporting false
       - run: node_modules/.bin/bit config set error_reporting false
