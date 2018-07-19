@@ -9,6 +9,7 @@ jobs:
       - run: npm i
       - run: node_modules/.bin/bit config set analytics_reporting false
       - run: node_modules/.bin/bit config set error_reporting false
+      - run: npm run build
       - run: npm run test:circle
       - run: npm run test:circle:e2e
 
