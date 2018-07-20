@@ -5,5 +5,3 @@ export function run() {
     return add(sub(1,2),1)
 }
 
-
-
