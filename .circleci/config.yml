@@ -20,7 +20,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: cd ~/bit-envs && npm run test:circle
+      - run: cd bit-envs && npm run test:circle
       - store_artifacts:
           path: ~/bit-envs/npm-debug.log
           destination: npm-debug-unit.log
@@ -31,7 +31,7 @@ jobs:
     steps:
        - attach_workspace:
           at: ./
-      - run: cd ~/bit-envs && npm run test:circle:e2e
+      - run: cd bit-envs && npm run test:circle:e2e
       - store_artifacts:
           path: ~/bit-envs/npm-debug.log
           destination: npm-debug-e2e.log
