@@ -48,6 +48,7 @@ describe('Webpack', function () {
         afterEach(function(){
             process.chdir(cwd)
         })
+        this.timeout(5000)
         it('basic bundling', function() {
             this.timeout(5 * 1000)
             return compiler!.action(actionInfo!).then(function(assets) {
