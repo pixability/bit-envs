@@ -18,7 +18,9 @@ jobs:
       - image: circleci/node:6.10.3
       working_directory: ~/bit-envs
     steps:
-      - run: cd bit-envs && npm run test:circle
+      - attach_workspace:
+          at: ~/
+      - run: cd ~/bit-envs && npm run test:circle
       - store_artifacts:
           path: ~/bit-envs/npm-debug.log
           destination: npm-debug-unit.log
@@ -27,7 +29,9 @@ jobs:
       - image: circleci/node:6.10.3
     working_directory: ~/bit-envs
     steps:
-      - run: cd bit-envs && npm run test:circle:e2e
+       - attach_workspace:
+          at: ~/
+      - run: cd ~/bit-envs && npm run test:circle:e2e
       - store_artifacts:
           path: ~/bit-envs/npm-debug.log
           destination: npm-debug-e2e.log
