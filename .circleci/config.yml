@@ -18,13 +18,19 @@ jobs:
       - image: circleci/node:6.10.3
       working_directory: ~/bit-envs
     steps:
-      - run: npm run test:circle
+      - run: cd bit-envs && npm run test:circle
+      - store_artifacts:
+          path: ~/bit-envs/npm-debug.log
+          destination: npm-debug-unit.log
   test_e2e:
     docker:
       - image: circleci/node:6.10.3
     working_directory: ~/bit-envs
     steps:
-      - run: npm run test:circle:e2e
+      - run: cd bit-envs && npm run test:circle:e2e
+      - store_artifacts:
+          path: ~/bit-envs/npm-debug.log
+          destination: npm-debug-e2e.log
 workflows:
   version: 2
   build_and_test:
