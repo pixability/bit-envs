@@ -10,9 +10,9 @@ describe('E2E', function() {
         this.timeout(1000 * 1000 * 1000)
         cwd = process.cwd()
         process.chdir(baseFixturePath)
-        child_process.execSync('../../../node_modules/.bin/bit init', {stdio:[0,1,2]})
-        child_process.execSync('../../../node_modules/.bin/bit add . --main index.ts --id to-build ', {stdio:[0,1,2]})
-        child_process.execSync('../../../node_modules/.bin/bit tag to-build ', {stdio:[0,1,2]})
+        child_process.execSync(path.resolve(__dirname, '../node_modules/.bin/bit') + ' init', {stdio:[0,1,2]})
+        child_process.execSync(path.resolve(__dirname, '../node_modules/.bin/bit') + ' add . --main index.ts --id to-build ', {stdio:[0,1,2]})
+        child_process.execSync(path.resolve(__dirname, '../node_modules/.bin/bit') + ' tag to-build ', {stdio:[0,1,2]})
         const bitJson = require(path.resolve(baseFixturePath, './bit.json'))
         bitJson.env.compiler = {
             "meta-webpack": {
