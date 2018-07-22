@@ -29,7 +29,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: cd project
+      - run: cd project/project
       - run: node_modules/.bin/bit config set analytics_reporting false
       - run: node_modules/.bin/bit config set error_reporting false
       - run: npm run test:circle:e2e
