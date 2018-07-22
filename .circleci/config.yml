@@ -30,6 +30,7 @@ jobs:
       - attach_workspace:
           at: ./
       - run: pwd
+      - run: ls -la
       - run: cd project
       - run: pwd
       - run: node_modules/.bin/bit config set analytics_reporting false
