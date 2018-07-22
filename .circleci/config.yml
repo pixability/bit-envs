@@ -29,7 +29,10 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: cd project && npm run test:circle:e2e
+      - run: cd project
+      - run: node_modules/.bin/bit config set analytics_reporting false
+      - run: node_modules/.bin/bit config set error_reporting false
+      - run: npm run test:circle:e2e
       - store_artifacts:
           path: ./npm-debug.log
           destination: npm-debug-e2e.log
