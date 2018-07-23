@@ -1,42 +1,18 @@
-import fs from 'fs-extra'
 import path from 'path'
 import webpack from 'webpack'
 import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
+import {CompilerExtension, ExtensionApiOptions, API} from './types'
+import {loadPackageJsonSync, getVersion} from './compiler-utils'
 
-export interface API {
-    getLogger: () => {
-        log:Function
-    }
-}
-export interface Options {
-    write: boolean
-}
-// spilt interfaces
-export interface ExtensionApiOptions {
-    files?: any
-    rawConfig?: any
-    dynamicConfig?: any
-    configFiles: [Vinyl]
-    api?: any
-    context: any
-}
-
-export interface CompilerExtension {
-    init: ({ api }: { api: API }) => Options
-    action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
-    getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
-    logger?: any
-}
-
-export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
+export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const MetaWebpack: CompilerExtension = {
-        init: ({ api }:{api:API}) => {
+        init: function({ api }:{api:API}) {
             MetaWebpack.logger = api.getLogger()
             return { write: true }
         },
-        action: function (info: ExtensionApiOptions) {
+        action: function(info: ExtensionApiOptions) {
             const configuration = require(findConfigFile(info.configFiles, mainConfigName).path)
             adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, MetaWebpack.logger)
             const compiler = webpack(configuration)
@@ -66,7 +42,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
                 }
             })
         },
-        getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
+        getDynamicPackageDependencies: function(info: ExtensionApiOptions) {
             const packages: { [key: string]: string } = {}
             const config: any = require(findConfigFile(info.configFiles, mainConfigName).path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
@@ -97,31 +73,12 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js') {
 }
 
 function fillDependencyVersion(packageJson: any, name: string, toFill: {[k:string]:string}) {
-    const version = _get(packageJson, `dependencies[${name}]`)    ||
-                    _get(packageJson, `devDependencies[${name}]`) ||
-                    _get(packageJson, `peerDependencies[${name}]`)
+    const version = getVersion(packageJson, name)
     if (version) {
         toFill[name] = version
     }
 }
 
-function loadPackageJsonSync(componentDir: string, workspaceDir: string) {
-    const packageJsonName = 'package.json'
-    let packageJsonPath
-    if (componentDir) {
-        packageJsonPath = path.join(componentDir, packageJsonName)
-        const packageJson = loadPackageJsonFromPathSync(packageJsonPath)
-        if (packageJson) {
-            return packageJson
-        }
-    }
-    packageJsonPath = path.join(workspaceDir, packageJsonName)
-    return loadPackageJsonFromPathSync(packageJsonPath)
-}
-
-function loadPackageJsonFromPathSync(packageJsonPath: string) {
-    return fs.pathExistsSync(packageJsonPath) ? fs.readJsonSync(packageJsonPath) : undefined
-}
 
 function findConfigFile(configs:Array<any> , configName:string){
     const file = configs.find((config:any) => {

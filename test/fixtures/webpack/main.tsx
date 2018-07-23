@@ -10,7 +10,6 @@ export default class MainComponent extends Component {
       </div>
     )
   }
-
 }
 
 const styles = {

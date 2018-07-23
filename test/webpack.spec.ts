@@ -1,13 +1,11 @@
 import {expect} from 'chai'
 import {CreateWebpackCompiler} from '../src'
-import {CompilerExtension, ExtensionApiOptions} from '../src/webpack'
-import Vinyl from 'vinyl'
+import {CompilerExtension, ExtensionApiOptions} from '../src/types'
+import {createApi, createConfigFile, createFiles} from './envs-test-utils'
+import {getVersion} from '../src/compiler-utils'
 import path from 'path'
-import fs from 'fs'
-import child_process from 'child_process'
 
 const baseFixturePath = path.resolve(__dirname, './fixtures/webpack')
-//todo: clean after tests
 
 describe('Webpack', function () {
     it('init', function (){
@@ -25,8 +23,8 @@ describe('Webpack', function () {
         let cwd = ''
         before(function(){
             compiler = CreateWebpackCompiler()
-            const files = createFiles()
-            config = createConfigFile()
+            const files = createFiles(baseFixturePath)
+            config = createConfigFile(baseFixturePath)
             actionInfo = {
                 files,
                 configFiles:[config],
@@ -62,7 +60,7 @@ describe('Webpack', function () {
             const beforeChanges = actionInfo!.configFiles
             const compiler = CreateWebpackCompiler(configName)
             compiler.init({api: createApi()})
-            actionInfo!.configFiles = [createConfigFile(configName)]
+            actionInfo!.configFiles = [createConfigFile(baseFixturePath, configName)]
             return compiler!.action(actionInfo!).then(function(assets) {
                 actionInfo!.configFiles = beforeChanges
                 const lib = eval(assets.files[0].contents!.toString())
@@ -75,7 +73,7 @@ describe('Webpack', function () {
             const beforeChanges = actionInfo!.configFiles
             const compiler = CreateWebpackCompiler(configName)
             compiler.init({api: createApi()})
-            actionInfo!.configFiles = [createConfigFile(configName)]
+            actionInfo!.configFiles = [createConfigFile(baseFixturePath, configName)]
             return compiler!.action(actionInfo!).then(function(assets) {
                 actionInfo!.configFiles = beforeChanges
                 expect(assets.files.length).to.be.greaterThan(1)
@@ -89,12 +87,9 @@ describe('Webpack', function () {
         let config:any = null
         let context:any =  null
         let packageJSON:any =  null
-        const getVersion = function(packageJSON:any, name:string) {
-            return packageJSON.devDependencies[name]
-        }
         before('setting up test compiler', function() {
             compiler = CreateWebpackCompiler()
-            config = createConfigFile()
+            config = createConfigFile(baseFixturePath)
             context = {
                 componentDir: baseFixturePath
             }
@@ -123,29 +118,4 @@ describe('Webpack', function () {
     })
 })
 
-function createFiles() {
-    return fs.readdirSync(baseFixturePath)
-    .filter(function(fileName){
-        return !fs.lstatSync(path.resolve(baseFixturePath, `./${fileName}`)).isDirectory()
-    })
-    .map(function(fileName){
-        const pathToFile = path.resolve(baseFixturePath, `./${fileName}`)
-        return new Vinyl({
-            path: pathToFile,
-            content: fs.readFileSync(pathToFile)
-        })
-    })
-}
-function createConfigFile(relativePathToConfig = './webpack.config.js') {
-    const configPath = path.resolve(baseFixturePath, relativePathToConfig)
-    return new Vinyl({
-        path: configPath,
-        contents: Buffer.from(fs.readFileSync(configPath))
-    })
-}
 
-function createApi(){
-    return {
-        getLogger: () => ({log:console.log})
-    }
-}
