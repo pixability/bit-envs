@@ -23,5 +23,16 @@
         "mainFile": "dist/compiler-utils.js",
         "origin": "AUTHORED"
     },
+    "qballer.bit-envs/compilers/babel@0.0.1": {
+        "files": [
+            {
+                "relativePath": "dist/babel.js",
+                "test": false,
+                "name": "babel.js"
+            }
+        ],
+        "mainFile": "dist/babel.js",
+        "origin": "AUTHORED"
+    },
     "version": "13.0.3"
 }
