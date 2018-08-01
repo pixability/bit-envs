@@ -16,7 +16,7 @@ export function CreateBabelCompiler() {
         action: function (info: ExtensionApiOptions) {
             const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
-                MetaBabelCompiler.logger.error('could not find .babelrc')
+                MetaBabelCompiler.logger!.error('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()
@@ -43,7 +43,7 @@ export function CreateBabelCompiler() {
             const dynamicPackageDependencies = {}
             const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
-                MetaBabelCompiler.logger.log('could not find .babelrc')
+                MetaBabelCompiler.logger!.log('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()

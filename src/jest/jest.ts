@@ -18,8 +18,8 @@ export function CreateJestTester(): TesterExtension {
         },
         action: function (info: ActionTesterOptions) {
             const config = findByName(info.configFiles, 'jest.config.js')
-            const directory = getDirectory(info, metaJest.logger)
-            const stdStreamHandler = CreateSTDStreamHandler(metaJest.logger)
+            const directory = getDirectory(info, metaJest.logger!)
+            const stdStreamHandler = CreateSTDStreamHandler(metaJest.logger!)
             const resultHandler = CreateResultFileHandler(directory)
 
             stdStreamHandler.shutdown()
@@ -49,7 +49,7 @@ export function CreateJestTester(): TesterExtension {
             let packages = {}
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
-                metaJest.logger.log('Could not find package.json.')
+                metaJest.logger!.log('Could not find package.json.')
                 return packages
             }
             const config = require(findByName(info.configFiles, 'jest.config.js').path)

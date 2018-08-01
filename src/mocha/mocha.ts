@@ -51,7 +51,7 @@ export function CreateMochaTester(): TesterExtension {
             let packages = {}
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
-                metaMocha.logger.log('Could not find package.json.')
+                metaMocha.logger!.error('Could not find package.json.')
                 return packages
             }
             _get(info, 'dynamicConfig.require', []).forEach(function (mochaRequire: string) {

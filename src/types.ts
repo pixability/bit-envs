@@ -28,11 +28,11 @@ export interface CompilerExtension {
     init: ({ api }: { api: API }) => Options
     action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
     getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
-    logger?: any
+    logger?: Logger
 }
 
 export interface TesterExtension {
-    logger?: any
+    logger?: Logger
     init: ({ api }: { api: API }) => Options
     action: (info: ActionTesterOptions) => Promise<Array<any>>
     getDynamicPackageDependencies: (info: ExtensionApiOptions) => object

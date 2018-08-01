@@ -13,7 +13,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
         },
         action: function(info: ExtensionApiOptions) {
             const configuration = require(findByName(info.configFiles, mainConfigName).path)
-            adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, metaWebpack.logger)
+            adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, metaWebpack.logger!)
             const compiler = webpack(configuration)
             const fs = new MemoryFS()
             compiler.outputFileSystem = (fs as any)
@@ -21,7 +21,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 return compiler.run(function (err, stats) {
                     const compilation = (stats as any).compilation
                     if (err || compilation.errors.length > 0) {
-                        metaWebpack.logger.log(err || compilation.errors)
+                        metaWebpack.logger!.log(err || compilation.errors)
                         reject(err || compilation.errors)
                         return
                     }
@@ -47,7 +47,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
 
             if (!packageJson) {
-                metaWebpack.logger.log('Could not find package.json.')
+                metaWebpack.logger!.log('Could not find package.json.')
                 return packages
             }
 
