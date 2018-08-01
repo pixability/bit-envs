@@ -1,21 +1,27 @@
 import Vinyl from 'vinyl'
 
 export interface API {
-    getLogger: () => {
-        log:Function
-    }
+    getLogger: () => Logger
+}
+export interface Logger {
+    log:Function,
+    error:Function
 }
 export interface Options {
     write: boolean
 }
 // spilt interfaces
 export interface ExtensionApiOptions {
-    files?: any
-    rawConfig?: any
-    dynamicConfig?: any
+    files?: Array<Vinyl>
+    rawConfig?: object
+    dynamicConfig?: object
     configFiles: Array<Vinyl>
     api?: any
     context: any
+}
+
+export interface ActionTesterOptions extends ExtensionApiOptions {
+    testFiles: Array<Vinyl>
 }
 
 export interface CompilerExtension {
@@ -23,4 +29,19 @@ export interface CompilerExtension {
     action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
     getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
     logger?: any
+}
+
+export interface TesterExtension {
+    logger?: any
+    init: ({ api }: { api: API }) => Options
+    action: (info: ActionTesterOptions) => Promise<Array<any>>
+    getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
+}
+
+export interface TestResult {
+    title: string
+    fullTitle: string
+    duration: number | undefined
+    currentRetry: number
+    err: object
 }

@@ -1,20 +1,19 @@
-import path from 'path'
 import webpack from 'webpack'
 import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
-import {CompilerExtension, ExtensionApiOptions, API} from './types'
-import {loadPackageJsonSync, getVersion} from './compiler-utils'
+import {CompilerExtension, ExtensionApiOptions, API ,Logger} from './types'
+import {loadPackageJsonSync, fillDependencyVersion, findByName} from './compiler-utils'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
-    const MetaWebpack: CompilerExtension = {
+    const metaWebpack: CompilerExtension = {
         init: function({ api }:{api:API}) {
-            MetaWebpack.logger = api.getLogger()
+            metaWebpack.logger = api.getLogger()
             return { write: true }
         },
         action: function(info: ExtensionApiOptions) {
-            const configuration = require(findConfigFile(info.configFiles, mainConfigName).path)
-            adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, MetaWebpack.logger)
+            const configuration = require(findByName(info.configFiles, mainConfigName).path)
+            adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, metaWebpack.logger)
             const compiler = webpack(configuration)
             const fs = new MemoryFS()
             compiler.outputFileSystem = (fs as any)
@@ -22,7 +21,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 return compiler.run(function (err, stats) {
                     const compilation = (stats as any).compilation
                     if (err || compilation.errors.length > 0) {
-                        MetaWebpack.logger.log(err || compilation.errors)
+                        metaWebpack.logger.log(err || compilation.errors)
                         reject(err || compilation.errors)
                         return
                     }
@@ -44,10 +43,11 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
         },
         getDynamicPackageDependencies: function(info: ExtensionApiOptions) {
             const packages: { [key: string]: string } = {}
-            const config: any = require(findConfigFile(info.configFiles, mainConfigName).path)
+            const config = require(findByName(info.configFiles, mainConfigName).path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
+
             if (!packageJson) {
-                MetaWebpack.logger.log('Could not find package.json.')
+                metaWebpack.logger.log('Could not find package.json.')
                 return packages
             }
 
@@ -69,29 +69,12 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
             return packages
         }
     }
-    return MetaWebpack
-}
-
-function fillDependencyVersion(packageJson: any, name: string, toFill: {[k:string]:string}) {
-    const version = getVersion(packageJson, name)
-    if (version) {
-        toFill[name] = version
-    }
+    return metaWebpack
 }
 
 
-function findConfigFile(configs:Array<any> , configName:string){
-    const file = configs.find((config:any) => {
-        const splitPath = config.path.split(path.sep)
-        return splitPath[splitPath.length -1] === configName
-    })
-    if (!file){
-        throw new Error(`Could not find ${configName}`)
-    }
-    return file
-}
 
-function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:{log:Function}){
+function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:Logger){
     if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
         const entires = Object.keys(configuration.entry)
         let correctEntry = {}
@@ -104,10 +87,11 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
             }
         }
         if (!Object.keys(correctEntry).length) {
-            logger.log('Could not find entry')
+            logger.error('Could not find entry')
             throw new Error('Could not find entry')
         }
         configuration.entry = correctEntry
     }
 }
+
 export default CreateWebpackCompiler()

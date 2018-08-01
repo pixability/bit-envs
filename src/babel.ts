@@ -1,6 +1,6 @@
 import { CompilerExtension, API, ExtensionApiOptions } from "./types"
 import Vinyl from 'vinyl'
-import { loadPackageJsonSync, getVersion } from './compiler-utils'
+import { loadPackageJsonSync, findByName,fillDependencyVersion } from './compiler-utils'
 import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
@@ -14,9 +14,9 @@ export function CreateBabelCompiler() {
             }
         },
         action: function (info: ExtensionApiOptions) {
-            const vinylBabelrc = getFileByName('.babelrc', info.configFiles)
+            const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
-                MetaBabelCompiler.logger.log('could not find .babelrc')
+                MetaBabelCompiler.logger.error('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()
@@ -24,15 +24,15 @@ export function CreateBabelCompiler() {
             const componentDir = info.context && info.context.componentDir
 
             if (componentDir) {
-                babelrc.plugins = babelrc.plugins.map((pluginName: string |Array<any>) => {
-                    const actualPluginName = Array.isArray(pluginName) ? pluginName[0]:pluginName
+                babelrc.plugins = babelrc.plugins.map((pluginName: string |Array<string>) => {
+                    const actualPluginName = Array.isArray(pluginName) ? pluginName[0]: pluginName
                     return resolvePlugin(componentDir, actualPluginName)
                 })
                 babelrc.presets = babelrc.presets.map((presetName: string) => resolvePreset(componentDir, presetName))
             }
 
             try {
-                const builtFiles: Array<Vinyl> = info.files.map((file:any) => runBabel(file, babelrc, info.context.rootDistFolder))
+                const builtFiles: Array<Vinyl> = (info.files || []).map((file:Vinyl) => runBabel(file, babelrc, info.context.rootDistFolder))
                     .reduce((a:any, b:any) => a.concat(b))
                 return Promise.resolve({ files: builtFiles })
             } catch (e) {
@@ -41,19 +41,18 @@ export function CreateBabelCompiler() {
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
             const dynamicPackageDependencies = {}
-            const vinylBabelrc = getFileByName('.babelrc', info.configFiles)
+            const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
                 MetaBabelCompiler.logger.log('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()
             const babelrc = JSON.parse(rawBabelrc)
-            const pluginsNames = babelrc.plugins && babelrc.plugins.map((name:string|Array<any>)=>Array.isArray(name) ? name[0]: name) || []
+            const pluginsNames = babelrc.plugins && babelrc.plugins.map((name:string|Array<string>)=> Array.isArray(name) ? name[0]: name) || []
             const presetsNames = babelrc.presets || []
-            const addParsedNameToResult = (result: any, packageJson: any, nameToPackageFn: any) => (name: any) => {
+            const addParsedNameToResult = (result: {[key:string]:string}, packageJson: object, nameToPackageFn: (name:string) => string) => (name: string) => {
                 const packageName = nameToPackageFn(name)
-                const packageVersion = getPackageVersion(packageName, packageJson)
-                result[packageName] = packageVersion
+                fillDependencyVersion(packageJson, packageName, result)
             }
             if (pluginsNames.length || presetsNames.length) {
                 const workspaceDir = info.context && info.context.workspaceDir
@@ -69,26 +68,6 @@ export function CreateBabelCompiler() {
     return MetaBabelCompiler
 }
 
-
-function getFileByName(name: string, files: Array<Vinyl>) {
-    return files.find((file) => (file.name === name))
-}
-
-function getPackageVersion(packageName: string , packageJson: any) {
-    if (!packageName) {
-        throw new Error('missing package name argument')
-    }
-    if (!packageJson) {
-        throw new Error('missing package.json file')
-    }
-    const version = getVersion(packageJson, packageName)
-
-    if (!version) {
-        throw new Error(`${packageName} not found in package.json file`)
-    }
-    return version
-}
-
 function getPluginPackageName(pluginName: string) {
     const prefix = 'babel-plugin'
     return getPrefixedPackageName(pluginName, prefix)
@@ -102,6 +81,7 @@ function getPresetPackageName(pluginName: string) {
 function getPrefixedPackageName(pluginName: string, prefix: string) {
     return pluginName.indexOf(prefix) !== 0 ? `${prefix}-${pluginName}` : pluginName
 }
+
 function resolvePlugin(componentDir: string, pluginName: string) {
     const resolvedName = getPluginPackageName(pluginName)
     return resolvePackagesFromComponentDir(componentDir, resolvedName)
@@ -121,8 +101,8 @@ function resolvePackagesFromComponentDir(componentDir: string, packagName: strin
     return resolvedPackage
 }
 
-function runBabel(file:any, options:any, distPath:string) {
-    const { code, map } = babel.transform(file.contents.toString(), options)
+function runBabel(file:Vinyl, options:object, distPath:string) {
+    const { code, map } = babel.transform(file.contents!.toString(), options)
     const mappings = new Vinyl({
         contents: Buffer.from((map as any).mappings),
         base: distPath,

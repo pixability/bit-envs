@@ -54,11 +54,11 @@ describe('babel', function () {
                 rootDistFolder: path.resolve(baseFixturePath, './dist')
             }
         }
-        compiler!.init({ api: createApi() })
+        compiler.init({ api: createApi() })
         return compiler.action(actionInfo)
             .then(function(assets){
                 const toRun = assets.files.find((file:Vinyl)=> file.basename == 'b.js')
-                const toRunRaw = _eval(toRun.contents.toString())
+                const toRunRaw = _eval(toRun!.contents!.toString())
                 expect(toRunRaw.run()).to.equal(0)
             })
     })

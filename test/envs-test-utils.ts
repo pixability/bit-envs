@@ -5,11 +5,15 @@ import _get from 'lodash.get'
 
 export function createApi(){
     return {
-        getLogger: () => ({log:console.log})
+        getLogger: () => ({
+            log:console.log,
+            error:console.error
+        })
     }
 }
 
-export function  createConfigFile(baseFixturePath:string, name = 'webpack.config.js'):Vinyl {
+export function createConfigFile(baseFixturePath:string, name = 'webpack.config.js'):Vinyl {
+
     const configPath = path.resolve(baseFixturePath, name)
     return new Vinyl({
         name: name,
@@ -21,11 +25,13 @@ export function  createConfigFile(baseFixturePath:string, name = 'webpack.config
 export function getVersion(packageJSON:any, name:string) {
     return _get(packageJSON, `dependencies[${name}]`) || _get(packageJSON, `devDependencies[${name}]`)
 }
-
-export function createFiles(fixturePath:string, skipFiles:Array<string> = []) {
+//@ts-ignore
+export function createFiles(fixturePath:string, skipFiles:Array<string> = [], acceptRule:string | null = null ):Array<Vinyl> {
     return fs.readdirSync(fixturePath)
-    .filter(function(fileName){
-        return !fs.lstatSync(path.resolve(fixturePath, `./${fileName}`)).isDirectory() && !~skipFiles.indexOf(fileName)
+    .filter(function(fileName) {
+        return (acceptRule && fileName.endsWith(acceptRule)) ||
+             !fs.lstatSync(path.resolve(fixturePath, `./${fileName}`)).isDirectory() &&
+             !~skipFiles.indexOf(fileName)
     })
     .map(function(fileName){
         const pathToFile = path.resolve(fixturePath, `./${fileName}`)

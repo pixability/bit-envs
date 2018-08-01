@@ -3,11 +3,9 @@
   "version": "0.0.1",
   "description": "Environment extensions for bit.",
   "main": "./dist/index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "build": "tsc -d",
+    "test:vanilla": "mocha --require dist/test/setup.js dist/test/*.spec.js",
     "test": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.spec.ts",
     "test:e2e": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register test/*.e2e.ts",
     "test:circle": "mocha --require ts-node/register/transpile-only --require test/setup.ts --require source-map-support/register --reporter mocha-circleci-reporter test/*.spec.ts",
@@ -29,17 +27,19 @@
     "@types/chai": "^4.1.4",
     "@types/fs-extra": "^5.0.4",
     "@types/lodash.get": "^4.4.3",
+    "@types/lodash.isempty": "^4.4.4",
     "@types/memory-fs": "^0.3.1",
     "@types/mocha": "^5.2.4",
     "@types/node": "^10.5.2",
     "@types/resolve": "0.0.8",
     "@types/vinyl": "^2.0.2",
     "@types/webpack": "^4.4.7",
-    "bit-bin": "^13.0.3",
+    "bit-bin": "13.0.4-dev.4",
     "chai": "^4.1.2",
     "eval": "^0.1.2",
     "mocha": "^5.2.0",
     "mocha-circleci-reporter": "0.0.3",
+    "nyc": "^12.0.2",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
     "ts-node": "^7.0.0",
@@ -48,10 +48,29 @@
   "dependencies": {
     "babel-core": "^6.26.3",
     "fs-extra": "^6.0.1",
+    "jest-cli": "^23.4.2",
     "lodash.get": "^4.4.2",
+    "lodash.isempty": "^4.4.0",
     "memory-fs": "^0.4.1",
     "resolve": "^1.8.1",
     "vinyl": "^2.2.0",
     "webpack": "^4.16.1"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "coverage",
+      "dist",
+      "node_modules",
+      "test/fixtures"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
   }
 }
