@@ -43,7 +43,7 @@
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
     "ts-node": "^7.0.0",
-    "typescript": "^3.0.1"
+    "typescript": "^2.9.2" 
   },
   "dependencies": {
     "babel-core": "^6.26.3",
@@ -74,3 +74,4 @@
     "all": true
   }
 }
+
