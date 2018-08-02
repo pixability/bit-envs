@@ -3,7 +3,7 @@ import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
 import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/types'
-import {loadPackageJsonSync, fillDependencyVersion, findByName} from '../env-utils'
+import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicPackageDependencies} from '../env-utils'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {
@@ -41,9 +41,11 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 }
             })
         },
-        getDynamicPackageDependencies: function(info: ExtensionApiOptions) {
+        getDynamicPackageDependencies: function(info: ExtensionApiOptions, babelConfigName = '.babelrc') {
             const packages: { [key: string]: string } = {}
-            const config = require(findByName(info.configFiles, mainConfigName).path)
+            const configFile = findByName(info.configFiles, mainConfigName)
+            debugger
+            const config = require(configFile.path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
 
             if (!packageJson) {
@@ -51,19 +53,29 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 return packages
             }
 
+            function handleLoader(packageJson: object, name: string, toFill: {[k:string]:string}){
+                let babelResults = {}
+                if(name === 'babel-loader'){
+                    babelResults = getBabelDynamicPackageDependencies(metaWebpack.logger!, babelConfigName)(info)
+                }
+
+                fillDependencyVersion(packageJson, name, toFill)
+                Object.assign(toFill, babelResults)
+            }
+            debugger
             _get(config, 'module.rules', []).forEach(function (rule: { use?: string, loader?: string }) {
                 if (Array.isArray(rule.use)) {
                     rule.use.forEach(function (internalUse) {
-                        fillDependencyVersion(packageJson, internalUse.loader, packages)
+                        handleLoader(packageJson, internalUse.loader, packages)
                     })
                 }
 
                 if (rule.use && typeof rule.use === 'string') {
-                    fillDependencyVersion(packageJson, rule.use, packages)
+                    handleLoader(packageJson, rule.use, packages)
                 }
 
                 if (rule.loader && typeof rule.loader === 'string') {
-                    fillDependencyVersion(packageJson, rule.loader, packages)
+                    handleLoader(packageJson, rule.loader, packages)
                 }
             })
             return packages
@@ -79,9 +91,9 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
         const entires = Object.keys(configuration.entry)
         let correctEntry = {}
         for (let i=0; i<entires.length; ++i) {
-             const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
+            const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
             if (configuration.entry[entires[i]].endsWith(mainFile) ||
-                 configuration.entry[entires[i]].endsWith(entryNamNoEnding)){
+                configuration.entry[entires[i]].endsWith(entryNamNoEnding)){
                 correctEntry = {[entires[i]]:configuration.entry[entires[i]]}
                 break;
             }

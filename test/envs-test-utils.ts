@@ -30,8 +30,8 @@ export function createFiles(fixturePath:string, skipFiles:Array<string> = [], ac
     return fs.readdirSync(fixturePath)
     .filter(function(fileName) {
         return (acceptRule && fileName.endsWith(acceptRule)) ||
-             !fs.lstatSync(path.resolve(fixturePath, `./${fileName}`)).isDirectory() &&
-             !~skipFiles.indexOf(fileName)
+            !fs.lstatSync(path.resolve(fixturePath, `./${fileName}`)).isDirectory() &&
+            !~skipFiles.indexOf(fileName)
     })
     .map(function(fileName){
         const pathToFile = path.resolve(fixturePath, `./${fileName}`)
@@ -42,10 +42,15 @@ export function createFiles(fixturePath:string, skipFiles:Array<string> = [], ac
     })
 }
 
-export function npmInstallFixture(context:Mocha.Context, paths: Array<string>) {
+export function setup(context:Mocha.Context, paths: Array<string>) {
+    Object.keys( require.cache ).forEach( function( file ) {
+        delete require.cache[ file ];
+    });
+
     if(process.env['NO_INSTALL']){
         return
     }
+
     context.timeout(1000*1000)
     paths.forEach(function(fixturePath){
         if (fs.lstatSync(fixturePath).isDirectory() &&

@@ -1,7 +1,7 @@
 import path from 'path'
 import {expect} from 'chai'
 import {CreateMochaTester} from '../../src'
-import {createApi, createFiles, npmInstallFixture} from '../envs-test-utils'
+import {createApi, createFiles, setup} from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
 
 
@@ -9,7 +9,7 @@ import { getVersion } from '../../src/env-utils';
 describe('mocha', function () {
     const baseFixturePath = path.resolve(__dirname, './fixture')
     before(function(){
-        npmInstallFixture(this, [baseFixturePath])
+        setup(this, [baseFixturePath])
     })
     it('init', function () {
         const tester = CreateMochaTester()

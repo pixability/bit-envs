@@ -1,7 +1,7 @@
 import path from 'path'
 import {expect} from 'chai'
 import {e2eHelper} from '../e2e-helper'
-import { npmInstallFixture } from '../envs-test-utils';
+import { setup } from '../envs-test-utils';
 
 describe('jest', function (){
     const baseFixturePath = path.resolve(__dirname, './fixture-action')
@@ -18,7 +18,7 @@ describe('jest', function (){
     })
     let mainCommandResult = ''
     before(function () {
-        npmInstallFixture(this, [baseFixturePath])
+        setup(this, [baseFixturePath])
         this.timeout(1000 * 1000)
         mainCommandResult = helper.before().toString()
     })

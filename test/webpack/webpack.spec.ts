@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {CreateWebpackCompiler} from '../../src'
 import {CompilerExtension, ExtensionApiOptions} from '../../src/env-utils'
-import {createApi, createConfigFile, createFiles, npmInstallFixture} from '../envs-test-utils'
+import {createApi, createConfigFile, createFiles, setup} from '../envs-test-utils'
 import {getVersion} from '../../src/env-utils'
 import path from 'path'
 
@@ -9,7 +9,7 @@ const baseFixturePath = path.resolve(__dirname, './fixture')
 
 describe('Webpack', function () {
     before(function(){
-        npmInstallFixture(this, [baseFixturePath])
+        setup(this, [baseFixturePath])
     })
     it('init', function (){
         const compiler = CreateWebpackCompiler()
@@ -91,6 +91,7 @@ describe('Webpack', function () {
         let context:any =  null
         let packageJSON:any =  null
         before('setting up test compiler', function() {
+            setup(this, [baseFixturePath])
             compiler = CreateWebpackCompiler()
             config = createConfigFile(baseFixturePath)
             context = {
@@ -116,6 +117,28 @@ describe('Webpack', function () {
             const result = compiler!.getDynamicPackageDependencies({configFiles:[config], context:context})
             expect(result).to.contain({
                 'url-loader':getVersion(packageJSON, 'url-loader')
+            })
+        })
+        it('should support babel-loader .babelrc file', function (){
+            const fixturePath = path.resolve(__dirname, './fixture-babel')
+            const configName = 'my-private-config.js'
+            const compiler = CreateWebpackCompiler(configName)
+            const configs = [createConfigFile(fixturePath,configName), createConfigFile(fixturePath, 'my-private-rc')]
+            const packageJSON = require(path.resolve(fixturePath, './package.json'))
+
+            context = {
+                componentDir: fixturePath
+            }
+            compiler.init({api: createApi()})
+            const result = compiler.getDynamicPackageDependencies({configFiles: configs, context: context}, 'my-private-rc')
+
+            const presetEnv = 'babel-preset-env'
+            const restPlugin = 'babel-plugin-transform-object-rest-spread'
+            const asyncPlugin = 'babel-plugin-transform-async-to-module-method'
+            expect(result).to.contain({
+                [presetEnv]: getVersion(packageJSON, presetEnv),
+                [restPlugin]: getVersion(packageJSON, restPlugin),
+                [asyncPlugin]: getVersion(packageJSON, asyncPlugin)
             })
         })
     })

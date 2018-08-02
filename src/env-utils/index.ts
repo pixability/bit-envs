@@ -15,3 +15,5 @@ export {
     TesterExtension,
     TestResult
 } from './types'
+
+export {getBabelDynamicPackageDependencies, getPluginPackageName, getPresetPackageName} from './babel-dependencies'

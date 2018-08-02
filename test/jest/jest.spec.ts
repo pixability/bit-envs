@@ -1,13 +1,13 @@
 import path from 'path'
 import { expect } from 'chai'
 import { CreateJestTester } from '../../src'
-import { createApi, createConfigFile, createFiles, npmInstallFixture } from '../envs-test-utils'
+import { createApi, createConfigFile, createFiles, setup } from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
 
 
 describe('jest', function () {
     before(function(){
-        npmInstallFixture(this, [baseFixturePath, fixtureAction])
+        setup(this, [baseFixturePath, fixtureAction])
     })
 
     const fixtureAction = path.resolve(__dirname, './fixture-action')

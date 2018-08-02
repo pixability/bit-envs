@@ -27,7 +27,7 @@ export interface ActionTesterOptions extends ExtensionApiOptions {
 export interface CompilerExtension {
     init: ({ api }: { api: API }) => Options
     action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
-    getDynamicPackageDependencies: (info: ExtensionApiOptions) => object
+    getDynamicPackageDependencies: (info: ExtensionApiOptions, name?:string) => object
     logger?: Logger
 }
 
