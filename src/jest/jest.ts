@@ -1,7 +1,8 @@
 import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
-import { runCLI } from 'jest-cli'
+import child_process from 'child_process'
+
 import {
     TesterExtension,
     API,
@@ -29,32 +30,17 @@ export function CreateJestTester(): TesterExtension {
         action: function(info: ActionTesterOptions) {
             const config = findByName(info.configFiles, 'jest.config.js')
             const directory = getDirectory(info, metaJest.logger!)
-            const stdStreamHandler = CreateSTDStreamHandler(metaJest.logger!)
             const resultHandler = CreateResultFileHandler(directory)
 
-            stdStreamHandler.shutdown()
             const outputFile = resultHandler.preTest()
-            return runCLI(
-                {
-                    rootDir: directory,
-                    config: config.path,
-                    json: true,
-                    outputFile
-                },
-                [directory]
-            ).then(function() {
-                const results = resultHandler.getResults()
-                const normalizedResults = convertJestFormatToBitFormat(results)
-                resultHandler.postTest()
-                stdStreamHandler.restore()
-                return normalizedResults
-            })
+            const jestPath = path.resolve(__dirname, '../../node_modules/.bin/jest')
+            child_process.execSync(`${jestPath} --rootDir=${directory} --config=${config.path} --json --outputFile=${outputFile}`, {stdio:[]})
+            const results = resultHandler.getResults()
+            const normalizedResults = convertJestFormatToBitFormat(results)
+            resultHandler.postTest()
+            return Promise.resolve(normalizedResults)
 
-            // should add bluebird
-            // .finally(function(){
-            //     // stdStreamHandler.restore()
-            //     resultHandler.postTest()
-            // })
+
         },
         getDynamicPackageDependencies: function(info: ExtensionApiOptions) {
             let packages = {}
@@ -132,34 +118,6 @@ function jestFindDynamicDependencies(
     })
 }
 
-function CreateSTDStreamHandler(logger: Logger) {
-    const savedSTDWrite = process.stdout.write
-    const savedERRWrite = process.stderr.write
-    let stdContent = ''
-    let stderr = ''
-    return {
-        shutdown: function() {
-            //@ts-ignore
-            process.stdout.write = function(
-                str: string, _encoding?: string, _cb?: Function) {
-                stdContent += str.toString()
-                return true
-            }
-            //@ts-ignore
-            process.stderr.write = function write(
-                str: string, _encoding?: string, _cb?: Function) {
-                stderr += str.toString()
-                return true
-            }
-        },
-        restore: function() {
-            logger.error(stderr)
-            logger.log(stdContent)
-            process.stdout.write = savedSTDWrite
-            process.stderr.write = savedERRWrite
-        }
-    }
-}
 function CreateResultFileHandler(directory: string) {
     const resultFileName = 'jestResults.json'
     let outputFile = ''
