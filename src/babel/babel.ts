@@ -1,4 +1,4 @@
-import { CompilerExtension, API, ExtensionApiOptions, Logger } from '../env-utils/types'
+import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
 import { findByName, getBabelDynamicPackageDependencies, getPluginPackageName, getPresetPackageName} from '../env-utils'
 import resolve from 'resolve'
