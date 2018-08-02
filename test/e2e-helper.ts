@@ -35,11 +35,11 @@ export function e2eHelper(i:e2eHelperInfo) {
             if (i.compilerName) {
                 bitJson.env.compiler = {
                     [`meta-${i.compilerName}`]: {
-                        "files": {
+                        'files': {
                             [i.confName]: './' + i.confName
                         },
-                        "options": {
-                            "file": i.compilerPath
+                        'options': {
+                            'file': i.compilerPath
                         }
                     }
                 }
@@ -49,11 +49,11 @@ export function e2eHelper(i:e2eHelperInfo) {
             } else if (i.testerPath) {
                 bitJson.env.tester = {
                     [`meta-tester`]: {
-                        "files": {
+                        'files': {
                             [i.confName]: './' + i.confName
                         },
-                        "options": {
-                            "file": i.testerPath
+                        'options': {
+                            'file': i.testerPath
                         }
                     }
                 }
@@ -62,6 +62,7 @@ export function e2eHelper(i:e2eHelperInfo) {
             // return child_process.execSync(`node --inspect-brk ${bitPath} ${(i.testerPath ? ' test': ' build')} --fork-level=NONE`, options)
             return child_process.execSync(`${bitPath} ${(i.testerPath ? ' test': ' build')}`, options)
         },
+        
         after: function () {
             fs.unlinkSync(path.resolve(i.baseFixturePath, 'bit.json'))
             fs.unlinkSync(path.resolve(i.baseFixturePath, '.bitmap'))

@@ -2,8 +2,8 @@ import webpack from 'webpack'
 import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
-import {CompilerExtension, ExtensionApiOptions, API ,Logger} from './types'
-import {loadPackageJsonSync, fillDependencyVersion, findByName} from './compiler-utils'
+import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/types'
+import {loadPackageJsonSync, fillDependencyVersion, findByName} from '../env-utils'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {

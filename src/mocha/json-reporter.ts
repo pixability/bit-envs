@@ -1,6 +1,6 @@
 import { Runner, Test ,Reporter} from 'mocha'
 import {Base, getEmptyStats} from './base-reporter'
-import {TestResult} from '../types'
+import {TestResult} from '../env-utils/types'
 import _get from 'lodash.get'
 /***
  * Initialize a new `JSON` reporter.

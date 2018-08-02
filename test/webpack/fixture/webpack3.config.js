@@ -2,9 +2,9 @@ const config  = require('./webpack.config')
 config.module.rules.push({
     test: /\.(jpg|png)$/,
     use: {
-      loader: "file-loader",
+      loader: 'file-loader',
       options: {
-        name: "[path][name].[hash].[ext]",
+        name: '[path][name].[hash].[ext]',
       },
     },
   })

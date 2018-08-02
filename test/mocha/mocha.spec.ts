@@ -1,12 +1,16 @@
 import path from 'path'
 import {expect} from 'chai'
-import {CreateMochaTester} from '../src'
-import {createApi, createFiles} from './envs-test-utils'
-import { getVersion } from '../src/compiler-utils';
+import {CreateMochaTester} from '../../src'
+import {createApi, createFiles, npmInstallFixture} from '../envs-test-utils'
+import { getVersion } from '../../src/env-utils';
 
-const baseFixturePath = path.resolve(__dirname, './fixtures/mocha')
+
 
 describe('mocha', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture')
+    before(function(){
+        npmInstallFixture(this, [baseFixturePath])
+    })
     it('init', function () {
         const tester = CreateMochaTester()
         const options = tester.init({ api: createApi() })
@@ -26,15 +30,15 @@ describe('mocha', function () {
             })
 
             const dynamicConfig = {
-                "require": ["babel-core/register", "source-map-support/register"],
-                "filesRequire": ["setup.js"]
+                'require': ['babel-core/register', 'source-map-support/register'],
+                'filesRequire': ['setup.js']
             }
             const results = tester.getDynamicPackageDependencies({configFiles:[], context, dynamicConfig})
 
             const packageJSON = require(path.resolve(baseFixturePath, './package.json'))
             expect(results).to.contain({
-                "babel-core":getVersion(packageJSON, "babel-core"),
-                "source-map-support": getVersion(packageJSON, "source-map-support")
+                'babel-core':getVersion(packageJSON, 'babel-core'),
+                'source-map-support': getVersion(packageJSON, 'source-map-support')
             })
         })
     })
@@ -50,8 +54,8 @@ describe('mocha', function () {
                 componentObject: {
                     mainFile: '',
                     dynamicConfig: {
-                        "require": ["babel-core/register", "source-map-support/register"],
-                        "filesRequire": ["setup.js"]
+                        'require': ['babel-core/register', 'source-map-support/register'],
+                        'filesRequire': ['setup.js']
                     }
                 },
                 rootDistFolder: path.resolve(baseFixturePath, './dist')
@@ -64,7 +68,7 @@ describe('mocha', function () {
             .then(function(results){
                 expect((global as any).mochaSetupTestRun, 'setup.js').to.be.true
                 const babelCore = Object.keys(require.cache).find((elem) => !!~elem.indexOf('babel-core/register'))
-                expect(babelCore, 'babel-core').to.contain('fixtures/mocha')
+                expect(babelCore, 'babel-core').to.contain('fixture')
                 const withFailures = results.find((item)=>item.specPath.endsWith('test2.spec.js'))
                 const allPassing = results.find((item)=>item.specPath.endsWith('test.spec.js'))
                 expect(withFailures.failures.length).to.equal(3)

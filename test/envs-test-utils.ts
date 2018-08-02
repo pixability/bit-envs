@@ -2,6 +2,7 @@ import path from 'path'
 import Vinyl from 'vinyl'
 import fs from 'fs'
 import _get from 'lodash.get'
+import child_process from 'child_process'
 
 export function createApi(){
     return {
@@ -13,7 +14,6 @@ export function createApi(){
 }
 
 export function createConfigFile(baseFixturePath:string, name = 'webpack.config.js'):Vinyl {
-
     const configPath = path.resolve(baseFixturePath, name)
     return new Vinyl({
         name: name,
@@ -39,5 +39,21 @@ export function createFiles(fixturePath:string, skipFiles:Array<string> = [], ac
             path: pathToFile,
             contents: Buffer.from(fs.readFileSync(pathToFile))
         })
+    })
+}
+
+export function npmInstallFixture(context:Mocha.Context, paths: Array<string>) {
+    if(process.env['NO_INSTALL']){
+        return
+    }
+    context.timeout(1000*1000)
+    paths.forEach(function(fixturePath){
+        if (fs.lstatSync(fixturePath).isDirectory() &&
+            !fs.existsSync(path.resolve(fixturePath, '.npm-skip')))  {
+            const cwd = process.cwd()
+            process.chdir(fixturePath)
+            child_process.execSync('npm i')
+            process.chdir(cwd)
+        }
     })
 }

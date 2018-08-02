@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: "production",
+  mode: 'production',
   entry: {
       secondary: './add',
       main: './index.ts'
@@ -15,9 +15,9 @@ module.exports = {
       }, {
         test: /\.css$/,
         use: [{
-            loader: "style-loader"
+            loader: 'style-loader'
         }, {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
                 import: true,
                 modules: true,

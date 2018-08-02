@@ -1,6 +1,6 @@
-import { CompilerExtension, API, ExtensionApiOptions } from "./types"
+import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
-import { loadPackageJsonSync, findByName,fillDependencyVersion } from './compiler-utils'
+import { loadPackageJsonSync, findByName,fillDependencyVersion } from '../env-utils'
 import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
@@ -16,7 +16,7 @@ export function CreateBabelCompiler() {
         action: function (info: ExtensionApiOptions) {
             const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
-                MetaBabelCompiler.logger!.error('could not find .babelrc')
+                MetaBabelCompiler.logger && MetaBabelCompiler.logger.error('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()
@@ -43,7 +43,7 @@ export function CreateBabelCompiler() {
             const dynamicPackageDependencies = {}
             const vinylBabelrc = findByName(info.configFiles, '.babelrc')
             if (!vinylBabelrc) {
-                MetaBabelCompiler.logger!.log('could not find .babelrc')
+                MetaBabelCompiler.logger && MetaBabelCompiler.logger.log('could not find .babelrc')
                 throw new Error('could not find .babelrc')
             }
             const rawBabelrc = vinylBabelrc!.contents!.toString()

@@ -1,5 +1,5 @@
-import { TesterExtension, ExtensionApiOptions, API, ActionTesterOptions } from '../types'
-import { loadPackageJsonSync, fillDependencyVersion } from '../compiler-utils'
+import { TesterExtension, ExtensionApiOptions, API, ActionTesterOptions } from '../env-utils/types'
+import { loadPackageJsonSync, fillDependencyVersion } from '../env-utils'
 import { JSONReporter } from './json-reporter'
 import Mocha, {Test} from 'mocha'
 import _get from 'lodash.get'

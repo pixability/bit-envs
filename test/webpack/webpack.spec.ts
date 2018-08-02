@@ -1,13 +1,16 @@
 import {expect} from 'chai'
-import {CreateWebpackCompiler} from '../src'
-import {CompilerExtension, ExtensionApiOptions} from '../src/types'
-import {createApi, createConfigFile, createFiles} from './envs-test-utils'
-import {getVersion} from '../src/compiler-utils'
+import {CreateWebpackCompiler} from '../../src'
+import {CompilerExtension, ExtensionApiOptions} from '../../src/env-utils'
+import {createApi, createConfigFile, createFiles, npmInstallFixture} from '../envs-test-utils'
+import {getVersion} from '../../src/env-utils'
 import path from 'path'
 
-const baseFixturePath = path.resolve(__dirname, './fixtures/webpack')
+const baseFixturePath = path.resolve(__dirname, './fixture')
 
 describe('Webpack', function () {
+    before(function(){
+        npmInstallFixture(this, [baseFixturePath])
+    })
     it('init', function (){
         const compiler = CreateWebpackCompiler()
         let options = compiler.init({
@@ -17,6 +20,7 @@ describe('Webpack', function () {
         expect(options.write).to.be.true
     })
     describe('action', function() {
+        this.timeout(5000 * 5)
         let compiler:CompilerExtension|null = null
         let actionInfo:ExtensionApiOptions|null = null
         let config = null
@@ -46,7 +50,6 @@ describe('Webpack', function () {
         afterEach(function(){
             process.chdir(cwd)
         })
-        this.timeout(5000)
         it('basic bundling', function() {
             this.timeout(5 * 1000)
             return compiler!.action(actionInfo!).then(function(assets) {

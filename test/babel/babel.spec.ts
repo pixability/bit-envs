@@ -1,14 +1,17 @@
 import { expect } from 'chai'
-import { CreateBabelCompiler } from '../src'
-import { createApi, createConfigFile, createFiles } from './envs-test-utils'
-import { getVersion } from '../src/compiler-utils'
+import { CreateBabelCompiler } from '../../src'
+import { createApi, createConfigFile, createFiles, npmInstallFixture } from '../envs-test-utils'
+import { getVersion } from '../../src/env-utils'
 import path from 'path'
 import Vinyl from 'vinyl'
 import _eval from 'eval'
 
-const baseFixturePath = path.resolve(__dirname, './fixtures/babel')
+const baseFixturePath = path.resolve(__dirname, './fixture')
 
 describe('babel', function () {
+    before(function() {
+        npmInstallFixture(this, [baseFixturePath])
+    })
     it('init', function () {
         const compiler = CreateBabelCompiler()
         const options = compiler.init({

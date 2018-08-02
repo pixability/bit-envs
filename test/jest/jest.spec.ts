@@ -1,12 +1,18 @@
 import path from 'path'
 import { expect } from 'chai'
-import { CreateJestTester } from '../src'
-import { createApi, createConfigFile, createFiles } from './envs-test-utils'
-import { getVersion } from '../src/compiler-utils';
+import { CreateJestTester } from '../../src'
+import { createApi, createConfigFile, createFiles, npmInstallFixture } from '../envs-test-utils'
+import { getVersion } from '../../src/env-utils';
 
-const baseFixturePath = path.resolve(__dirname, './fixtures/jest')
 
 describe('jest', function () {
+    before(function(){
+        npmInstallFixture(this, [baseFixturePath, fixtureAction])
+    })
+
+    const fixtureAction = path.resolve(__dirname, './fixture-action')
+    const baseFixturePath = path.resolve(__dirname, './fixture')
+
     it('init', function () {
         const tester = CreateJestTester()
         const options = tester.init({ api: createApi() })
@@ -37,19 +43,18 @@ describe('jest', function () {
     it('action', function () {
         this.timeout(5000 * 10 )
         const configName = 'jest.config.js'
-        const baseFixturePath = path.resolve(__dirname, './fixtures/jest-action')
         const tester = CreateJestTester()
-        const testFiles = createFiles(baseFixturePath, [configName, 'package.json', 'package-lock.json'])
-        const config = createConfigFile(baseFixturePath, configName)
+        const testFiles = createFiles(fixtureAction, [configName, 'package.json', 'package-lock.json'])
+        const config = createConfigFile(fixtureAction, configName)
         const actionInfo = {
             testFiles,
             configFiles: [config],
             context: {
-                componentDir: baseFixturePath,
+                componentDir: fixtureAction,
                 componentObject: {
                     mainFile: 'index.ts'
                 },
-                rootDistFolder: path.resolve(baseFixturePath, './dist')
+                rootDistFolder: path.resolve(fixtureAction, './dist')
             }
         }
         tester.init({ api: createApi() })
