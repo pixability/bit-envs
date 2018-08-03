@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import path from 'path'
 import { e2eHelper } from '../e2e-helper'
 import { setup } from '../envs-test-utils';
-require('babel-core/register')
+
 describe('mocha', function() {
     const baseFixturePath = path.resolve(__dirname, './fixture')
     const compilerPath = path.resolve(__dirname, '../../dist/babel/babel.js')

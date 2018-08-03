@@ -43,10 +43,6 @@ export function createFiles(fixturePath:string, skipFiles:Array<string> = [], ac
 }
 
 export function setup(context:Mocha.Context, paths: Array<string>) {
-    Object.keys( require.cache ).forEach( function( file ) {
-        delete require.cache[ file ];
-    });
-
     if(process.env['NO_INSTALL']){
         return
     }
