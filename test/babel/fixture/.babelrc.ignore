@@ -1,0 +1,14 @@
+{
+    "presets": ["env"],
+    "sourceMaps": true,
+    "ast": false,
+    "minified": true,
+    "plugins": [
+      "transform-object-rest-spread",
+      ["transform-async-to-module-method", {
+        "module": "bluebird",
+        "method": "coroutine"
+      }]
+    ],
+    "ignore": ["a.js"]
+  }

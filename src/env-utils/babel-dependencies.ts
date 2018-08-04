@@ -11,7 +11,9 @@ export function getBabelDynamicPackageDependencies(logger:Logger, name = '.babel
         }
         const rawBabelrc = vinylBabelrc!.contents!.toString()
         const babelrc = JSON.parse(rawBabelrc)
-        const pluginsNames = babelrc.plugins && babelrc.plugins.map((name:string|Array<string>)=> Array.isArray(name) ? name[0]: name) || []
+        const pluginsNames = babelrc.plugins ?
+            babelrc.plugins.map((pluginName:string|Array<string>)=> Array.isArray(pluginName) ? pluginName[0]: pluginName) :
+            []
         const presetsNames = babelrc.presets || []
         const addParsedNameToResult = (result: {[key:string]:string}, packageJson: object, nameToPackageFn: (name:string) => string) => (name: string) => {
             const packageName = nameToPackageFn(name)

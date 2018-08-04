@@ -72,9 +72,13 @@ function resolvePackagesFromComponentDir(componentDir: string, packagName: strin
 }
 
 function runBabel(file:Vinyl, options:object, distPath:string) {
-    const { code, map } = babel.transform(file.contents!.toString(), options)
+    const adjustedOptions = Object.assign({}, options, { filename:file.basename})
+    const r = babel.transform(file.contents!.toString(), adjustedOptions)
+    if(r.ignored) {
+        return []
+    }
     const mappings = new Vinyl({
-        contents: Buffer.from((map as any).mappings),
+        contents: Buffer.from((r.map as any).mappings),
         base: distPath,
         path: path.join(distPath, file.relative),
         basename: `${file.basename}.map`
@@ -82,7 +86,7 @@ function runBabel(file:Vinyl, options:object, distPath:string) {
     const distFile = file.clone()
     distFile.base = distPath
     distFile.path = path.join(distPath, file.relative)
-    distFile.contents = code ? Buffer.from(`${code}\n\n//# sourceMappingURL=${mappings.basename}`) : Buffer.from(code!)
+    distFile.contents = r.code ? Buffer.from(`${r.code}\n\n//# sourceMappingURL=${mappings.basename}`) : Buffer.from(r.code!)
     return [mappings, distFile]
 }
 

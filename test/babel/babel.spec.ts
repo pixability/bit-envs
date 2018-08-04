@@ -7,6 +7,7 @@ import Vinyl from 'vinyl'
 import _eval from 'eval'
 
 const baseFixturePath = path.resolve(__dirname, './fixture')
+const ignoreList = ['.babelrc', 'package.json', 'package-lock.json','.babelrc.only', '.babelrc.ignore']
 
 describe('babel', function () {
     before(function() {
@@ -43,27 +44,42 @@ describe('babel', function () {
     })
 
     it('action', function () {
-        const compiler = CreateBabelCompiler()
-        const files = createFiles(baseFixturePath, ['.babelrc', 'package.json', 'package-lock.json'])
-        const config = createConfigFile(baseFixturePath, '.babelrc')
-        const actionInfo = {
-            files,
-            configFiles: [config],
-            context: {
-                componentDir: baseFixturePath,
-                componentObject: {
-                    mainFile: ''
-                },
-                rootDistFolder: path.resolve(baseFixturePath, './dist')
-            }
-        }
-        compiler.init({ api: createApi() })
-        return compiler.action(actionInfo)
+        return runCompilerAction('.babelrc')
             .then(function(assets){
                 const toRun = assets.files.find((file:Vinyl)=> file.basename == 'b.js')
                 const toRunRaw = _eval(toRun!.contents!.toString())
                 expect(toRunRaw.run()).to.equal(0)
             })
     })
+    it('action should support only', function () {
+        return runCompilerAction('.babelrc.only')
+            .then(function(assets){
+                expect(assets.files.length).to.equal(0)
+            })
+    })
+    it('action should support ignore', function () {
+        return runCompilerAction('.babelrc.ignore')
+            .then(function(assets){
+                expect(assets.files.length).to.equal(2)
+            })
+    })
 })
 
+function runCompilerAction(configName:string) {
+    const compiler = CreateBabelCompiler(configName)
+    const files = createFiles(baseFixturePath, ignoreList)
+    const config = createConfigFile(baseFixturePath, configName)
+    const actionInfo = {
+        files,
+        configFiles: [config],
+        context: {
+            componentDir: baseFixturePath,
+            componentObject: {
+                mainFile: ''
+            },
+            rootDistFolder: path.resolve(baseFixturePath, './dist')
+        }
+    }
+    compiler.init({ api: createApi() })
+    return compiler.action(actionInfo)
+}
