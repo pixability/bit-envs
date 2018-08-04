@@ -82,6 +82,29 @@ describe('Webpack', function () {
                 expect(assets.files.length).to.be.greaterThan(1)
             })
         })
+        it('should keep entires test or ends with _test', function () {
+            const configName = 'webpack4.config.js'
+            const compiler:CompilerExtension = CreateWebpackCompiler(configName)
+            const config = createConfigFile(baseFixturePath, configName)
+            const files = createFiles(baseFixturePath)
+            const actionInfo:ExtensionApiOptions = {
+                files,
+                configFiles:[config],
+                context: {
+                    componentDir: '',
+                    componentObject: {
+                        mainFile: 'index.ts'
+                    },
+                    rootDistFolder: path.resolve(baseFixturePath, './dist')
+                }
+            }
+            compiler!.init({api: createApi()})
+            return compiler.action(actionInfo).then(function (assets){
+                expect(assets.files.some((file)=>file.basename === 'test.bundle.js' )).to.be.true
+                expect(assets.files.some((file)=>file.basename ==='another_test.bundle.js')).to.be.true
+            })
+
+        })
     })
 
 
@@ -126,7 +149,7 @@ describe('Webpack', function () {
             const configs = [createConfigFile(fixturePath,configName), createConfigFile(fixturePath, 'my-private-rc')]
             const packageJSON = require(path.resolve(fixturePath, './package.json'))
 
-            context = {
+            const context = {
                 componentDir: fixturePath
             }
             compiler.init({api: createApi()})

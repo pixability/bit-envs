@@ -44,7 +44,6 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
         getDynamicPackageDependencies: function(info: ExtensionApiOptions, babelConfigName = '.babelrc') {
             const packages: { [key: string]: string } = {}
             const configFile = findByName(info.configFiles, mainConfigName)
-            debugger
             const config = require(configFile.path)
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
 
@@ -62,7 +61,6 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 fillDependencyVersion(packageJson, name, toFill)
                 Object.assign(toFill, babelResults)
             }
-            debugger
             _get(config, 'module.rules', []).forEach(function (rule: { use?: string, loader?: string }) {
                 if (Array.isArray(rule.use)) {
                     rule.use.forEach(function (internalUse) {
@@ -88,16 +86,17 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
 
 function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:Logger){
     if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
-        const entires = Object.keys(configuration.entry)
-        let correctEntry = {}
-        for (let i=0; i<entires.length; ++i) {
+        let correctEntry:{[x:string]:string} = {}
+        Object.keys(configuration.entry).forEach(function(entry) {
             const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
-            if (configuration.entry[entires[i]].endsWith(mainFile) ||
-                configuration.entry[entires[i]].endsWith(entryNamNoEnding)){
-                correctEntry = {[entires[i]]:configuration.entry[entires[i]]}
-                break;
+
+            if (configuration.entry[entry].endsWith(mainFile) ||
+                configuration.entry[entry].endsWith(entryNamNoEnding)){
+                correctEntry[entry] = configuration.entry[entry]
+            } else if(entry === 'test' || entry.endsWith('_test')) {
+                correctEntry[entry] = configuration.entry[entry]
             }
-        }
+        })
         if (!Object.keys(correctEntry).length) {
             logger.error('Could not find entry')
             throw new Error('Could not find entry')
