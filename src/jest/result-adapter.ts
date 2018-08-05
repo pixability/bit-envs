@@ -18,12 +18,11 @@ export function convertJestFormatToBitFormat(results: any) {
             testProps = test.assertionResults.map((assertionRes: any) => {
                 const title = assertionRes.title
                 const pass = assertionRes.status === 'passed' ? true : false
-                const err = !pass
-                    ? {
-                          message: assertionRes.failureMessages[0],
-                          stack: assertionRes.failureMessages[0]
-                      }
-                    : undefined
+                const err = !pass ? {
+                        message: assertionRes.failureMessages[0],
+                        stack: assertionRes.failureMessages[0]
+                    } :
+                    undefined
                 if (err)
                     return {
                         title,

@@ -28,8 +28,8 @@ export function Base(this:any, runner:Runner) {
 
     runner.on('pass', function (test) {
         runner.stats!.passes = runner.stats!.passes || 0
-        if (!test.duration){
-           test.speed = undefined
+        if (!test.duration) {
+            test.speed = undefined
         } else if (test.duration > test.slow()) {
             test.speed = 'slow'
         } else if (test.duration > test.slow() / 2) {

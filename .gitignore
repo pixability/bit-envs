@@ -21,3 +21,4 @@ dist
 coverage
 .nyc_output
 notes.md
+components
