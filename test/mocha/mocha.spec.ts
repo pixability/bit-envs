@@ -1,14 +1,14 @@
 import path from 'path'
 import {expect} from 'chai'
 import {CreateMochaTester} from '../../src'
-import {createApi, createFiles, setup} from '../envs-test-utils'
+import {createApi, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
-
-
+import packageJSON from './private-package-json'
 
 describe('mocha', function () {
     const baseFixturePath = path.resolve(__dirname, './fixture')
     before(function(){
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
     })
     it('init', function () {
@@ -45,7 +45,7 @@ describe('mocha', function () {
 
     it('action', function () {
         const tester = CreateMochaTester()
-        const testFiles = createFiles(baseFixturePath, ['.babelrc', 'package.json', 'package-lock.json'])
+        const testFiles = createFiles(baseFixturePath, ['.babelrc', 'package.json', 'package-lock.json', '.gitignore'])
         const actionInfo = {
             testFiles,
             configFiles: [],

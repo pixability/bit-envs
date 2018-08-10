@@ -1,1 +1,3 @@
-export {default as jestTester, CreateJestTester} from './jest'
+import {default as jestTester} from './jest'
+export {CreateJestTester} from './jest'
+export default jestTester

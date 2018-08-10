@@ -1,3 +1,4 @@
+/// <reference path="./babel-core.d.ts" />
 import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
 import {
@@ -9,6 +10,7 @@ import {
 import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
+import _get from 'lodash.get'
 
 export function CreateBabelCompiler(name='.babelrc') {
     const metaBabelCompiler: CompilerExtension = {
@@ -19,6 +21,7 @@ export function CreateBabelCompiler(name='.babelrc') {
             }
         },
         action: function (info: ExtensionApiOptions) {
+
             const vinylBabelrc = findByName(info.configFiles, name)
             if (!vinylBabelrc) {
                 metaBabelCompiler.logger && metaBabelCompiler.logger.error('could not find ', name)
@@ -29,11 +32,11 @@ export function CreateBabelCompiler(name='.babelrc') {
             const componentDir = info.context && info.context.componentDir
 
             if (componentDir) {
-                babelrc.plugins = babelrc.plugins.map((pluginName: string |Array<string>) => {
+                babelrc.plugins = _get(babelrc, 'plugins', []).map((pluginName: string |Array<string>) => {
                     const actualPluginName = Array.isArray(pluginName) ? pluginName[0]: pluginName
                     return resolvePlugin(componentDir, actualPluginName)
                 })
-                babelrc.presets = babelrc.presets.map((presetName: string) => resolvePreset(componentDir, presetName))
+                babelrc.presets = _get(babelrc,'presets', []).map((presetName: string) => resolvePreset(componentDir, presetName))
             }
 
             try {
@@ -78,7 +81,7 @@ function runBabel(file:Vinyl, options:object, distPath:string) {
         return []
     }
     const mappings = new Vinyl({
-        contents: Buffer.from((r.map as any).mappings),
+        contents: Buffer.from(_get(r, 'map.mappings', '')),
         base: distPath,
         path: path.join(distPath, file.relative),
         basename: `${file.basename}.map`

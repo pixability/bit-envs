@@ -1,16 +1,27 @@
+/// <reference path="eval.d.ts" />
 import { expect } from 'chai'
 import { CreateBabelCompiler } from '../../src'
-import { createApi, createConfigFile, createFiles, setup } from '../envs-test-utils'
+import { createApi, createConfigFile, createFiles, setup, generatePackageJson } from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils'
 import path from 'path'
 import Vinyl from 'vinyl'
 import _eval from 'eval'
 
+import packageJSON from './private-package-json'
+
 const baseFixturePath = path.resolve(__dirname, './fixture')
-const ignoreList = ['.babelrc', 'package.json', 'package-lock.json','.babelrc.only', '.babelrc.ignore']
+const ignoreList = [
+    '.babelrc',
+    'package.json',
+    'package-lock.json',
+    '.babelrc.only',
+    '.babelrc.ignore',
+    '.babelrc.empty',
+    '.gitignore']
 
 describe('babel', function () {
     before(function() {
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
     })
     it('init', function () {
@@ -51,6 +62,14 @@ describe('babel', function () {
                 expect(toRunRaw.run()).to.equal(0)
             })
     })
+    it('action empty', function () {
+        const baseFixturePath = path.resolve(__dirname, './fixture-empty')
+        return runCompilerAction('.babelrc.empty', baseFixturePath)
+            .then(function(assets){
+                const file = assets.files.find((file:Vinyl)=> file.basename == 'b.js')
+                expect(file!.basename).to.equal('b.js')
+            })
+    })
     it('action should support only', function () {
         return runCompilerAction('.babelrc.only')
             .then(function(assets){
@@ -65,19 +84,20 @@ describe('babel', function () {
     })
 })
 
-function runCompilerAction(configName:string) {
+function runCompilerAction(configName:string, fixturePath:string = baseFixturePath) {
+
     const compiler = CreateBabelCompiler(configName)
-    const files = createFiles(baseFixturePath, ignoreList)
-    const config = createConfigFile(baseFixturePath, configName)
+    const files = createFiles(fixturePath, ignoreList)
+    const config = createConfigFile(fixturePath, configName)
     const actionInfo = {
         files,
         configFiles: [config],
         context: {
-            componentDir: baseFixturePath,
+            componentDir: fixturePath,
             componentObject: {
                 mainFile: ''
             },
-            rootDistFolder: path.resolve(baseFixturePath, './dist')
+            rootDistFolder: path.resolve(fixturePath, './dist')
         }
     }
     compiler.init({ api: createApi() })

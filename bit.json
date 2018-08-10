@@ -1,6 +1,12 @@
 {
     "env": {
-        "compiler": "bit.test-envs/compilers/typescript@0.0.5"
+        "compiler": {
+          "bit.test-envs/compilers/typescript@0.0.5" : {
+            "options": {
+              "file": ""
+            }
+          }
+        }
     },
     "dependencies": {
         "bit.envs/compilers/typescript": "0.0.3"

@@ -1,12 +1,14 @@
 import path from 'path'
 import { expect } from 'chai'
 import { CreateJestTester } from '../../src'
-import { createApi, createConfigFile, createFiles, setup } from '../envs-test-utils'
+import { createApi, createConfigFile, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
+import packageJSON from './private-package-json'
 
 
 describe('jest', function () {
     before(function(){
+        generatePackageJson({[fixtureAction]:packageJSON})
         setup(this, [baseFixturePath, fixtureAction])
     })
 
@@ -44,7 +46,7 @@ describe('jest', function () {
         this.timeout(5000 * 10 )
         const configName = 'jest.config.js'
         const tester = CreateJestTester()
-        const testFiles = createFiles(fixtureAction, [configName, 'package.json', 'package-lock.json'])
+        const testFiles = createFiles(fixtureAction, [configName, 'package.json', 'package-lock.json', '.gitignore'])
         const config = createConfigFile(fixtureAction, configName)
         const actionInfo = {
             testFiles,

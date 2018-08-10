@@ -1,14 +1,17 @@
 import {expect} from 'chai'
 import {CreateWebpackCompiler} from '../../src'
 import {CompilerExtension, ExtensionApiOptions} from '../../src/env-utils'
-import {createApi, createConfigFile, createFiles, setup} from '../envs-test-utils'
+import {createApi, createConfigFile, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import {getVersion} from '../../src/env-utils'
 import path from 'path'
+import packageJSON from './private-package-json'
+import packageJSONBabel from './private-package-json-babel'
 
 const baseFixturePath = path.resolve(__dirname, './fixture')
 
 describe('Webpack', function () {
     before(function(){
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
     })
     it('init', function (){
@@ -27,7 +30,7 @@ describe('Webpack', function () {
         let cwd = ''
         before(function(){
             compiler = CreateWebpackCompiler()
-            const files = createFiles(baseFixturePath)
+            const files = createFiles(baseFixturePath, ['.gitignore'])
             config = createConfigFile(baseFixturePath)
             actionInfo = {
                 files,
@@ -51,7 +54,6 @@ describe('Webpack', function () {
             process.chdir(cwd)
         })
         it('basic bundling', function() {
-            this.timeout(5 * 1000)
             return compiler!.action(actionInfo!).then(function(assets) {
                 const lib = eval(assets.files[0].contents!.toString())
                 expect(lib.run()).to.equal(0)
@@ -86,7 +88,7 @@ describe('Webpack', function () {
             const configName = 'webpack4.config.js'
             const compiler:CompilerExtension = CreateWebpackCompiler(configName)
             const config = createConfigFile(baseFixturePath, configName)
-            const files = createFiles(baseFixturePath)
+            const files = createFiles(baseFixturePath, ['.gitignore'])
             const actionInfo:ExtensionApiOptions = {
                 files,
                 configFiles:[config],
@@ -114,7 +116,6 @@ describe('Webpack', function () {
         let context:any =  null
         let packageJSON:any =  null
         before('setting up test compiler', function() {
-            setup(this, [baseFixturePath])
             compiler = CreateWebpackCompiler()
             config = createConfigFile(baseFixturePath)
             context = {
@@ -144,6 +145,7 @@ describe('Webpack', function () {
         })
         it('should support babel-loader .babelrc file', function (){
             const fixturePath = path.resolve(__dirname, './fixture-babel')
+            generatePackageJson({[fixturePath]:packageJSONBabel})
             const configName = 'my-private-config.js'
             const compiler = CreateWebpackCompiler(configName)
             const configs = [createConfigFile(fixturePath,configName), createConfigFile(fixturePath, 'my-private-rc')]

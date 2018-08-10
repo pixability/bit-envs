@@ -1,12 +1,13 @@
 import path from 'path'
 import {expect} from 'chai'
 import {e2eHelper} from '../e2e-helper'
-import { setup } from '../envs-test-utils';
+import { setup, generatePackageJson } from '../envs-test-utils';
+import packageJSON from './private-package-json'
 
 describe('jest', function (){
     const baseFixturePath = path.resolve(__dirname, './fixture-action')
     const compilerPath = ''
-    const testerPath = path.resolve(__dirname, '../../dist/jest/jest.js')
+    const testerPath = path.resolve(__dirname, '../../dist/src/jest')
     const helper = e2eHelper({baseFixturePath,
         mainFile:'index.ts',
         compilerName:'',
@@ -18,6 +19,7 @@ describe('jest', function (){
     })
     let mainCommandResult = ''
     before(function () {
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
         this.timeout(1000 * 1000)
         mainCommandResult = helper.before().toString()

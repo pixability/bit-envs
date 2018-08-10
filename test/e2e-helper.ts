@@ -59,10 +59,10 @@ export function e2eHelper(i:e2eHelperInfo) {
                 }
             }
             fs.writeFileSync('./bit.json', JSON.stringify(bitJson))
-            // return child_process.execSync(`node --inspect-brk ${bitPath} ${(i.testerPath ? ' test': ' build')} --fork-level=NONE`, options)
+            // return child_process.execSync(`node --inspect-brk ${bitPath} ${(i.testerPath ? ' test': ' build')}`, options)
             return child_process.execSync(`${bitPath} ${(i.testerPath ? ' test': ' build')}`, options)
         },
-        
+
         after: function () {
             fs.unlinkSync(path.resolve(i.baseFixturePath, 'bit.json'))
             fs.unlinkSync(path.resolve(i.baseFixturePath, '.bitmap'))

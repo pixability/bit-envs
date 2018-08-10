@@ -2,11 +2,12 @@ import {expect} from 'chai'
 import path from 'path'
 import fs from 'fs-extra'
 import {e2eHelper} from '../e2e-helper'
-import { setup } from '../envs-test-utils';
+import { setup, generatePackageJson } from '../envs-test-utils';
+import packageJSON from './private-package-json-e2e'
 
 describe('webpack', function() {
     const baseFixturePath = path.resolve(__dirname, './fixture-e2e')
-    const compilerPath = path.resolve(__dirname, '../../dist/webpack/webpack.js')
+    const compilerPath = path.resolve(__dirname, '../../dist/src/webpack')
     console.log(compilerPath)
     const helper = e2eHelper({
         baseFixturePath,
@@ -16,6 +17,7 @@ describe('webpack', function() {
         compilerPath
     })
     before(function() {
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
         this.timeout(1000 * 1000)
         helper.before()

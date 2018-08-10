@@ -1,12 +1,13 @@
 import { expect } from 'chai'
 import path from 'path'
 import { e2eHelper } from '../e2e-helper'
-import { setup } from '../envs-test-utils';
+import { setup, generatePackageJson } from '../envs-test-utils';
+import packageJSON from './private-package-json'
 
 describe('mocha', function() {
     const baseFixturePath = path.resolve(__dirname, './fixture')
-    const compilerPath = path.resolve(__dirname, '../../dist/babel/babel.js')
-    const testerPath = path.resolve(__dirname, '../../dist/mocha/mocha.js')
+    const compilerPath = path.resolve(__dirname, '../../dist/src/babel')
+    const testerPath = path.resolve(__dirname, '../../dist/src/mocha')
     const testerConfig = {
         [`meta-tester`]: {
             rawConfig: {
@@ -31,6 +32,7 @@ describe('mocha', function() {
     })
     let mainCommandResult = ''
     before(function() {
+        generatePackageJson({[baseFixturePath]:packageJSON})
         setup(this, [baseFixturePath])
         this.timeout(1000 * 1000)
         mainCommandResult = helper.before().toString()

@@ -1,6 +1,6 @@
 import path from 'path'
 import Vinyl from 'vinyl'
-import fs from 'fs'
+import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
 
@@ -56,5 +56,13 @@ export function setup(context:Mocha.Context, paths: Array<string>) {
             child_process.execSync('npm i')
             process.chdir(cwd)
         }
+    })
+}
+
+export function generatePackageJson(toInstall: {[path:string]:any}){
+    Object.keys(toInstall).forEach(function(fixturePath:string){
+        if (fs.lstatSync(fixturePath).isDirectory()){
+                fs.writeJSONSync(`${fixturePath}/package.json`, toInstall[fixturePath])
+            }
     })
 }

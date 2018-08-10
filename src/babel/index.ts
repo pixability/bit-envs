@@ -1,1 +1,4 @@
-export {default as babelCompiler, CreateBabelCompiler} from './babel'
+import {default as babelCompiler} from './babel'
+export {CreateBabelCompiler} from './babel'
+export default babelCompiler
+
