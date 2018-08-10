@@ -1,14 +1,15 @@
 import path from 'path'
 import { expect } from 'chai'
-import { CreateJestTester } from '../../src'
+import { CreateJestTester } from '../../src/jest'
 import { createApi, createConfigFile, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
 import packageJSON from './private-package-json'
-
+import packageJSONNoAction from './private-package-json-empty'
 
 describe('jest', function () {
     before(function(){
-        generatePackageJson({[fixtureAction]:packageJSON})
+        generatePackageJson({[fixtureAction]:packageJSON,
+                            [baseFixturePath]:packageJSONNoAction})
         setup(this, [baseFixturePath, fixtureAction])
     })
 
@@ -22,6 +23,7 @@ describe('jest', function () {
         expect(options.write).to.be.true
     })
     it('getDynamicPackageDependencies', function () {
+        const packageJSON = packageJSONNoAction
         const tester = CreateJestTester()
         const context = {
             componentDir: baseFixturePath
@@ -32,7 +34,6 @@ describe('jest', function () {
         })
 
         const results = tester.getDynamicPackageDependencies({ configFiles: [config], context })
-        const packageJSON = require(path.resolve(baseFixturePath, './package.json'))
         expect(results).to.contain({
             'ts-jest': getVersion(packageJSON, 'ts-jest'),
             'babel-jest': getVersion(packageJSON, 'babel-jest'),

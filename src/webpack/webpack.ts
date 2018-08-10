@@ -5,8 +5,6 @@ import _get from 'lodash.get'
 import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/types'
 import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicPackageDependencies} from '../env-utils'
 
-
-
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {
         init: function({ api }:{api:API}) {

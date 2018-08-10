@@ -1,4 +1,4 @@
-/// <reference path="eval.d.ts" />
+/// <reference path='eval.d.ts' />
 import {expect} from 'chai'
 import path from 'path'
 import fs from 'fs-extra'

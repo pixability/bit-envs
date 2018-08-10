@@ -1,4 +1,4 @@
-/// <reference path="./babel-core.d.ts" />
+/// <reference path='./babel-core.d.ts' />
 import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
 import {

@@ -53,10 +53,12 @@ export function CreateJestTester(): TesterExtension {
                 metaJest.logger!.log('Could not find package.json.')
                 return packages
             }
+
             const config = require(findByName(
                 info.configFiles,
                 'jest.config.js'
             ).path)
+
             const paths = [
                 'transform',
                 'preset',

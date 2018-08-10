@@ -20,7 +20,7 @@ export function e2eHelper(i:e2eHelperInfo) {
         before: function(){
             cwd = process.cwd()
             process.chdir(i.baseFixturePath)
-            const bitPath = path.resolve(__dirname, '../node_modules/.bin/bit')
+            const bitPath = require.resolve('bit-bin/bin/bit.js')
             // const bitPath = '/usr/local/bin/bd'
             const options = {}
             // const options = {stdio: [0,1,2]}

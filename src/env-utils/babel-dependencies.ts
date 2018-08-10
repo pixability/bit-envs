@@ -1,5 +1,5 @@
-import { Logger, ExtensionApiOptions } from "./types";
-import { findByName, fillDependencyVersion, loadPackageJsonSync } from "./compiler-utils";
+import { Logger, ExtensionApiOptions } from './types';
+import { findByName, fillDependencyVersion, loadPackageJsonSync } from './compiler-utils';
 
 export function getBabelDynamicPackageDependencies(logger:Logger, name = '.babelrc') {
     return function (info: ExtensionApiOptions) {

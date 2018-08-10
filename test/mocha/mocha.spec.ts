@@ -1,6 +1,6 @@
 import path from 'path'
 import {expect} from 'chai'
-import {CreateMochaTester} from '../../src'
+import {CreateMochaTester} from '../../src/mocha'
 import {createApi, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils';
 import packageJSON from './private-package-json'

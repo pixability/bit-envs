@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {CreateWebpackCompiler} from '../../src'
+import {CreateWebpackCompiler} from '../../src/webpack'
 import {CompilerExtension, ExtensionApiOptions} from '../../src/env-utils'
 import {createApi, createConfigFile, createFiles, setup, generatePackageJson} from '../envs-test-utils'
 import {getVersion} from '../../src/env-utils'

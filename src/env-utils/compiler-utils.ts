@@ -1,4 +1,4 @@
-import path from 'path'
+import * as path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import Vinyl from 'vinyl'
@@ -13,6 +13,7 @@ export function loadPackageJsonSync(componentDir: string, workspaceDir: string) 
             return packageJson
         }
     }
+
     packageJsonPath = path.join(workspaceDir, packageJsonName)
     return loadPackageJsonFromPathSync(packageJsonPath)
 }

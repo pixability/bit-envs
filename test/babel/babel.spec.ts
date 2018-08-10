@@ -1,6 +1,6 @@
-/// <reference path="eval.d.ts" />
+/// <reference path='eval.d.ts' />
 import { expect } from 'chai'
-import { CreateBabelCompiler } from '../../src'
+import { CreateBabelCompiler } from '../../src/babel'
 import { createApi, createConfigFile, createFiles, setup, generatePackageJson } from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils'
 import path from 'path'
