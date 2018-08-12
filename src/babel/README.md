@@ -1,6 +1,6 @@
 # Babel-based Transpiling Environment
 
-Bit build environment for transpiling using Bit.
+Bit build environment for transpiling using Babel.
 
 ## Usage Instructions
 
