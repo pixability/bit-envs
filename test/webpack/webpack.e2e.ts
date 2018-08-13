@@ -8,7 +8,6 @@ import packageJSON from './private-package-json-e2e'
 describe('webpack', function() {
     const baseFixturePath = path.resolve(__dirname, './fixture-e2e')
     const compilerPath = path.resolve(__dirname, '../../dist/src/webpack')
-    console.log(compilerPath)
     const helper = e2eHelper({
         baseFixturePath,
         mainFile:'index.ts',

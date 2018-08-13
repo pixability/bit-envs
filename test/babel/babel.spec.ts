@@ -8,8 +8,10 @@ import Vinyl from 'vinyl'
 import _eval from 'eval'
 
 import packageJSON from './private-package-json'
+import packageJSONResolve from './private-package-json-resolve'
 
 const baseFixturePath = path.resolve(__dirname, './fixture')
+const resolveFixture = path.resolve(__dirname, 'fixture-resolve')
 const ignoreList = [
     '.babelrc',
     'package.json',
@@ -21,8 +23,11 @@ const ignoreList = [
 
 describe('babel', function () {
     before(function() {
-        generatePackageJson({[baseFixturePath]:packageJSON})
-        setup(this, [baseFixturePath])
+        generatePackageJson({
+            [baseFixturePath]:packageJSON,
+            [resolveFixture]:packageJSONResolve
+        })
+        setup(this, [baseFixturePath, resolveFixture])
     })
     it('init', function () {
         const compiler = CreateBabelCompiler()
@@ -30,7 +35,7 @@ describe('babel', function () {
             api: createApi()
         })
         expect(!!compiler.logger).to.be.true
-        expect(options.write).to.be.false
+        expect(options.write).to.be.true
     })
 
     it('getDynamicPackageDependencies', function () {
@@ -81,6 +86,16 @@ describe('babel', function () {
             .then(function(assets){
                 expect(assets.files.length).to.equal(2)
             })
+    })
+    it('babel should be able to resolve files', function () {
+        return runCompilerAction('.babelrc', resolveFixture)
+        .then(function(assets){
+            assets.files.forEach(function(file){
+                expect(file.basename).to.not.contain('.svg')
+            })
+        }).catch(function(reason){
+            expect.fail('compilation should not throw', 'it did', reason)
+        })
     })
 })
 

@@ -17,7 +17,7 @@ export function CreateBabelCompiler(name='.babelrc') {
         init: function ({ api }: { api: API }) {
             metaBabelCompiler.logger = api.getLogger()
             return {
-                write: false
+                write: true
             }
         },
         action: function (info: ExtensionApiOptions) {
@@ -38,14 +38,15 @@ export function CreateBabelCompiler(name='.babelrc') {
                 })
                 babelrc.presets = _get(babelrc,'presets', []).map((presetName: string) => resolvePreset(componentDir, presetName))
             }
-
-            try {
-                const builtFiles: Array<Vinyl> = (info.files || []).map((file:Vinyl) => runBabel(file, babelrc, info.context.rootDistFolder))
-                    .reduce((a:any, b:any) => a.concat(b))
-                return Promise.resolve({ files: builtFiles })
-            } catch (e) {
-                throw e
-            }
+            const builtFiles: {files:Array<Vinyl>, errors:Array<any>} = (info.files || [])
+                .map((file:Vinyl) => runBabel(file, babelrc, info.context.rootDistFolder))
+                .reduce((a:any, b:any):any => {
+                    return {
+                        errors: a.errors.concat(b.errors),
+                        files: a.files.concat(b.files)
+                    }
+                })
+            return !builtFiles.errors.length ? Promise.resolve(builtFiles): Promise.reject(builtFiles.errors)
         },
         getDynamicPackageDependencies: function (info){
             return getBabelDynamicPackageDependencies(metaBabelCompiler.logger!, name)(info)
@@ -75,10 +76,17 @@ function resolvePackagesFromComponentDir(componentDir: string, packagName: strin
 }
 
 function runBabel(file:Vinyl, options:object, distPath:string) {
-    const adjustedOptions = Object.assign({}, options, { filename:file.basename})
-    const r = babel.transform(file.contents!.toString(), adjustedOptions)
-    if(r.ignored) {
-        return []
+    const adjustedOptions = Object.assign({}, options, {
+        filename:file.path
+    })
+    let r
+    try {
+        r = babel.transform(file.contents!.toString(), adjustedOptions)
+    } catch(e){
+        return {files:[], errors:[e]}
+    }
+    if (r.ignored) {
+        return {files:[], errors:[]}
     }
     const mappings = new Vinyl({
         contents: Buffer.from(_get(r, 'map.mappings', '')),
@@ -90,7 +98,7 @@ function runBabel(file:Vinyl, options:object, distPath:string) {
     distFile.base = distPath
     distFile.path = path.join(distPath, file.relative)
     distFile.contents = r.code ? Buffer.from(`${r.code}\n\n//# sourceMappingURL=${mappings.basename}`) : Buffer.from(r.code!)
-    return [mappings, distFile]
+    return {files:[mappings, distFile], errors: []}
 }
 
 export default CreateBabelCompiler()
