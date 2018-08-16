@@ -9,13 +9,16 @@ A tester component for authoring components with mocha unit testing.
 ```bash
 bit import bit.test-envs/testers/mocha -c
 ```
+
 Then build using [bit test](https://docs.bitsrc.io/docs/cli-test.html).
+
 ```bash
 bit test
 ```
 
 #### Usage - Configure
-When you import a tester component your bit.json file will contain an env entry as following:
+
+When you import a tester component your bit.json file will contain an env entry as follows:
 
 ```Typescript
 {
@@ -25,9 +28,10 @@ When you import a tester component your bit.json file will contain an env entry 
     //...
 }
 ```
-Mocha compiler configuration supports the require (--require in the cli) config option. In case you want to require component files (e.g setup chai assertions) add the filesRequire entry to the rawConfig.
 
-The end result should look as following:
+Mocha compiler configuration supports the require (--require in the CLI) config option. In case you want to require component files (e.g. setup chai assertions) add the filesRequire entry to the rawConfig.
+
+The result should look as follows:
 
 ```Typescript
 {
@@ -48,4 +52,5 @@ The end result should look as following:
 - `tester[name].rawConfig.filesRequire` - Points to component setup files.
 
 ### Glob support
-In bit land you explicitly declare test files. Any glob pattern that the tester might support will be void since only the specified files will be available.
+
+In Bit land, you explicitly declare test files. Any glob pattern that the tester might support will be void since only the specified files will be available.

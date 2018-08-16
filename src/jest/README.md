@@ -3,6 +3,7 @@ Jest
 A tester component for authoring components with jest unit testing.
 
 #### Usage - Import
+
 [import docs](https://docs.bitsrc.io/docs/cli-import.html#import-a-new-environment)
 
 ```bash
@@ -10,12 +11,14 @@ bit import bit.test-envs/testers/jest -c
 ```
 
 Then build using [bit test](https://docs.bitsrc.io/docs/cli-test.html).
+
 ```bash
 bit test
 ```
 
 #### Usage - Configure
-When you import a tester component your bit.json file will contain an env entry as following:
+
+When you import a tester component your `bit.json` file will contain an env entry as follows:
 
 ```Typescript
 {
@@ -25,7 +28,8 @@ When you import a tester component your bit.json file will contain an env entry 
     //...
 }
 ```
-In order to configure it we will need to change the tester entry. The end result should look as following:
+
+To configure it, we will need to change the tester entry. The result should look as follows:
 
 ```Typescript
 {
@@ -42,7 +46,8 @@ In order to configure it we will need to change the tester entry. The end result
 ```
 
 - `tester[name].files` - must contain a `jest.config.js` entry as key with the path to your configuration. Most commonly `jest.config.js` file is in the project root.
-- Path to configuration file must be a js file which exports jest config object.
+- Path to configuration file must be a JS file which exports jest config object.
 
 ### Glob support
+
 In Bit you explicitly declare test files. Glob patterns that the tester might support will be void since only the specified files will be available.
