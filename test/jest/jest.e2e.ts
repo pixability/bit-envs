@@ -4,7 +4,7 @@ import {e2eHelper} from '../e2e-helper'
 import { setup, generatePackageJson } from '../envs-test-utils';
 import packageJSON from './private-package-json'
 
-describe('jest', function (){
+describe.only('jest', function (){
     const baseFixturePath = path.resolve(__dirname, './fixture-action')
     const compilerPath = ''
     const testerPath = path.resolve(__dirname, '../../dist/src/jest')

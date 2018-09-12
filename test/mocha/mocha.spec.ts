@@ -58,7 +58,7 @@ describe('mocha', function () {
                         'filesRequire': ['setup.js']
                     }
                 },
-                rootDistFolder: path.resolve(baseFixturePath, './dist')
+                rootDistDir: path.resolve(baseFixturePath, './dist')
             }
         }
         tester.init({

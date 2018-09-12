@@ -1,10 +1,9 @@
 {
     "env": {
-        "compiler": "bit.test-envs/compilers/typescript@0.0.9",
-        "tester": "bit.test-envs/testers/mocha@0.0.15"
+        "compiler": "bit.test-envs/typescript/index@0.0.3",
+        "tester": "bit.test-envs/testers/mocha@0.0.2"
     },
-    "dependencies": {
-    },
+    "dependencies": {},
     "componentsDefaultDirectory": "components/{namespace}/{name}",
     "packageManager": "npm"
 }

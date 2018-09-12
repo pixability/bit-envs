@@ -40,7 +40,7 @@ describe('Webpack', function () {
                     componentObject: {
                         mainFile: 'index.ts'
                     },
-                    rootDistFolder: path.resolve(baseFixturePath, './dist')
+                    rootDistDir: path.resolve(baseFixturePath, './dist')
                 }
             }
             compiler!.init({api: createApi()})
@@ -97,7 +97,7 @@ describe('Webpack', function () {
                     componentObject: {
                         mainFile: 'index.ts'
                     },
-                    rootDistFolder: path.resolve(baseFixturePath, './dist')
+                    rootDistDir: path.resolve(baseFixturePath, './dist')
                 }
             }
             compiler!.init({api: createApi()})

@@ -57,7 +57,7 @@ describe('jest', function () {
                 componentObject: {
                     mainFile: 'index.ts'
                 },
-                rootDistFolder: path.resolve(fixtureAction, './dist')
+                rootDistDir: path.resolve(fixtureAction, './dist')
             }
         }
         tester.init({ api: createApi() })

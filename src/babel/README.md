@@ -7,8 +7,8 @@ A compiler component for authoring babel based components.
 ```bash
 bit import bit.test-envs/compilers/babel -c
 ```
-
 [import docs](https://docs.bitsrc.io/docs/cli-import.html#import-a-new-environment)
+
 
 Then build using [bit build](https://docs.bitsrc.io/docs/cli-build.html).
 
@@ -17,8 +17,7 @@ bit build
 ```
 
 #### Usage - Configure
-
-When you import a compiler component your bit.json file will contain an env entry as follows:
+When you import a compiler component your bit.json file will contain an env entry as following:
 
 ```Typescript
 {
@@ -28,8 +27,7 @@ When you import a compiler component your bit.json file will contain an env entr
     //...
 }
 ```
-
-To configure it, we will need to change the compiler entry. The result should look as follows:
+In order to configure it we will need to change the compiler entry. The end result should look as following:
 
 ```Typescript
 {
@@ -49,5 +47,5 @@ To configure it, we will need to change the compiler entry. The result should lo
 - Path to `.babelrc` must be a json file.
 
 ### Ignore (non js files)
+In case you have non js file which you don't want babel to compile but rather have access to when plugins apply. You should configure the ignore pattern. This way babel doesn't transform it and plugins get access. The compiler will also copy them to the dist folder.
 
-In case you have non-JS file which you don't want babel to compile but rather have access to when plugins apply. You should configure the ignore pattern. This way babel doesn't transform it and plugins get access. The compiler will also copy them to the `dist` folder.

@@ -24,8 +24,8 @@ function loadPackageJsonFromPathSync(packageJsonPath: string) {
 
 export function getVersion(packageJSON:object, name:string) {
     return _get(packageJSON, `dependencies[${name}]`) ||
-           _get(packageJSON, `devDependencies[${name}]`) ||
-           _get(packageJSON, `peerDependencies[${name}]`)
+            _get(packageJSON, `devDependencies[${name}]`) ||
+            _get(packageJSON, `peerDependencies[${name}]`)
 }
 
 export function fillDependencyVersion(packageJson: object, name: string, toFill: {[k:string]:string}) {

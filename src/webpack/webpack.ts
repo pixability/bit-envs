@@ -32,7 +32,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                 return {
                     files:Object.keys(assets).map((name)=>{
                         return new Vinyl({
-                            base: info.context.rootDistFolder,
+                            base: info.context.rootDistDir,
                             baseName: name,
                             path: assets[name].existsAt,
                             contents: Buffer.from(assets[name]._value)

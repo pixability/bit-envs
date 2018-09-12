@@ -112,7 +112,7 @@ function runCompilerAction(configName:string, fixturePath:string = baseFixturePa
             componentObject: {
                 mainFile: ''
             },
-            rootDistFolder: path.resolve(fixturePath, './dist')
+            rootDistDir: path.resolve(fixturePath, './dist')
         }
     }
     compiler.init({ api: createApi() })

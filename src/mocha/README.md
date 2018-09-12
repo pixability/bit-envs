@@ -18,7 +18,7 @@ bit test
 
 #### Usage - Configure
 
-When you import a tester component your bit.json file will contain an env entry as follows:
+When you import a tester component your `bit.json` file will contain an env entry as follows:
 
 ```Typescript
 {

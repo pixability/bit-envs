@@ -35,7 +35,10 @@ export function CreateJestTester(): TesterExtension {
             const outputFile = resultHandler.preTest()
             // const jestPath = Object.keys(require.cache).find((elem) => !!~elem.indexOf('jest-cli/bin/jest')) //path.resolve(__dirname, '../../node_modules/.bin/jest')
             const jestPath = require.resolve('jest-cli/bin/jest')
-            child_process.execSync(`${jestPath} --rootDir=${directory} --config=${config.path} --json --outputFile=${outputFile}`, {stdio:[]})
+
+            const testFilePath = info.testFiles.map((f)=>f.path)
+
+            child_process.execSync(`${jestPath} --rootDir=${directory} --config=${config.path} --json --outputFile=${outputFile} ${testFilePath.join(' ')}`, {stdio:[]})
             const results = resultHandler.getResults()
             const normalizedResults = convertJestFormatToBitFormat(results)
             resultHandler.postTest()

@@ -21,7 +21,6 @@ export function CreateBabelCompiler(name='.babelrc') {
             }
         },
         action: function (info: ExtensionApiOptions) {
-
             const vinylBabelrc = findByName(info.configFiles, name)
             if (!vinylBabelrc) {
                 metaBabelCompiler.logger && metaBabelCompiler.logger.error('could not find ', name)
@@ -39,7 +38,7 @@ export function CreateBabelCompiler(name='.babelrc') {
                 babelrc.presets = _get(babelrc,'presets', []).map((presetName: string) => resolvePreset(componentDir, presetName))
             }
             const builtFiles: {files:Array<Vinyl>, errors:Array<any>} = (info.files || [])
-                .map((file:Vinyl) => runBabel(file, babelrc, info.context.rootDistFolder))
+                .map((file:Vinyl) => runBabel(file, babelrc, info.context.rootDistDir))
                 .reduce((a:any, b:any):any => {
                     return {
                         errors: a.errors.concat(b.errors),

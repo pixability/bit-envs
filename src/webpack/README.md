@@ -5,31 +5,33 @@ A compiler component for authoring components with Webpack bundling.
 #### Usage - Import
 
 [import docs](https://docs.bitsrc.io/docs/cli-import.html#import-a-new-environment)
-
 ```bash
 bit import bit.test-envs/compilers/webpack -c
 ```
 
 Then build using [bit test](https://docs.bitsrc.io/docs/cli-test.html).
-
 ```bash
 bit test
 ```
 
 #### Usage - Configure
-
-When you import a tester component your bit.json file will contain an env entry as follows:
+<<<<<<< HEAD
+When you import a tester component your bit.json file will contain an env entry as following:
+=======
 
 ```Typescript
 {
-    "env": {
         "compiler": "bit.test-envs/compilers/webpack@0.0.9",
     }
     //...
 }
 ```
+<<<<<<< HEAD
+In order to configure it we will need to change the compiler entry. The end result should look as following:
+=======
 
 To configure it, we will need to change the compiler entry. The result should look as follows:
+>>>>>>> master
 
 ```Typescript
 {
@@ -49,5 +51,9 @@ To configure it, we will need to change the compiler entry. The result should lo
 - Path to `.babelrc` must be a json file.
 
 # asset per entry
+<<<<<<< HEAD
+Webpack environment chooses the entry which is best suited according to your component main file. Besides that `test`, and any entry which ends with `_test` will be created by the compiler.
+=======
 
 Webpack environment chooses the entry which is best suited according to your component's main file. Besides that `test`, and the compiler will create any entry which ends with `_test`
+>>>>>>> master
