@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
+require('jest-cli')
 
 import {
     TesterExtension,
@@ -38,7 +39,7 @@ export function CreateJestTester(): TesterExtension {
 
             const testFilePath = info.testFiles.map((f)=>f.path)
 
-            child_process.execSync(`${jestPath} --rootDir=${directory} --config=${config.path} --json --outputFile=${outputFile} ${testFilePath.join(' ')}`, {stdio:[]})
+            child_process.execSync(`${jestPath} --config=${config.path} --json ${testFilePath.join(' ')} > ${outputFile}`, {stdio:[]})
             const results = resultHandler.getResults()
             const normalizedResults = convertJestFormatToBitFormat(results)
             resultHandler.postTest()

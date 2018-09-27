@@ -76,7 +76,7 @@ function resolvePackagesFromComponentDir(componentDir: string, packagName: strin
 
 function runBabel(file:Vinyl, options:object, distPath:string) {
     const adjustedOptions = Object.assign({}, options, {
-        filename:file.path
+        filename:file.relative
     })
     let r
     try {

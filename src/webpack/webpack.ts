@@ -22,7 +22,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                     const compilation = (stats as any).compilation
                     if (err || compilation.errors.length > 0) {
                         metaWebpack.logger!.log(err || compilation.errors)
-                        reject(err || compilation.errors)
+                        reject(err ? {errors:[err]}: {errors:compilation.errors})
                         return
                     }
                     resolve(compilation.assets)
@@ -35,7 +35,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
                             base: info.context.rootDistDir,
                             baseName: name,
                             path: assets[name].existsAt,
-                            contents: Buffer.from(assets[name]._value)
+                            contents: Buffer.from(assets[name]._value || assets[name].children[0]._value)
                         })
                     })
                 }
@@ -84,12 +84,11 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
 
 
 
-function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:Logger){
+function adjustConfigurationIfNeeded(configuration:any, mainFile:string, _logger:Logger){
     if (typeof configuration.entry === 'object' && Object.keys(configuration.entry).length > 1){
         let correctEntry:{[x:string]:string} = {}
         Object.keys(configuration.entry).forEach(function(entry) {
             const entryNamNoEnding = mainFile.split('.').slice(0, -1).join('.')
-
             if (configuration.entry[entry].endsWith(mainFile) ||
                 configuration.entry[entry].endsWith(entryNamNoEnding)){
                 correctEntry[entry] = configuration.entry[entry]
@@ -97,11 +96,11 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, logger:
                 correctEntry[entry] = configuration.entry[entry]
             }
         })
-        if (!Object.keys(correctEntry).length) {
-            logger.error('Could not find entry')
-            throw new Error('Could not find entry')
-        }
         configuration.entry = correctEntry
+    }
+
+    if (!Object.keys(configuration.entry).length) {
+        configuration.entry = {main: mainFile}
     }
 }
 
