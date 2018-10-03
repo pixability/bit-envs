@@ -79,7 +79,6 @@ export const defaultGetBy:{[k:string]:any} = {
             config: packageJson[options.pjKeyName] ? packageJson[options.pjKeyName] : null,
             save: true
         }
-        return
     }
 }
 
