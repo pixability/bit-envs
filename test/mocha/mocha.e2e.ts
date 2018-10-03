@@ -23,7 +23,7 @@ describe('mocha', function() {
         baseFixturePath,
         mainFile: 'index.js',
         compilerName: 'babel',
-        confName: '.babelrc',
+        confName: ['.babelrc'],
         compilerPath,
         testerPath,
         compFiles: ['index.js', 'add.js', 'sub.js', 'setup.js'],

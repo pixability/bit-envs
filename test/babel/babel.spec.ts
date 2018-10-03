@@ -1,7 +1,7 @@
 /// <reference path='eval.d.ts' />
 import { expect } from 'chai'
 import { CreateBabelCompiler } from '../../src/babel'
-import { createApi, createConfigFile, createFiles, setup, generatePackageJson } from '../envs-test-utils'
+import { createApi, createConfigFile, setup, generatePackageJson, createExtensionInfo } from '../envs-test-utils'
 import { getVersion } from '../../src/env-utils'
 import path from 'path'
 import Vinyl from 'vinyl'
@@ -9,25 +9,20 @@ import _eval from 'eval'
 
 import packageJSON from './private-package-json'
 import packageJSONResolve from './private-package-json-resolve'
-
+import {ignoreList} from './ignore-list'
 const baseFixturePath = path.resolve(__dirname, './fixture')
 const resolveFixture = path.resolve(__dirname, 'fixture-resolve')
-const ignoreList = [
-    '.babelrc',
-    'package.json',
-    'package-lock.json',
-    '.babelrc.only',
-    '.babelrc.ignore',
-    '.babelrc.empty',
-    '.gitignore']
+const fixtureConfigurationPath = path.resolve(__dirname, 'fixture-configuration')
+
 
 describe('babel', function () {
     before(function() {
         generatePackageJson({
-            [baseFixturePath]:packageJSON,
-            [resolveFixture]:packageJSONResolve
+            [baseFixturePath]: packageJSON,
+            [resolveFixture]: packageJSONResolve,
+            [fixtureConfigurationPath]: packageJSON
         })
-        setup(this, [baseFixturePath, resolveFixture])
+        setup(this, [baseFixturePath, resolveFixture, fixtureConfigurationPath])
     })
     it('init', function () {
         const compiler = CreateBabelCompiler()
@@ -89,32 +84,29 @@ describe('babel', function () {
     })
     it('babel should be able to resolve files', function () {
         return runCompilerAction('.babelrc', resolveFixture)
-        .then(function(assets){
-            assets.files.forEach(function(file){
-                expect(file.basename).to.not.contain('.svg')
+            .then(function(assets){
+                assets.files.forEach(function(file){
+                    expect(file.basename).to.not.contain('.svg')
+                })
+            }).catch(function(reason){
+                expect.fail('compilation should not throw', 'it did', reason)
             })
-        }).catch(function(reason){
-            expect.fail('compilation should not throw', 'it did', reason)
+    })
+    it('should find correct configuration', function (){
+        const configName = '.babelrc'
+        const info = createExtensionInfo(configName, fixtureConfigurationPath, ignoreList)
+        const compiler = CreateBabelCompiler()
+        compiler.init({
+            api: createApi()
         })
+        const config = compiler.getDynamicConfig!(info)
+        expect(config).to.deep.equal({})
     })
 })
 
 function runCompilerAction(configName:string, fixturePath:string = baseFixturePath) {
-
     const compiler = CreateBabelCompiler(configName)
-    const files = createFiles(fixturePath, ignoreList)
-    const config = createConfigFile(fixturePath, configName)
-    const actionInfo = {
-        files,
-        configFiles: [config],
-        context: {
-            componentDir: fixturePath,
-            componentObject: {
-                mainFile: ''
-            },
-            rootDistDir: path.resolve(fixturePath, './dist')
-        }
-    }
+    const actionInfo = createExtensionInfo(configName, fixturePath, ignoreList)
     compiler.init({ api: createApi() })
     return compiler.action(actionInfo)
 }

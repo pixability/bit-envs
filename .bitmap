@@ -145,11 +145,6 @@
                 "name": "my-private-rc"
             },
             {
-                "relativePath": "test/webpack/fixture/.gitignore",
-                "test": false,
-                "name": ".gitignore"
-            },
-            {
                 "relativePath": "test/webpack/fixture/1.png",
                 "test": false,
                 "name": "1.png"
@@ -235,6 +230,11 @@
                 "relativePath": "src/env-utils/compiler-utils.ts",
                 "test": false,
                 "name": "compiler-utils.ts"
+            },
+            {
+                "relativePath": "src/env-utils/find-configuration.ts",
+                "test": false,
+                "name": "find-configuration.ts"
             },
             {
                 "relativePath": "src/env-utils/index.ts",
@@ -416,5 +416,5 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "version": "13.0.5-dev.7"
+    "version": "13.0.5-dev.8"
 }

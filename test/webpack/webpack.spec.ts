@@ -60,6 +60,11 @@ describe('Webpack', function () {
             })
         })
 
+        it('with dynamic configuration', function() {
+            const config = compiler!.getDynamicConfig!(actionInfo!)
+            expect(config).to.deep.equal({})
+        })
+
         it('should support filename without ending', function() {
             const configName = 'webpack2.config.js'
             const beforeChanges = actionInfo!.configFiles
@@ -105,7 +110,6 @@ describe('Webpack', function () {
                 expect(assets.files.some((file)=>file.basename === 'test.bundle.js' )).to.be.true
                 expect(assets.files.some((file)=>file.basename ==='another_test.bundle.js')).to.be.true
             })
-
         })
     })
 
@@ -148,7 +152,7 @@ describe('Webpack', function () {
             generatePackageJson({[fixturePath]:packageJSONBabel})
             const configName = 'my-private-config.js'
             const compiler = CreateWebpackCompiler(configName)
-            const configs = [createConfigFile(fixturePath,configName), createConfigFile(fixturePath, 'my-private-rc')]
+            const configs = [createConfigFile(fixturePath,configName)!, createConfigFile(fixturePath, 'my-private-rc')!]
             const packageJSON = require(path.resolve(fixturePath, './package.json'))
 
             const context = {

@@ -6,7 +6,7 @@ interface e2eHelperInfo {
     baseFixturePath:string
     mainFile:string
     compilerName:string
-    confName:string
+    confName:Array<string>
     compilerPath:string
     testerPath?:string
     compFiles?:Array<string>
@@ -32,12 +32,15 @@ export function e2eHelper(i:e2eHelperInfo) {
             }
             child_process.execSync(bitPath + ' tag to-build ', options)
             const bitJson = require(path.resolve(i.baseFixturePath, './bit.json'))
+            const files = i.confName.reduce(function(prev:{[k:string]:string}, curr){
+                prev[curr] =  './' + curr
+                return prev
+            }, {})
+
             if (i.compilerName) {
                 bitJson.env.compiler = {
                     [`meta-${i.compilerName}`]: {
-                        'files': {
-                            [i.confName]: './' + i.confName
-                        },
+                        files,
                         'options': {
                             'file': i.compilerPath
                         }
@@ -49,9 +52,7 @@ export function e2eHelper(i:e2eHelperInfo) {
             } else if (i.testerPath) {
                 bitJson.env.tester = {
                     [`meta-tester`]: {
-                        'files': {
-                            [i.confName]: './' + i.confName
-                        },
+                        files,
                         'options': {
                             'file': i.testerPath
                         }

@@ -1,5 +1,5 @@
 import { TesterExtension, ExtensionApiOptions, API, ActionTesterOptions } from '../env-utils/types'
-import { loadPackageJsonSync, fillDependencyVersion } from '../env-utils'
+import { loadPackageJsonSync, fillDependencyVersion, FindStrategy, findConfiguration } from '../env-utils'
 import { JSONReporter } from './json-reporter'
 import Mocha, {Test} from 'mocha'
 import _get from 'lodash.get'
@@ -14,6 +14,10 @@ export function CreateMochaTester(): TesterExtension {
                 write:false
             }
         },
+        getDynamicConfig: function (info: ActionTesterOptions) {
+            let config = mochaFindConfiguration(info)
+            return config.save ? config.config : {}
+        },
         action: function (info: ActionTesterOptions) {
             const correctFolder = info.context.componentDir || info.context.workspaceDir
             const privateRequire = createPrivateRequire(correctFolder)
@@ -24,9 +28,12 @@ export function CreateMochaTester(): TesterExtension {
                 require(path.resolve(correctFolder, toRequire))
             })
             cleanPrivateRequire(correctFolder)
+            const configFromFind = mochaFindConfiguration(info)
+            const config = _get(configFromFind, 'config.mocha', configFromFind.config)
+            Object.assign(config, { reporter: (JSONReporter as any) })
             try {
                 return new Promise((resolve) => {
-                    const mocha = new Mocha({ reporter: (JSONReporter as any) })
+                    const mocha = new Mocha(config)
 
                     info.testFiles.forEach((testFile) => {
                         mocha.addFile(testFile.path)
@@ -48,7 +55,7 @@ export function CreateMochaTester(): TesterExtension {
             }
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
-            let packages = {}
+            const packages = {}
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
                 metaMocha.logger!.error('Could not find package.json.')
@@ -135,4 +142,15 @@ function cleanPrivateRequire(directory:string) {
     fs.unlinkSync(pathToDynamicScript)
 
 }
+export function mochaFindConfiguration(info:ExtensionApiOptions){
+    const fileName = 'mocha.opts'
+    return findConfiguration(info, {
+        [FindStrategy.pjKeyName]: 'mocha',
+        [FindStrategy.fileName]: fileName,
+        [FindStrategy.default]: {},
+        [FindStrategy.defaultFilePaths]: [`./test/${fileName}`],
+    })
+}
+
+
 export default CreateMochaTester()

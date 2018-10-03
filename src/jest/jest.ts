@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
+import {defaultConfig} from './default-configuration'
 require('jest-cli')
 
 import {
@@ -14,7 +15,9 @@ import {
 import {
     loadPackageJsonSync,
     findByName,
-    fillDependencyVersion
+    fillDependencyVersion,
+    FindStrategy,
+    findConfiguration
 } from '../env-utils'
 import { convertJestFormatToBitFormat } from './result-adapter'
 
@@ -28,8 +31,13 @@ export function CreateJestTester(): TesterExtension {
                 write: true
             }
         },
+        getDynamicConfig: function(info: ActionTesterOptions) {
+            let config = jestFindConfiguration(info)
+            return config.save ? config.config : {}
+        },
         action: function(info: ActionTesterOptions) {
-            const config = findByName(info.configFiles, 'jest.config.js')
+            // const configFromFind = jestFindConfiguration(info)
+            // const config = _get(configFromFind, 'config.jest', configFromFind.config)
             const directory = getDirectory(info, metaJest.logger!)
             const resultHandler = CreateResultFileHandler(directory)
 
@@ -38,8 +46,10 @@ export function CreateJestTester(): TesterExtension {
             const jestPath = require.resolve('jest-cli/bin/jest')
 
             const testFilePath = info.testFiles.map((f)=>f.path)
-
-            child_process.execSync(`${jestPath} --config=${config.path} --json ${testFilePath.join(' ')} > ${outputFile}`, {stdio:[]})
+            const oldDir = process.cwd()
+            process.chdir(directory)
+            child_process.execSync(`${jestPath} --json ${testFilePath.join(' ')} > ${outputFile}`, {stdio:[]})
+            process.chdir(oldDir)
             const results = resultHandler.getResults()
             const normalizedResults = convertJestFormatToBitFormat(results)
             resultHandler.postTest()
@@ -165,4 +175,13 @@ function getDirectory(info: ActionTesterOptions, logger: Logger) {
         throw new Error('Could not find test directory')
     }
     return directory
+}
+
+export function jestFindConfiguration(info:ExtensionApiOptions){
+    return findConfiguration(info, {
+        [FindStrategy.pjKeyName]: 'jest',
+        [FindStrategy.fileName]: 'jest.config.js',
+        [FindStrategy.default]: defaultConfig,
+        [FindStrategy.defaultFilePaths]: ['./jest.config.js'],
+    })
 }

@@ -3,13 +3,13 @@ const path = require('path');
 module.exports = {
   mode: "production",
   entry: {
-      main: './index.ts'
+      main: './index.js'
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: 'babel-loader',
         exclude: /node_modules/
       }, {
         test: /\.css$/,

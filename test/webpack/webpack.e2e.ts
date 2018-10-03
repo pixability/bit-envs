@@ -10,9 +10,9 @@ describe('webpack', function() {
     const compilerPath = path.resolve(__dirname, '../../dist/src/webpack')
     const helper = e2eHelper({
         baseFixturePath,
-        mainFile:'index.ts',
+        mainFile:'index.js',
         compilerName:'webpack',
-        confName:'webpack.config.js',
+        confName:['webpack.config.js', '.babelrc'],
         compilerPath
     })
     before(function() {
