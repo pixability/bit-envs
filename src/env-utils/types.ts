@@ -29,6 +29,7 @@ export interface CompilerExtension {
     action: (info: ExtensionApiOptions) => Promise<{files: Array<Vinyl>}>
     getDynamicPackageDependencies: (info: ExtensionApiOptions, name?:string) => object
     logger?: Logger
+    getDynamicConfig?: (info: ExtensionApiOptions, name?:string) => any
 }
 
 export interface TesterExtension {

@@ -17,3 +17,9 @@ export {
 } from './types'
 
 export {getBabelDynamicPackageDependencies, getPluginPackageName, getPresetPackageName} from './babel-dependencies'
+
+export {
+    findConfiguration,
+    findOptions,
+    FindStrategy
+} from './find-configuration'

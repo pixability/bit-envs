@@ -12,15 +12,17 @@ import packageJSONResolve from './private-package-json-resolve'
 import {ignoreList} from './ignore-list'
 const baseFixturePath = path.resolve(__dirname, './fixture')
 const resolveFixture = path.resolve(__dirname, 'fixture-resolve')
+const fixtureConfigurationPath = path.resolve(__dirname, 'fixture-configuration')
 
 
 describe('babel', function () {
     before(function() {
         generatePackageJson({
-            [baseFixturePath]:packageJSON,
-            [resolveFixture]:packageJSONResolve
+            [baseFixturePath]: packageJSON,
+            [resolveFixture]: packageJSONResolve,
+            [fixtureConfigurationPath]: packageJSON
         })
-        setup(this, [baseFixturePath, resolveFixture])
+        setup(this, [baseFixturePath, resolveFixture, fixtureConfigurationPath])
     })
     it('init', function () {
         const compiler = CreateBabelCompiler()
@@ -89,6 +91,16 @@ describe('babel', function () {
             }).catch(function(reason){
                 expect.fail('compilation should not throw', 'it did', reason)
             })
+    })
+    it('should find correct configuration', function (){
+        const configName = '.babelrc'
+        const info = createExtensionInfo(configName, fixtureConfigurationPath, ignoreList)
+        const compiler = CreateBabelCompiler()
+        compiler.init({
+            api: createApi()
+        })
+        const config = compiler.getDynamicConfig!(info)
+        expect(config).to.deep.equal({})
     })
 })
 

@@ -47,6 +47,9 @@ export const defaultGetBy:{[k:string]:any} = {
     },
     [FindStrategy.fileName]: function (info:ExtensionApiOptions, options:findOptions) {
         const config = { config: null, save: false}
+        if (!info.configFiles){
+            return config
+        }
         try {
             const configVinyl = findByName(info.configFiles, options.fileName)
             if (configVinyl) {
@@ -74,9 +77,17 @@ export const defaultGetBy:{[k:string]:any} = {
     [FindStrategy.pjKeyName]: function(info:ExtensionApiOptions, options:findOptions){
         const workspaceDir = info.context && info.context.workspaceDir
         const componentDir = info.context && info.context.componentDir
-        const packageJson = loadPackageJsonSync(componentDir, workspaceDir)
+        let packageJson:{[k:string]:any} = {}
+        try {
+            packageJson = loadPackageJsonSync(componentDir, workspaceDir)
+        } catch(e){
+            return {
+                config: null,
+                save: false
+            }
+        }
         return {
-            config: packageJson[options.pjKeyName] ? packageJson[options.pjKeyName] : null,
+            config: packageJson && packageJson[options.pjKeyName] ? packageJson[options.pjKeyName] : null,
             save: true
         }
     }
@@ -86,13 +97,13 @@ export function findConfiguration(info:ExtensionApiOptions, options:findOptions,
     const defaultStrategy =  [
         FindStrategy.dynamicConfig,
         FindStrategy.fileName,
-        FindStrategy.defaultFilePaths,
+        // FindStrategy.defaultFilePaths,
         FindStrategy.raw,
         FindStrategy.pjKeyName,
         FindStrategy.default
     ]
     const strategy:Array<FindStrategy> =  options.strategy || defaultStrategy
-    const config = {config: {}, save: false}
+    const config:{config:any, save:boolean} = {config: {}, save: false}
     for (let method of strategy) {
         const configLookup = !!getBy[method] ? getBy[method](info, options): (console.log('unknown strategy to load configuration'), null)
         if (configLookup.config) {

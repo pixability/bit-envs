@@ -36,6 +36,7 @@ export function e2eHelper(i:e2eHelperInfo) {
                 prev[curr] =  './' + curr
                 return prev
             }, {})
+
             if (i.compilerName) {
                 bitJson.env.compiler = {
                     [`meta-${i.compilerName}`]: {
