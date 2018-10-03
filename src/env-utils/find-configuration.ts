@@ -80,15 +80,11 @@ export const defaultGetBy:{[k:string]:any} = {
         let packageJson:{[k:string]:any} = {}
         try {
             packageJson = loadPackageJsonSync(componentDir, workspaceDir)
-        } catch(e){
-            return {
-                config: null,
-                save: false
-            }
-        }
+        } catch(e){}
+        debugger
         return {
-            config: packageJson && packageJson[options.pjKeyName] ? packageJson[options.pjKeyName] : null,
-            save: true
+            config: packageJson && packageJson[options.pjKeyName] ? {[options.pjKeyName]:packageJson[options.pjKeyName]} : null,
+            save: !!(packageJson && packageJson[options.pjKeyName])
         }
     }
 }
@@ -105,6 +101,7 @@ export function findConfiguration(info:ExtensionApiOptions, options:findOptions,
     const strategy:Array<FindStrategy> =  options.strategy || defaultStrategy
     const config:{config:any, save:boolean} = {config: {}, save: false}
     for (let method of strategy) {
+
         const configLookup = !!getBy[method] ? getBy[method](info, options): (console.log('unknown strategy to load configuration'), null)
         if (configLookup.config) {
             Object.assign(config.config, configLookup.config)

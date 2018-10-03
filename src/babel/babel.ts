@@ -24,12 +24,7 @@ export function CreateBabelCompiler(name = '.babelrc') {
             }
         },
         getDynamicConfig: function(info: ExtensionApiOptions){
-            let config = findConfiguration(info, {
-                [FindStrategy.pjKeyName]: 'babel',
-                [FindStrategy.fileName]: name,
-                [FindStrategy.default]: defaultConfig,
-                [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js'],
-            })
+            let config = babelFindConfiguration(info, name)
             return config.save ? config.config : {}
         },
         action: function (info: ExtensionApiOptions) {
@@ -40,13 +35,7 @@ export function CreateBabelCompiler(name = '.babelrc') {
             // }
             // const rawBabelrc = vinylBabelrc!.contents!.toString()
             // const babelrc = JSON.parse(rawBabelrc)
-            debugger
-            let babelrc = findConfiguration(info, {
-                [FindStrategy.pjKeyName]: 'babel',
-                [FindStrategy.fileName]: name,
-                [FindStrategy.default]: defaultConfig,
-                [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js'],
-            }).config
+            let babelrc = babelFindConfiguration(info, name).config
             const componentDir = info.context && info.context.componentDir
 
             if (componentDir) {
@@ -120,3 +109,12 @@ function runBabel(file:Vinyl, options:object, distPath:string) {
 }
 
 export default CreateBabelCompiler()
+
+export function babelFindConfiguration(info:ExtensionApiOptions, name:string){
+    return findConfiguration(info, {
+        [FindStrategy.pjKeyName]: 'babel',
+        [FindStrategy.fileName]: name,
+        [FindStrategy.default]: defaultConfig,
+        [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js'],
+    })
+}

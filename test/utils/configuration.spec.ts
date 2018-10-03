@@ -46,8 +46,9 @@ describe('configuration', function() {
 
     it('should be found in package.json', function() {
         const info = createExtensionInfo('.babelrc', configPackageFixturePath, ignoreList )
-        const config = findConfiguration(info, {pjKeyName:'babel', fileName:''})
-        expect(config.config).to.deep.equal(packageJson.babel)
+        const findOptions = {pjKeyName:'babel', fileName:''}
+        const config = findConfiguration(info, findOptions)
+        expect(config.config[findOptions.pjKeyName]).to.deep.equal((packageJson as any)[findOptions.pjKeyName])
         expect(config.save).to.be.true
     })
 
