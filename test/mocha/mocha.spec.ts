@@ -75,6 +75,30 @@ describe('mocha', function () {
                 expect(allPassing.failures.length).to.equal(0)
             })
     })
+    it('should support dynamic config lookup', function () {
+        const tester = CreateMochaTester()
+        const testFiles = createFiles(baseFixturePath, ['.babelrc', 'package.json', 'package-lock.json', '.gitignore'])
+        const actionInfo = {
+            testFiles,
+            configFiles: [],
+            context: {
+                componentDir: baseFixturePath,
+                componentObject: {
+                    mainFile: '',
+                    dynamicConfig: {
+                        'require': ['babel-core/register', 'source-map-support/register'],
+                        'filesRequire': ['setup.js']
+                    }
+                },
+                rootDistDir: path.resolve(baseFixturePath, './dist')
+            }
+        }
+        tester.init({
+            api:createApi()
+        })
+        let config = tester.getDynamicConfig!(actionInfo)
+        expect(config).to.deep.equal({})
+    })
 })
 
 
