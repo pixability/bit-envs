@@ -13,7 +13,7 @@ describe('babel', function () {
     const helper = e2eHelper({baseFixturePath,
         mainFile:'b.js',
         compilerName:'babel',
-        confName: '.babelrc',
+        confName: ['.babelrc'],
         compilerPath})
     before(function () {
         generatePackageJson({[baseFixturePath]:packageJSON})

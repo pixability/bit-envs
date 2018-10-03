@@ -8,10 +8,12 @@ import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicP
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {
         init: function({ api }:{api:API}) {
+            debugger
             metaWebpack.logger = api.getLogger()
             return { write: true }
         },
         action: function(info: ExtensionApiOptions) {
+            debugger
             const configuration = require(findByName(info.configFiles, mainConfigName).path)
             adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, metaWebpack.logger!)
             const compiler = webpack(configuration)
@@ -42,6 +44,7 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
             })
         },
         getDynamicPackageDependencies: function(info: ExtensionApiOptions, babelConfigName = '.babelrc') {
+            debugger
             const packages: { [key: string]: string } = {}
             const configFile = findByName(info.configFiles, mainConfigName)
             const config = require(configFile.path)

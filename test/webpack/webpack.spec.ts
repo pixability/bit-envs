@@ -148,7 +148,7 @@ describe('Webpack', function () {
             generatePackageJson({[fixturePath]:packageJSONBabel})
             const configName = 'my-private-config.js'
             const compiler = CreateWebpackCompiler(configName)
-            const configs = [createConfigFile(fixturePath,configName), createConfigFile(fixturePath, 'my-private-rc')]
+            const configs = [createConfigFile(fixturePath,configName)!, createConfigFile(fixturePath, 'my-private-rc')!]
             const packageJSON = require(path.resolve(fixturePath, './package.json'))
 
             const context = {

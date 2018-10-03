@@ -13,7 +13,7 @@ export function createApi(){
     }
 }
 
-export function createConfigFile(baseFixturePath:string, name = 'webpack.config.js'):Vinyl {
+export function createConfigFile(baseFixturePath:string, name = 'webpack.config.js'): Vinyl   {
     const configPath = path.resolve(baseFixturePath, name)
     return new Vinyl({
         name: name,
@@ -25,7 +25,7 @@ export function createConfigFile(baseFixturePath:string, name = 'webpack.config.
 export function getVersion(packageJSON:any, name:string) {
     return _get(packageJSON, `dependencies[${name}]`) || _get(packageJSON, `devDependencies[${name}]`)
 }
-//@ts-ignore
+
 export function createFiles(fixturePath:string, skipFiles:Array<string> = [], acceptRule:string | null = null ):Array<Vinyl> {
     return fs.readdirSync(fixturePath)
     .filter(function(fileName) {
@@ -62,7 +62,24 @@ export function setup(context:Mocha.Context, paths: Array<string>) {
 export function generatePackageJson(toInstall: {[path:string]:any}){
     Object.keys(toInstall).forEach(function(fixturePath:string){
         if (fs.lstatSync(fixturePath).isDirectory()){
-                fs.writeJSONSync(`${fixturePath}/package.json`, toInstall[fixturePath])
-            }
+            fs.writeJSONSync(`${fixturePath}/package.json`, toInstall[fixturePath])
+        }
     })
+}
+
+export function createExtensionInfo (configName:string, fixturePath:string,  skipFiles: Array<string> = []):any {
+    const files = createFiles(fixturePath, skipFiles)
+    const config = fs.existsSync(path.resolve(fixturePath, configName)) ? createConfigFile(fixturePath, configName) : null
+    return {
+        files,
+        configFiles:  config ? [config]: [],
+        context: {
+            componentDir: fixturePath,
+            componentObject: {
+                mainFile: ''
+            },
+            rootDistDir: path.resolve(fixturePath, './dist')
+        },
+        rawConfig: {}
+    }
 }

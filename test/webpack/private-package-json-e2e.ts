@@ -5,7 +5,7 @@ const packageJson = {
         'file-loader': '1.1.11',
         rimraf: '2.6.2',
         'style-loader': '0.21.0',
-        'ts-loader': '4.4.2',
+        'babel-loader': '^8.0.4',
         'url-loader': '1.0.1',
         'webpack-cli': '3.0.8',
         typescript: '2.7.1'
