@@ -6,14 +6,12 @@ import {
     getBabelDynamicPackageDependencies,
     getPluginPackageName,
     getPresetPackageName,
-    findConfiguration,
-    FindStrategy
 } from '../env-utils'
-import {defaultConfig} from './default-configuration'
 import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
 import _get from 'lodash.get'
+import { babelFindConfiguration } from '../env-utils/babel-dependencies';
 
 export function CreateBabelCompiler(name = '.babelrc') {
     const metaBabelCompiler: CompilerExtension = {
@@ -35,7 +33,9 @@ export function CreateBabelCompiler(name = '.babelrc') {
             // }
             // const rawBabelrc = vinylBabelrc!.contents!.toString()
             // const babelrc = JSON.parse(rawBabelrc)
-            let babelrc = babelFindConfiguration(info, name).config
+            const babelrcFromfind = babelFindConfiguration(info, name)
+            const babelrc = _get(babelrcFromfind, 'config.babel', babelrcFromfind.config)
+
             const componentDir = info.context && info.context.componentDir
 
             if (componentDir) {
@@ -109,12 +109,3 @@ function runBabel(file:Vinyl, options:object, distPath:string) {
 }
 
 export default CreateBabelCompiler()
-
-export function babelFindConfiguration(info:ExtensionApiOptions, name:string){
-    return findConfiguration(info, {
-        [FindStrategy.pjKeyName]: 'babel',
-        [FindStrategy.fileName]: name,
-        [FindStrategy.default]: defaultConfig,
-        [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js'],
-    })
-}

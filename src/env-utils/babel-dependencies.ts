@@ -1,16 +1,16 @@
 import { Logger, ExtensionApiOptions } from './types';
-import { findByName, fillDependencyVersion, loadPackageJsonSync } from './compiler-utils';
+import { fillDependencyVersion, loadPackageJsonSync } from './compiler-utils';
+import { findConfiguration, FindStrategy } from './find-configuration';
+import {defaultConfig} from './default-babel-config'
 
-export function getBabelDynamicPackageDependencies(logger:Logger, name = '.babelrc') {
+import _get from 'lodash.get'
+
+export function getBabelDynamicPackageDependencies(_logger:Logger, name = '.babelrc') {
     return function (info: ExtensionApiOptions) {
         const dynamicPackageDependencies = {}
-        const vinylBabelrc = findByName(info.configFiles, name)
-        if (!vinylBabelrc) {
-            logger.log('could not find ', name)
-            throw new Error('could not find ' + name)
-        }
-        const rawBabelrc = vinylBabelrc!.contents!.toString()
-        const babelrc = JSON.parse(rawBabelrc)
+        const babelrcFromfind = babelFindConfiguration(info, name)
+        const babelrc = _get(babelrcFromfind, 'config.babel', babelrcFromfind.config)
+
         const pluginsNames = babelrc.plugins ?
             babelrc.plugins.map((pluginName:string|Array<string>)=> Array.isArray(pluginName) ? pluginName[0]: pluginName) :
             []
@@ -43,4 +43,14 @@ export function getPresetPackageName(pluginName: string) {
 
 export function getPrefixedPackageName(pluginName: string, prefix: string) {
     return pluginName.indexOf(prefix) !== 0 ? `${prefix}-${pluginName}` : pluginName
+}
+
+
+export function babelFindConfiguration(info:ExtensionApiOptions, name:string){
+    return findConfiguration(info, {
+        [FindStrategy.pjKeyName]: 'babel',
+        [FindStrategy.fileName]: name,
+        [FindStrategy.default]: defaultConfig,
+        [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js'],
+    })
 }

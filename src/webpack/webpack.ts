@@ -3,7 +3,7 @@ import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
 import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/types'
-import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicPackageDependencies} from '../env-utils'
+import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicPackageDependencies, findConfiguration, FindStrategy} from '../env-utils'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {
@@ -11,8 +11,15 @@ export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):Comp
             metaWebpack.logger = api.getLogger()
             return { write: true }
         },
+        getDynamicConfig: function(info: ExtensionApiOptions) {
+            let config = webpackFindConfiguration(info, mainConfigName)
+            return config.save ? config.config : {}
+        },
         action: function(info: ExtensionApiOptions) {
-            const configuration = require(findByName(info.configFiles, mainConfigName).path)
+            // const configuration = require(findByName(info.configFiles, mainConfigName).path)
+            const fromFind = webpackFindConfiguration(info, mainConfigName)
+            const configuration = _get(fromFind, 'config.webpack', fromFind.config)
+
             adjustConfigurationIfNeeded(configuration, info.context.componentObject.mainFile, metaWebpack.logger!)
             const compiler = webpack(configuration)
             const fs = new MemoryFS()
@@ -104,5 +111,14 @@ function adjustConfigurationIfNeeded(configuration:any, mainFile:string, _logger
         configuration.entry = {main: mainFile}
     }
 }
+export function webpackFindConfiguration(info:ExtensionApiOptions, name:string){
+    return findConfiguration(info, {
+        [FindStrategy.pjKeyName]: 'webpack',
+        [FindStrategy.fileName]: name,
+        [FindStrategy.default]: {},
+        [FindStrategy.defaultFilePaths]: [`./${name}`],
+    })
+}
+
 
 export default CreateWebpackCompiler()
