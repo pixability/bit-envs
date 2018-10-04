@@ -31,6 +31,7 @@ export function CreateJestTester(): TesterExtension {
                 write: true
             }
         },
+
         getDynamicConfig: function(info: ActionTesterOptions) {
             let config = jestFindConfiguration(info)
             return config.save ? config.config : {}
