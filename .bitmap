@@ -232,19 +232,9 @@
     "bit.test-envs/internal/env-utils@0.0.17": {
         "files": [
             {
-                "relativePath": "src/env-utils/babel-dependencies.ts",
-                "test": false,
-                "name": "babel-dependencies.ts"
-            },
-            {
                 "relativePath": "src/env-utils/compiler-utils.ts",
                 "test": false,
                 "name": "compiler-utils.ts"
-            },
-            {
-                "relativePath": "src/env-utils/default-babel-config.ts",
-                "test": false,
-                "name": "default-babel-config.ts"
             },
             {
                 "relativePath": "src/env-utils/index.ts",

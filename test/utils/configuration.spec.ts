@@ -1,6 +1,6 @@
 import { setup, generatePackageJson, createExtensionInfo } from '../envs-test-utils'
 import path from 'path'
-import {findConfiguration, FindStrategy , defaultGetBy} from '../../src/env-utils/find-configuration'
+import {findConfiguration, FindStrategy , defaultGetBy} from '../../src/find-configuration'
 import { expect, use } from 'chai';
 import subset from 'chai-subset'
 import {ignoreList} from '../babel/ignore-list'
