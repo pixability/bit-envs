@@ -14,7 +14,6 @@ import {
 } from '../env-utils/'
 import {
     loadPackageJsonSync,
-    findByName,
     fillDependencyVersion
 } from '../env-utils'
 import {FindStrategy, findConfiguration} from '../../src/find-configuration'
@@ -71,10 +70,8 @@ export function CreateJestTester(): TesterExtension {
                 return packages
             }
 
-            const config = require(findByName(
-                info.configFiles,
-                'jest.config.js'
-            ).path)
+            const configFromFind = jestFindConfiguration(info)
+            const config = _get(configFromFind, 'config.jest', configFromFind.config)
 
             const paths = [
                 'transform',
