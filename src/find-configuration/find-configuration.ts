@@ -38,9 +38,6 @@ export const defaultGetBy:{[k:string]:any} = {
             if(fs.existsSync(fullConfigPath)){
                 config.config = readConfigByFileEnding(fullConfigPath)
                 config.save = !!config.config
-                if (config.save){
-                    throw new Error(`Default configuration path found: configure ${fullConfigPath} in bit.json compiler/tester files entry.`)
-                }
             }
         }
         return config
