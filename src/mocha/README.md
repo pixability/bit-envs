@@ -39,8 +39,8 @@ The result should look as follows:
         "tester": {
             "bit.test-envs/testers/mocha@0.0.9": {
                 "rawConfig": {
-                    "require": ['babel-core/register', 'source-map-support/register'],
-                    "require": ['setup.js']
+                    "require": ["babel-core/register", "source-map-support/register"],
+                    "require": ["setup.js"]
                 }
             }
         }
