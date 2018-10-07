@@ -536,7 +536,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "compilers/webapck@0.0.24": {
+    "bit.test-envs/compilers/webapck@0.0.24": {
         "files": [
             {
                 "relativePath": "src/webpack/default-config.ts",
@@ -546,7 +546,7 @@
         ],
         "mainFile": "src/webpack/default-config.ts",
         "origin": "AUTHORED",
-        "exported": false
+        "exported": true
     },
     "version": "13.0.5-dev.11"
 }
