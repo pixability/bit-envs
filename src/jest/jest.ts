@@ -15,10 +15,9 @@ import {
 import {
     loadPackageJsonSync,
     findByName,
-    fillDependencyVersion,
-    FindStrategy,
-    findConfiguration
+    fillDependencyVersion
 } from '../env-utils'
+import {FindStrategy, findConfiguration} from '../../src/find-configuration'
 import { convertJestFormatToBitFormat } from './result-adapter'
 
 export default CreateJestTester()
@@ -31,6 +30,7 @@ export function CreateJestTester(): TesterExtension {
                 write: true
             }
         },
+
         getDynamicConfig: function(info: ActionTesterOptions) {
             let config = jestFindConfiguration(info)
             return config.save ? config.config : {}

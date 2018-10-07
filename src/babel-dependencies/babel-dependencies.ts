@@ -1,6 +1,5 @@
-import { Logger, ExtensionApiOptions } from './types';
-import { fillDependencyVersion, loadPackageJsonSync } from './compiler-utils';
-import { findConfiguration, FindStrategy } from './find-configuration';
+import { Logger, ExtensionApiOptions, fillDependencyVersion, loadPackageJsonSync} from '../env-utils';
+import { findConfiguration, FindStrategy } from '../find-configuration';
 import {defaultConfig} from './default-babel-config'
 
 import _get from 'lodash.get'
@@ -8,8 +7,8 @@ import _get from 'lodash.get'
 export function getBabelDynamicPackageDependencies(_logger:Logger, name = '.babelrc') {
     return function (info: ExtensionApiOptions) {
         const dynamicPackageDependencies = {}
-        const babelrcFromfind = babelFindConfiguration(info, name)
-        const babelrc = _get(babelrcFromfind, 'config.babel', babelrcFromfind.config)
+        const babelrcFromFind = babelFindConfiguration(info, name)
+        const babelrc = _get(babelrcFromFind, 'config.babel', babelrcFromFind.config)
 
         const pluginsNames = babelrc.plugins ?
             babelrc.plugins.map((pluginName:string|Array<string>)=> Array.isArray(pluginName) ? pluginName[0]: pluginName) :

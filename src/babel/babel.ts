@@ -1,17 +1,14 @@
-/// <reference path='./babel-core.d.ts' />
 import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
 import {
-    // findByName,
-    getBabelDynamicPackageDependencies,
     getPluginPackageName,
     getPresetPackageName,
-} from '../env-utils'
+} from '../babel-dependencies'
 import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
 import _get from 'lodash.get'
-import { babelFindConfiguration } from '../env-utils/babel-dependencies';
+import { babelFindConfiguration, getBabelDynamicPackageDependencies } from '../babel-dependencies';
 
 export function CreateBabelCompiler(name = '.babelrc') {
     const metaBabelCompiler: CompilerExtension = {
@@ -26,13 +23,6 @@ export function CreateBabelCompiler(name = '.babelrc') {
             return config.save ? config.config : {}
         },
         action: function (info: ExtensionApiOptions) {
-            // const vinylBabelrc = findByName(info.configFiles, name)
-            // if (!vinylBabelrc) {
-            //     metaBabelCompiler.logger && metaBabelCompiler.logger.error('could not find ', name)
-            //     throw new Error('could not find ' + name)
-            // }
-            // const rawBabelrc = vinylBabelrc!.contents!.toString()
-            // const babelrc = JSON.parse(rawBabelrc)
             const babelrcFromfind = babelFindConfiguration(info, name)
             const babelrc = _get(babelrcFromfind, 'config.babel', babelrcFromfind.config)
 

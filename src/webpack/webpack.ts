@@ -3,7 +3,9 @@ import MemoryFS from 'memory-fs'
 import Vinyl from 'vinyl'
 import _get from 'lodash.get'
 import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/types'
-import {loadPackageJsonSync, fillDependencyVersion, findByName, getBabelDynamicPackageDependencies, findConfiguration, FindStrategy} from '../env-utils'
+import {loadPackageJsonSync, fillDependencyVersion, findByName} from '../env-utils'
+import {findConfiguration, FindStrategy } from '../find-configuration'
+import {getBabelDynamicPackageDependencies} from '../babel-dependencies'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {

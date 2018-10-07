@@ -1,5 +1,5 @@
-import { loadPackageJsonSync, findByName } from './compiler-utils';
-import {ExtensionApiOptions} from './types'
+
+import { loadPackageJsonSync, findByName, ExtensionApiOptions } from '../env-utils';
 import _ from 'lodash'
 import path from 'path'
 import fs from 'fs-extra'
