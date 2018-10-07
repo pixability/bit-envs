@@ -125,13 +125,8 @@ describe('configuration', function() {
                 defaultFilePaths: ['./.babelrc']
 
             }
-            try {
-                findConfiguration(info, findOptions )
-            } catch(e) {
-                return
-            }
-            expect.fail('', '', 'find configuration should throw')
-
+            let config = findConfiguration(info, findOptions ).config
+            expect(config).to.deep.equal(fs.readJsonSync(path.resolve(__dirname, './fixture-config-bit-file/.babelrc')))
 
             // expect(config.config).to.deep.equal(fs.readJSONSync(path.resolve(configFileFixturePath, '.babelrc')))
             // expect(config.save).to.be.true
