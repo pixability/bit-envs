@@ -61,6 +61,7 @@
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "memory-fs": "^0.4.1",
+    "parse5": "^5.1.0",
     "resolve": "^1.8.1",
     "vinyl": "^2.2.0",
     "webpack": "^4.16.1"

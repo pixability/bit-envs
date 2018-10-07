@@ -81,7 +81,7 @@ export const defaultGetBy:{[k:string]:any} = {
         try {
             packageJson = loadPackageJsonSync(componentDir, workspaceDir)
         } catch(e){}
-        debugger
+
         return {
             config: packageJson && packageJson[options.pjKeyName] ? {[options.pjKeyName]:packageJson[options.pjKeyName]} : null,
             save: !!(packageJson && packageJson[options.pjKeyName])
@@ -93,7 +93,7 @@ export function findConfiguration(info:ExtensionApiOptions, options:findOptions,
     const defaultStrategy =  [
         FindStrategy.dynamicConfig,
         FindStrategy.fileName,
-        // FindStrategy.defaultFilePaths,
+        FindStrategy.defaultFilePaths,
         FindStrategy.raw,
         FindStrategy.pjKeyName,
         FindStrategy.default

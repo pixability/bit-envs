@@ -117,7 +117,7 @@ describe('configuration', function() {
             expect(config.save).to.be.false
         })
 
-        xit('should support default file paths', function() {
+        it('should support default file paths', function() {
             const info = createExtensionInfo('.lol', configFileFixturePath, ignoreList )
             const findOptions = {
                 pjKeyName: 'babel',
