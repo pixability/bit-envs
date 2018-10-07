@@ -14,7 +14,6 @@ import {
 } from '../env-utils/'
 import {
     loadPackageJsonSync,
-    findByName,
     fillDependencyVersion
 } from '../env-utils'
 import {FindStrategy, findConfiguration} from '../../src/find-configuration'

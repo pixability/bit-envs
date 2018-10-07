@@ -536,5 +536,17 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "compilers/webapck": {
+        "files": [
+            {
+                "relativePath": "src/webpack/default-config.ts",
+                "test": false,
+                "name": "default-config.ts"
+            }
+        ],
+        "mainFile": "src/webpack/default-config.ts",
+        "origin": "AUTHORED",
+        "exported": false
+    },
     "version": "13.0.5-dev.11"
 }

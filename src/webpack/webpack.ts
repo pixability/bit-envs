@@ -6,6 +6,7 @@ import {CompilerExtension, ExtensionApiOptions, API ,Logger} from '../env-utils/
 import {loadPackageJsonSync, fillDependencyVersion, findByName} from '../env-utils'
 import {findConfiguration, FindStrategy } from '../find-configuration'
 import {getBabelDynamicPackageDependencies} from '../babel-dependencies'
+import DefaulftWebapckConfig from './default-config'
 
 export function CreateWebpackCompiler(mainConfigName = 'webpack.config.js'):CompilerExtension {
     const metaWebpack: CompilerExtension = {
@@ -117,7 +118,7 @@ export function webpackFindConfiguration(info:ExtensionApiOptions, name:string){
     return findConfiguration(info, {
         [FindStrategy.pjKeyName]: 'webpack',
         [FindStrategy.fileName]: name,
-        [FindStrategy.default]: {},
+        [FindStrategy.default]: DefaulftWebapckConfig,
         [FindStrategy.defaultFilePaths]: [`./${name}`],
     })
 }
