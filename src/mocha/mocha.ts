@@ -16,10 +16,12 @@ export function CreateMochaTester(): TesterExtension {
             }
         },
         getDynamicConfig: function (info: ActionTesterOptions) {
+            // console.log('getDynamicConfig')
             let config = mochaFindConfiguration(info)
             return config.save ? config.config : {}
         },
         action: function (info: ActionTesterOptions) {
+            // console.log('action')
             const correctFolder = info.context.componentDir || info.context.workspaceDir
             const privateRequire = createPrivateRequire(correctFolder)
             _get(info, 'context.componentObject.dynamicConfig.require', []).forEach(function(toRequire:string){
@@ -56,6 +58,7 @@ export function CreateMochaTester(): TesterExtension {
             }
         },
         getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
+            // console.log('getDynamicPackageDependencies')
             const packages = {}
             const packageJson = loadPackageJsonSync(info.context.componentDir, info.context.workspaceDir)
             if (!packageJson) {
