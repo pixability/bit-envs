@@ -2,9 +2,9 @@ import { TesterExtension, ExtensionApiOptions, API, ActionTesterOptions } from '
 import { loadPackageJsonSync, fillDependencyVersion } from '../env-utils'
 import { FindStrategy, findConfiguration} from '../../src/find-configuration'
 import { JSONReporter } from './json-reporter'
+import {createPrivateRequire, cleanPrivateRequire} from '../env-utils'
 import Mocha, {Test} from 'mocha'
 import _get from 'lodash.get'
-import fs from 'fs-extra'
 import path from 'path'
 
 export function CreateMochaTester(): TesterExtension {
@@ -118,31 +118,7 @@ function normalizeResults(mochaJsonResults: any, file: string) {
     }
 }
 
-const IGNORE_FOLDER = '.bitTmp'
 
-function createPrivateRequire(directory:string) {
-    const privateRequireContent = `
-    function privateRequire(pathToModule){
-        return require(pathToModule)
-    }
-    module.exports = privateRequire
-    `
-    const tempFolderInComp = path.resolve(directory, IGNORE_FOLDER)
-    if(!fs.existsSync(tempFolderInComp)) {
-        fs.mkdirpSync(tempFolderInComp)
-    }
-    const pathToDynamicScript = path.resolve(tempFolderInComp, 'private-require.js')
-    fs.writeFileSync(pathToDynamicScript, privateRequireContent, { encoding:'utf8' })
-
-    return require(pathToDynamicScript)
-
-}
-
-function cleanPrivateRequire(directory:string) {
-    const pathToDynamicScript = path.resolve(directory, IGNORE_FOLDER, 'private-require.js')
-    fs.unlinkSync(pathToDynamicScript)
-
-}
 export function mochaFindConfiguration(info:ExtensionApiOptions){
     const fileName = 'mocha.opts'
     return findConfiguration(info, {
