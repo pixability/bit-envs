@@ -17,3 +17,7 @@ export {
 } from './types'
 
 
+export {
+    cleanPrivateRequire,
+    createPrivateRequire
+} from './private-require'

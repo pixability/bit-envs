@@ -3,15 +3,15 @@ import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
 import {defaultConfig} from './default-configuration'
-require('jest-cli')
-
 import {
     TesterExtension,
     API,
     ActionTesterOptions,
     ExtensionApiOptions,
-    Logger
-} from '../env-utils/types'
+    Logger,
+    createPrivateRequire,
+    cleanPrivateRequire
+} from '../env-utils/'
 import {
     loadPackageJsonSync,
     findByName,
@@ -43,8 +43,11 @@ export function CreateJestTester(): TesterExtension {
 
             const outputFile = resultHandler.preTest()
             // const jestPath = Object.keys(require.cache).find((elem) => !!~elem.indexOf('jest-cli/bin/jest')) //path.resolve(__dirname, '../../node_modules/.bin/jest')
-            const jestPath = require.resolve('jest-cli/bin/jest')
+            const privateRequire = createPrivateRequire(directory, 'require.resolve(pathToModule)')
 
+            // const jestPath = require.resolve('jest/bin/jest')
+            const jestPath = privateRequire('jest/bin/jest')
+            cleanPrivateRequire(directory)
             const testFilePath = info.testFiles.map((f)=>f.path)
             const oldDir = process.cwd()
             process.chdir(directory)
