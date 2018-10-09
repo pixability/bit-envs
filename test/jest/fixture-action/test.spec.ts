@@ -11,4 +11,7 @@ describe('basic', function (){
     it('sub', function() {
         expect(sub(3, 1)).to.equal(2)
     })
+    it('supports preloading files with the jest `setupFiles` field', function() {
+        expect(global.jestSetupFilesRun).to.equal(true)
+    })
 })
