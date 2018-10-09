@@ -16,18 +16,16 @@ export function CreateMochaTester(): TesterExtension {
             }
         },
         getDynamicConfig: function (info: ActionTesterOptions) {
-            // console.log('getDynamicConfig')
             let config = mochaFindConfiguration(info)
-            return config.save ? config.config : {}
+            return config.save ? config.config : info.rawConfig
         },
         action: function (info: ActionTesterOptions) {
-            // console.log('action')
             const correctFolder = info.context.componentDir || info.context.workspaceDir
             const privateRequire = createPrivateRequire(correctFolder)
-            _get(info, 'context.componentObject.dynamicConfig.require', []).forEach(function(toRequire:string){
+            _get(info, 'dynamicConfig.require', []).forEach(function(toRequire:string){
                 privateRequire(toRequire)
             })
-            _get(info, 'context.componentObject.dynamicConfig.filesRequire', []).forEach(function(toRequire:string){
+            _get(info, 'dynamicConfig.filesRequire', []).forEach(function(toRequire:string){
                 require(path.resolve(correctFolder, toRequire))
             })
             cleanPrivateRequire(correctFolder)
