@@ -7,7 +7,7 @@ A tester component for authoring components with mocha unit testing.
 [import docs](https://docs.bitsrc.io/docs/cli-import.html#import-a-new-environment)
 
 ```bash
-bit import bit.test-envs/testers/mocha -c
+bit import bit.test-envs/testers/mocha -t
 ```
 
 Then build using [bit test](https://docs.bitsrc.io/docs/cli-test.html).
