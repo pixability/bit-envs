@@ -13,6 +13,6 @@ module.exports = {
         "/node_modules/",
         "/.git/"
       ],
-      "setupFiles": [],
+      "setupFiles": ["<rootDir>/setup.js"],
       "testEnvironment": "node"
   };
