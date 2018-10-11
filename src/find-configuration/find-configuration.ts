@@ -15,7 +15,7 @@ export const enum FindStrategy {
 
 export type findOptions = {
     [FindStrategy.pjKeyName]:string,
-    [FindStrategy.fileName]:string,
+    [FindStrategy.fileName]?:string,
     [FindStrategy.default]?: any,
     [FindStrategy.defaultFilePaths]?: Array<string>,
     strategy?: Array<FindStrategy>

@@ -123,12 +123,9 @@ function normalizeResults(mochaJsonResults: any, file: string) {
 
 
 export function mochaFindConfiguration(info:ExtensionApiOptions){
-    const fileName = 'mocha.opts'
     return findConfiguration(info, {
         [FindStrategy.pjKeyName]: 'mocha',
-        [FindStrategy.fileName]: fileName,
-        [FindStrategy.default]: {},
-        [FindStrategy.defaultFilePaths]: [`./test/${fileName}`],
+        [FindStrategy.default]: {}
     })
 }
 
