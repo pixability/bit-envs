@@ -6,6 +6,6 @@ describe('basic', function (){
         expect(run()).to.equal(0)
     })
     it('should preload a file specified with `filesRequire` in the config', function() {
-        expect(global.mochaSetupTestRun).to.equal(true)
+        expect(global.mochaSetupTestRun).to.be.true
     })
 })
