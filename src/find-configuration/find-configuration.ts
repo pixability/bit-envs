@@ -15,7 +15,7 @@ export const enum FindStrategy {
 
 export type findOptions = {
     [FindStrategy.pjKeyName]:string,
-    [FindStrategy.fileName]:string,
+    [FindStrategy.fileName]?:string,
     [FindStrategy.default]?: any,
     [FindStrategy.defaultFilePaths]?: Array<string>,
     strategy?: Array<FindStrategy>
@@ -48,7 +48,7 @@ export const defaultGetBy:{[k:string]:any} = {
             return config
         }
         try {
-            const configVinyl = findByName(info.configFiles, options.fileName)
+            const configVinyl = findByName(info.configFiles, options.fileName || '')
             if (configVinyl) {
                 config.config = readConfigByFileEnding(configVinyl.path, configVinyl.contents!.toString())
             }
