@@ -49,14 +49,14 @@ describe('mocha', function () {
         const actionInfo = {
             testFiles,
             configFiles: [],
+            dynamicConfig: {
+                'require': ['babel-core/register', 'source-map-support/register'],
+                'filesRequire': ['setup.js']
+            },
             context: {
                 componentDir: baseFixturePath,
                 componentObject: {
-                    mainFile: '',
-                    dynamicConfig: {
-                        'require': ['babel-core/register', 'source-map-support/register'],
-                        'filesRequire': ['setup.js']
-                    }
+                    mainFile: ''
                 },
                 rootDistDir: path.resolve(baseFixturePath, './dist')
             }
@@ -81,14 +81,15 @@ describe('mocha', function () {
         const actionInfo = {
             testFiles,
             configFiles: [],
+            dynamicConfig: {
+                'require': ['babel-core/register', 'source-map-support/register'],
+                'filesRequire': ['setup.js']
+            },
+            rawConfig: {foo: 'bar'},
             context: {
                 componentDir: baseFixturePath,
                 componentObject: {
                     mainFile: '',
-                    dynamicConfig: {
-                        'require': ['babel-core/register', 'source-map-support/register'],
-                        'filesRequire': ['setup.js']
-                    }
                 },
                 rootDistDir: path.resolve(baseFixturePath, './dist')
             }
@@ -97,7 +98,7 @@ describe('mocha', function () {
             api:createApi()
         })
         let config = tester.getDynamicConfig!(actionInfo)
-        expect(config).to.deep.equal({})
+        expect(config).to.deep.equal(actionInfo.rawConfig)
     })
 })
 
