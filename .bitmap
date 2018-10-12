@@ -382,11 +382,6 @@
                 "name": "b.js"
             },
             {
-                "relativePath": "test/babel/fixture-configuration/package.json",
-                "test": false,
-                "name": "package.json"
-            },
-            {
                 "relativePath": "test/babel/fixture-empty/.babelrc.empty",
                 "test": false,
                 "name": ".babelrc.empty"
@@ -479,11 +474,6 @@
                 "name": "b.js"
             },
             {
-                "relativePath": "test/utils/fixture-config-bit-file/package.json",
-                "test": false,
-                "name": "package.json"
-            },
-            {
                 "relativePath": "test/utils/fixture-config-bit-raw/a.js",
                 "test": false,
                 "name": "a.js"
@@ -494,11 +484,6 @@
                 "name": "b.js"
             },
             {
-                "relativePath": "test/utils/fixture-config-bit-raw/package.json",
-                "test": false,
-                "name": "package.json"
-            },
-            {
                 "relativePath": "test/utils/fixture-config-package/a.js",
                 "test": false,
                 "name": "a.js"
@@ -507,11 +492,6 @@
                 "relativePath": "test/utils/fixture-config-package/b.js",
                 "test": false,
                 "name": "b.js"
-            },
-            {
-                "relativePath": "test/utils/fixture-config-package/package.json",
-                "test": false,
-                "name": "package.json"
             }
         ],
         "mainFile": "src/find-configuration/index.ts",
@@ -541,5 +521,5 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "version": "13.0.5-dev.11"
+    "version": "13.0.5-dev.14"
 }
