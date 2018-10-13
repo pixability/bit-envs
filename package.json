@@ -13,8 +13,7 @@
     "test:circle:e2e": "mocha --require ts-node/register/transpile-only --require source-map-support/register --reporter mocha-circleci-reporter test/**/*.e2e.ts",
     "test:ci": "npm run test && npm run test:e2e",
     "clean": "rimraf ./dist/*",
-    "lint": "tslint --project .",
-    "lint:fix": "prettier-standard **/*.ts"
+    "lint": "tslint --project ."
   },
   "repository": {
     "type": "git",
@@ -48,7 +47,6 @@
     "mocha": "^5.2.0",
     "mocha-circleci-reporter": "0.0.3",
     "nyc": "^12.0.2",
-    "prettier-standard": "^8.0.1",
     "rimraf": "^2.6.2",
     "sinon": "^6.3.4",
     "sinon-chai": "^3.2.0",
@@ -101,11 +99,5 @@
       "html"
     ],
     "all": true
-  },
-  "standard": {
-    "parser": "typescript-eslint-parser",
-    "plugins": [
-      "typescript"
-    ]
   }
 }
