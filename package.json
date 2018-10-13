@@ -6,12 +6,15 @@
   "scripts": {
     "build": "tsc -d",
     "test:watch": "mocha -w --require ts-node/register/transpile-only --require source-map-support/register test/**/*.spec.ts",
-    "test": "mocha --require ts-node/register/transpile-only --require source-map-support/register test/**/*.spec.ts",
-    "test:e2e": " mocha --require ts-node/register/transpile-only --require source-map-support/register test/**/*.e2e.ts",
+    "test": "npm run lint && npm run test-only",
+    "test-only": "mocha --require ts-node/register/transpile-only --require source-map-support/register test/**/*.spec.ts",
+    "test:e2e": "mocha --require ts-node/register/transpile-only --require source-map-support/register test/**/*.e2e.ts",
     "test:circle": "mocha --require ts-node/register/transpile-only --require source-map-support/register --reporter mocha-circleci-reporter test/**/*.spec.ts",
     "test:circle:e2e": "mocha --require ts-node/register/transpile-only --require source-map-support/register --reporter mocha-circleci-reporter test/**/*.e2e.ts",
     "test:ci": "npm run test && npm run test:e2e",
-    "clean": "rimraf ./dist/*"
+    "clean": "rimraf ./dist/*",
+    "lint": "tslint --project .",
+    "lint:fix": "prettier-standard **/*.ts"
   },
   "repository": {
     "type": "git",
@@ -40,16 +43,21 @@
     "bit-bin": "13.0.5-dev.8",
     "chai": "^4.1.2",
     "chai-subset": "^1.6.0",
+    "eslint-plugin-typescript": "^0.12.0",
     "eval": "^0.1.2",
     "mocha": "^5.2.0",
     "mocha-circleci-reporter": "0.0.3",
     "nyc": "^12.0.2",
+    "prettier-standard": "^8.0.1",
     "rimraf": "^2.6.2",
     "sinon": "^6.3.4",
     "sinon-chai": "^3.2.0",
     "source-map-support": "^0.5.6",
     "ts-node": "^7.0.0",
-    "typescript": "^2.9.2"
+    "tslint": "^5.11.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^2.9.2",
+    "typescript-eslint-parser": "^20.0.0"
   },
   "dependencies": {
     "babel-core": "^6.26.3",
@@ -64,6 +72,8 @@
     "json5": "^2.1.0",
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
+    "lodash.isnil": "^4.0.0",
+    "lodash.pickby": "^4.6.0",
     "memory-fs": "^0.4.1",
     "node-sass": "^4.9.3",
     "parse5": "^5.1.0",
@@ -91,5 +101,11 @@
       "html"
     ],
     "all": true
+  },
+  "standard": {
+    "parser": "typescript-eslint-parser",
+    "plugins": [
+      "typescript"
+    ]
   }
 }
