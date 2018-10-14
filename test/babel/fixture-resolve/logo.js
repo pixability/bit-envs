@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import MyBitLogo from './logo.svg';
 // const MyBitLogo = require('./logo.svg')
 /**
