@@ -1,1 +1,6 @@
-export {findConfiguration, findOptions, FindStrategy, defaultGetBy} from './find-configuration'
+export {
+  findConfiguration,
+  findOptions,
+  FindStrategy,
+  defaultGetBy
+} from './find-configuration'
