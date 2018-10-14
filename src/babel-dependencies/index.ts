@@ -1,6 +1,6 @@
 export {
-    getBabelDynamicPackageDependencies,
-    babelFindConfiguration,
-    getPresetPackageName,
-    getPluginPackageName
+  getBabelDynamicPackageDependencies,
+  babelFindConfiguration,
+  getPresetPackageName,
+  getPluginPackageName
 } from './babel-dependencies'
