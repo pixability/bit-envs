@@ -76,6 +76,66 @@
                 "name": "tsconfig.json"
             },
             {
+                "relativePath": "test/jest/fixture-configuration/add.ts",
+                "test": false,
+                "name": "add.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-configuration/index.ts",
+                "test": false,
+                "name": "index.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-configuration/package.json",
+                "test": false,
+                "name": "package.json"
+            },
+            {
+                "relativePath": "test/jest/fixture-configuration/sub.ts",
+                "test": false,
+                "name": "sub.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/add.ts",
+                "test": false,
+                "name": "add.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/index.ts",
+                "test": false,
+                "name": "index.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/jest.config.js",
+                "test": false,
+                "name": "jest.config.js"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/setup.js",
+                "test": false,
+                "name": "setup.js"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/sub.ts",
+                "test": false,
+                "name": "sub.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/test.spec.ts",
+                "test": false,
+                "name": "test.spec.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/test2.spec.ts",
+                "test": false,
+                "name": "test2.spec.ts"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/tsconfig.json",
+                "test": false,
+                "name": "tsconfig.json"
+            },
+            {
                 "relativePath": "test/jest/fixture/.npm-skip",
                 "test": false,
                 "name": ".npm-skip"
@@ -395,6 +455,26 @@
                 "relativePath": "test/babel/fixture-empty/b.js",
                 "test": false,
                 "name": "b.js"
+            },
+            {
+                "relativePath": "test/babel/fixture-resolve/.babelrc",
+                "test": false,
+                "name": ".babelrc"
+            },
+            {
+                "relativePath": "test/babel/fixture-resolve/logo.js",
+                "test": false,
+                "name": "logo.js"
+            },
+            {
+                "relativePath": "test/babel/fixture-resolve/logo.svg",
+                "test": false,
+                "name": "logo.svg"
+            },
+            {
+                "relativePath": "test/babel/fixture-resolve/package.json",
+                "test": false,
+                "name": "package.json"
             },
             {
                 "relativePath": "test/babel/fixture/.babelrc",
