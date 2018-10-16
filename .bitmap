@@ -335,6 +335,11 @@
                 "name": "base-reporter.ts"
             },
             {
+                "relativePath": "src/mocha/configuration-parser.ts",
+                "test": false,
+                "name": "configuration-parser.ts"
+            },
+            {
                 "relativePath": "src/mocha/index.ts",
                 "test": false,
                 "name": "index.ts"
@@ -348,6 +353,11 @@
                 "relativePath": "src/mocha/mocha.ts",
                 "test": false,
                 "name": "mocha.ts"
+            },
+            {
+                "relativePath": "test/mocha/configuration-parser.spec.ts",
+                "test": true,
+                "name": "configuration-parser.spec.ts"
             },
             {
                 "relativePath": "test/mocha/fixture/.babelrc",

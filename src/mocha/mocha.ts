@@ -5,10 +5,10 @@ import {
   ActionTesterOptions
 } from '../env-utils/types'
 import {
-    loadPackageJsonSync,
-    fillDependencyVersion,
-    createPrivateRequire,
-    cleanPrivateRequire
+  loadPackageJsonSync,
+  fillDependencyVersion,
+  createPrivateRequire,
+  cleanPrivateRequire
 } from '../env-utils'
 import { FindStrategy, findConfiguration } from '../../src/find-configuration'
 import { JSONReporter } from './json-reporter'
@@ -26,7 +26,14 @@ export function CreateMochaTester (): TesterExtension {
     },
     getDynamicConfig: function (info: ActionTesterOptions) {
       let config = mochaFindConfiguration(info)
-      return config.save ? config.config : info.rawConfig
+      const rawConfigFilesRequire = _get(info, 'rawConfig.filesRequire', [])
+      const filesRequire =
+        config.save && config.config && config.config.mochaRequire
+          ? rawConfigFilesRequire.concat(config.config.mochaRequire)
+          : rawConfigFilesRequire
+      return config.save
+        ? Object.assign({}, config.config, { filesRequire })
+        : info.rawConfig
     },
     action: function (info: ActionTesterOptions) {
       const correctFolder =
@@ -71,7 +78,6 @@ export function CreateMochaTester (): TesterExtension {
       }
     },
     getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
-      // console.log('getDynamicPackageDependencies')
       const packages = {}
       const packageJson = loadPackageJsonSync(
         info.context.componentDir,
@@ -139,9 +145,11 @@ function normalizeResults (mochaJsonResults: any, file: string) {
 }
 
 export function mochaFindConfiguration (info: ExtensionApiOptions) {
+  const fileName = 'mocha.opts'
   return findConfiguration(info, {
     [FindStrategy.pjKeyName]: 'mocha',
-    [FindStrategy.default]: {}
+    [FindStrategy.default]: {},
+    [FindStrategy.defaultFilePaths]: [`./test/${fileName}`]
   })
 }
 

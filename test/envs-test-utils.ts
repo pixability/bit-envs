@@ -58,11 +58,13 @@ export function createFiles (
 }
 
 export function setup (context: Mocha.Context, paths: Array<string>) {
-  if (process.env['NO_INSTALL']) {
-    return
-  }
-
+  if (process.env['NO_INSTALL']) return
   context.timeout(1000 * 1000)
+  return installPaths(paths)
+}
+
+export function installPaths (paths: Array<string>) {
+  if (process.env['NO_INSTALL']) return
   paths.forEach(function (fixturePath) {
     if (
       fs.lstatSync(fixturePath).isDirectory() &&
@@ -70,7 +72,8 @@ export function setup (context: Mocha.Context, paths: Array<string>) {
     ) {
       const cwd = process.cwd()
       process.chdir(fixturePath)
-      child_process.execSync('npm i')
+      // filter output from test results
+      child_process.execSync('npm i', { stdio: 'ignore' })
       process.chdir(cwd)
     }
   })

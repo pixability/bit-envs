@@ -81,7 +81,7 @@ describe('mocha', function () {
       api: createApi()
     })
     return tester.action(actionInfo).then(function (results) {
-      expect((global as any).mochaSetupTestRun, 'setup.js').to.equal(true)
+      expect(!!(global as any).mochaSetupTestRun, 'setup.js').to.equal(true)
       const babelCore = Object.keys(require.cache).find(
         elem => !!~elem.indexOf('babel-core/register')
       )

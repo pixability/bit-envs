@@ -21,9 +21,7 @@ export function e2eHelper (i: E2eHelperInfo) {
       cwd = process.cwd()
       process.chdir(i.baseFixturePath)
       const bitPath = require.resolve('bit-bin/bin/bit.js')
-      // const bitPath = '/usr/local/bin/bd'
       const options = {}
-      // const options = {stdio: [0,1,2]}
       const fileList =
         i.compFiles && i.compFiles.length > 0 ? i.compFiles.join(' ') : '.'
       child_process.execSync(bitPath + ' init', options)
@@ -31,12 +29,13 @@ export function e2eHelper (i: E2eHelperInfo) {
         `${bitPath} add ${fileList} --main ${i.mainFile} --id to-build `,
         options
       )
-      if (i.testFiles && i.testFiles.length > 0) {
-        child_process.execSync(
-          `${bitPath} add -t ${i.testFiles.join(' ')} --id to-build `,
-          options
-        )
-      }
+      i.testFiles &&
+        i.testFiles.forEach(tFile => {
+          child_process.execSync(
+            `${bitPath} add -t ${tFile} --id to-build `,
+            options
+          )
+        })
       child_process.execSync(bitPath + ' tag to-build ', options)
       const bitJson = require(path.resolve(i.baseFixturePath, './bit.json'))
       const files = i.confName.reduce(function (

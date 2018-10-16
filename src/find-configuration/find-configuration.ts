@@ -3,6 +3,7 @@ import {
   findByName,
   ExtensionApiOptions
 } from '../env-utils'
+import { configurationParser } from '../mocha/configuration-parser'
 import _ from 'lodash'
 import path from 'path'
 import fs from 'fs-extra'
@@ -51,7 +52,7 @@ export const defaultGetBy: { [k: string]: any } = {
         _.get(info, 'context.componentDir', '')
       const fullConfigPath = path.resolve(correctFolder, configPath)
       if (fs.existsSync(fullConfigPath)) {
-        config.config = readConfigByFileEnding(fullConfigPath)
+        config.config = readConfig(fullConfigPath, info)
         config.save = !!config.config
       }
     }
@@ -68,13 +69,14 @@ export const defaultGetBy: { [k: string]: any } = {
     try {
       const configVinyl = findByName(info.configFiles, options.fileName || '')
       if (configVinyl) {
-        config.config = readConfigByFileEnding(
+        config.config = readConfig(
           configVinyl.path,
+          info,
           configVinyl.contents!.toString()
         )
       }
     } catch (e) {
-      // do nothing
+      // TBD
     }
     return config
   },
@@ -110,7 +112,7 @@ export const defaultGetBy: { [k: string]: any } = {
     try {
       packageJson = loadPackageJsonSync(componentDir, workspaceDir)
     } catch (e) {
-      // do nothing
+      // TBD
     }
 
     return {
@@ -155,8 +157,26 @@ export function findConfiguration (
   return config
 }
 
-function readConfigByFileEnding (configPath: string, content = '') {
-  return configPath.endsWith('.js')
-    ? require(configPath)
-    : content ? JSON.parse(content) : fs.readJsonSync(configPath)
+function findParser (filePath: string, info: ExtensionApiOptions) {
+  return filePath.endsWith('js')
+    ? require
+    : filePath.endsWith('mocha.opts')
+    ? (target: string) => configurationParser(target, info)
+    : JSON.parse
+}
+
+function findTarget (filePath: string, content: string) {
+  if (filePath.endsWith('js')) return filePath
+  if (content) return content
+  return fs.readFileSync(filePath, 'utf-8')
+}
+
+function readConfig (
+  configPath: string,
+  info: ExtensionApiOptions,
+  content = ''
+) {
+  const parser = findParser(configPath, info)
+  const target = findTarget(configPath, content)
+  return parser(target)
 }
