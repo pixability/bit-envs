@@ -36,10 +36,11 @@ const addDotSlashPrefIfAbsent = (file: string) => file.replace(/^\.\/|^/, './')
 
 const throwOnMissingRequires = (parser: any, info: ExtensionApiOptions) => {
   const externalFiles = parser.require ? [parser.require] : []
+  const localExternalFiles = externalFiles.filter(f => f.startsWith('./'))
   const configFiles = info.configFiles.map(f => f.relative)
-  const missingConfigFiles = externalFiles.filter((f: string) => {
+  const missingConfigFiles = localExternalFiles.filter((f: string) => {
     return !configFiles.find(
-      cFile => addDotSlashPrefIfAbsent(cFile) === addDotSlashPrefIfAbsent(f)
+      cFile => addDotSlashPrefIfAbsent(cFile) === f
     )
   })
   if (missingConfigFiles.length > 0) {
