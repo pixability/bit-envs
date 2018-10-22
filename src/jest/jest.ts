@@ -43,7 +43,7 @@ export function CreateJestTester (): TesterExtension {
       )
 
       // const jestPath = require.resolve('jest/bin/jest')
-      const jestPath = privateRequire('jest/bin/jest')
+      const jestPath = privateRequire('jest-cli/bin/jest')
       cleanPrivateRequire(directory)
       const testFilePath = info.testFiles.map(f => f.path)
       const oldDir = process.cwd()
