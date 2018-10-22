@@ -11,7 +11,8 @@ interface E2eHelperInfo {
   testerPath?: string
   compFiles?: Array<string>
   testFiles?: Array<string>
-  testerConfig?: object
+  testerConfig?: object,
+  compilerConfig?: object
 }
 
 export function e2eHelper (i: E2eHelperInfo) {
@@ -47,7 +48,9 @@ export function e2eHelper (i: E2eHelperInfo) {
       },
       {})
 
-      if (i.compilerName) {
+      if (i.compilerName && i.compilerConfig) {
+        bitJson.env.compiler = i.compilerConfig
+      } else if (i.compilerName) {
         bitJson.env.compiler = {
           [`meta-${i.compilerName}`]: {
             files,

@@ -1,34 +1,19 @@
 import { expect } from 'chai'
 import path from 'path'
 import { e2eHelper } from '../e2e-helper'
-import { installPaths, generatePackageJson } from '../envs-test-utils'
+import { createEnvironment } from '../envs-test-utils'
 import packageJSON from './private-package-json'
 
 const compilerPath = path.resolve(__dirname, '../../dist/src/babel')
 const testerPath = path.resolve(__dirname, '../../dist/src/mocha')
 
-function createEnvironment (baseFixturePath: string) {
-  generatePackageJson({ [baseFixturePath]: packageJSON })
-  installPaths([baseFixturePath])
-}
-
-function createHelper (
-  testerConfig: object,
-  testFiles: Array<string>,
-  baseFixturePath: string
-) {
-  createEnvironment(baseFixturePath)
-  return e2eHelper({
-    baseFixturePath,
-    mainFile: 'index.js',
-    compilerName: 'babel',
-    confName: ['.babelrc'],
-    compilerPath,
-    testerPath,
-    compFiles: ['index.js', 'add.js', 'sub.js', 'setup.js'],
-    testFiles,
-    testerConfig
-  })
+const testEnvDefaults = {
+  mainFile: 'index.js',
+  compilerName: 'babel',
+  confName: ['.babelrc'],
+  compilerPath,
+  testerPath,
+  compFiles: ['index.js', 'add.js', 'sub.js', 'setup.js']
 }
 
 describe('mocha', function () {
@@ -50,7 +35,13 @@ describe('mocha', function () {
         }
       }
     }
-    this.helper = createHelper(testerConfig, testFiles, baseFixturePath)
+    this.helper = e2eHelper(Object.assign({}, testEnvDefaults, {
+      baseFixturePath,
+      testFiles,
+      testerConfig,
+      confName: ['.babelrc']
+    }))
+    createEnvironment(baseFixturePath, packageJSON)
     const mainCommandResult = this.helper.before().toString()
     expect(mainCommandResult).to.contain('tests passed')
     expect(mainCommandResult).to.not.contain('tests failed')
@@ -68,7 +59,13 @@ describe('mocha', function () {
         }
       }
     }
-    this.helper = createHelper(testerConfig, testFiles, baseFixturePath)
+    this.helper = e2eHelper(Object.assign({}, testEnvDefaults, {
+      baseFixturePath,
+      testFiles,
+      testerConfig,
+      confName: ['.babelrc']
+    }))
+    createEnvironment(baseFixturePath, packageJSON)
     const mainCommandResult = this.helper.before().toString()
     expect(mainCommandResult).to.contain('tests passed')
     expect(mainCommandResult).to.not.contain('tests failed')
@@ -87,7 +84,13 @@ describe('mocha', function () {
         }
       }
     }
-    this.helper = createHelper(testerConfig, testFiles, baseFixturePath)
+    this.helper = e2eHelper(Object.assign({}, testEnvDefaults, {
+      baseFixturePath,
+      testFiles,
+      testerConfig,
+      confName: ['.babelrc']
+    }))
+    createEnvironment(baseFixturePath, packageJSON)
     const mainCommandResult = this.helper.before().toString()
     expect(mainCommandResult).to.contain('tests passed')
     expect(mainCommandResult).to.not.contain('tests failed')
@@ -105,7 +108,13 @@ describe('mocha', function () {
         }
       }
     }
-    this.helper = createHelper(testerConfig, testFiles, baseFixturePath)
+    this.helper = e2eHelper(Object.assign({}, testEnvDefaults, {
+      baseFixturePath,
+      testFiles,
+      testerConfig,
+      confName: ['.babelrc']
+    }))
+    createEnvironment(baseFixturePath, packageJSON)
     expect(this.helper.before).to.throw('Command failed')
   })
 })

@@ -20,8 +20,8 @@ export function CreateBabelCompiler (name = '.babelrc') {
       }
     },
     getDynamicConfig: function (info: ExtensionApiOptions) {
-      let config = babelFindConfiguration(info, name)
-      return config.save ? config.config : {}
+      const config = babelFindConfiguration(info, name)
+      return config.save ? config.config : info.rawConfig
     },
     action: function (info: ExtensionApiOptions) {
       const babelrcFromfind = babelFindConfiguration(info, name)
@@ -30,7 +30,6 @@ export function CreateBabelCompiler (name = '.babelrc') {
         'config.babel',
         babelrcFromfind.config
       )
-
       const componentDir = info.context && info.context.componentDir
 
       if (componentDir) {

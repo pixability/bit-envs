@@ -79,6 +79,14 @@ export function installPaths (paths: Array<string>) {
   })
 }
 
+export function createEnvironment (
+  baseFixturePath: string,
+  packageJSON: object
+) {
+  generatePackageJson({ [baseFixturePath]: packageJSON })
+  installPaths([baseFixturePath])
+}
+
 export function generatePackageJson (toInstall: { [path: string]: any }) {
   Object.keys(toInstall).forEach(function (fixturePath: string) {
     if (fs.lstatSync(fixturePath).isDirectory()) {

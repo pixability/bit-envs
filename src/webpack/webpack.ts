@@ -27,7 +27,7 @@ export function CreateWebpackCompiler (
     },
     getDynamicConfig: function (info: ExtensionApiOptions) {
       let config = webpackFindConfiguration(info, mainConfigName)
-      return config.save ? config.config : {}
+      return config.save ? config.config : info.rawConfig
     },
     action: function (info: ExtensionApiOptions) {
       const fromFind = webpackFindConfiguration(info, mainConfigName)
@@ -70,7 +70,11 @@ export function CreateWebpackCompiler (
       info: ExtensionApiOptions,
       babelConfigName = '.babelrc'
     ) {
+      const useDefaultConfig = _get(info, 'rawConfig.useDefaultConfig', false)
       const packages: { [key: string]: string } = {}
+      if (useDefaultConfig) {
+        return packages
+      }
       const configFile = findByName(info.configFiles, mainConfigName)
       const config = require(configFile.path)
       const packageJson = loadPackageJsonSync(
@@ -158,12 +162,19 @@ export function webpackFindConfiguration (
   info: ExtensionApiOptions,
   name: string
 ) {
-  return findConfiguration(info, {
-    [FindStrategy.pjKeyName]: 'webpack',
-    [FindStrategy.fileName]: name,
-    [FindStrategy.default]: DefaulftWebapckConfig,
-    [FindStrategy.defaultFilePaths]: [`./${name}`]
-  })
+  const useDefaultConfig = _get(info, 'rawConfig.useDefaultConfig', false)
+  if (useDefaultConfig) {
+    return findConfiguration(info, {
+      [FindStrategy.default]: DefaulftWebapckConfig
+    })
+  } else {
+    return findConfiguration(info, {
+      [FindStrategy.pjKeyName]: 'webpack',
+      [FindStrategy.fileName]: name,
+      [FindStrategy.default]: DefaulftWebapckConfig,
+      [FindStrategy.defaultFilePaths]: [`./${name}`]
+    })
+  }
 }
 
 export default CreateWebpackCompiler()

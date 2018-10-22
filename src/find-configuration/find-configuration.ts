@@ -18,7 +18,7 @@ export const enum FindStrategy {
 }
 
 export type findOptions = {
-  [FindStrategy.pjKeyName]: string
+  [FindStrategy.pjKeyName]?: string
   [FindStrategy.fileName]?: string
   [FindStrategy.default]?: any
   [FindStrategy.defaultFilePaths]?: Array<string>
@@ -117,10 +117,14 @@ export const defaultGetBy: { [k: string]: any } = {
 
     return {
       config:
-        packageJson && packageJson[options.pjKeyName]
+        packageJson && options.pjKeyName && packageJson[options.pjKeyName]
           ? { [options.pjKeyName]: packageJson[options.pjKeyName] }
           : null,
-      save: !!(packageJson && packageJson[options.pjKeyName])
+      save: !!(
+        packageJson &&
+        options.pjKeyName &&
+        packageJson[options.pjKeyName]
+      )
     }
   }
 }

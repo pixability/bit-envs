@@ -1,7 +1,3 @@
-const babelPresetEs2015 = require('babel-preset-es2015')
-const babelPresetReact = require('babel-preset-react')
-const stage0 = require('babel-preset-stage-0')
-
 // indirect
 require('babel-loader')
 require('babel-core')
@@ -11,12 +7,14 @@ require('sass-loader')
 require('node-sass')
 require('json-loader')
 require('url-loader')
+require('@babel/preset-env')
 
 const nodeExternals = require('webpack-node-externals')
 const PACKAGE_TYPE = 'umd'
 
 const configure = () => {
   return {
+    mode: 'production',
     output: {
       filename: '[name].bundle.js',
       libraryTarget: PACKAGE_TYPE
@@ -28,7 +26,11 @@ const configure = () => {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: [babelPresetReact, babelPresetEs2015, stage0]
+            presets: [
+              ['@babel/preset-env', {
+                useBuiltIns: 'entry'
+              }]
+            ]
           }
         },
         {
@@ -82,6 +84,9 @@ const configure = () => {
           }
         }
       ]
+    },
+    entry: {
+      main: './index.js'
     },
 
     externals: [

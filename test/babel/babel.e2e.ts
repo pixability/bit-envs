@@ -4,29 +4,74 @@ import path from 'path'
 import fs from 'fs-extra'
 import _eval from 'eval'
 import { e2eHelper } from '../e2e-helper'
-import { setup, generatePackageJson } from '../envs-test-utils'
+import { createEnvironment } from '../envs-test-utils'
 import packageJSON from './private-package-json'
 
+const compilerPath = path.resolve(__dirname, '../../dist/src/babel')
+
+const testEnvDefaults = {
+  mainFile: 'b.js',
+  compilerName: 'babel',
+  compilerPath
+}
+
 describe('babel', function () {
-  const baseFixturePath = path.resolve(__dirname, './fixture')
-  const compilerPath = path.resolve(__dirname, '../../dist/src/babel')
-  const helper = e2eHelper({
-    baseFixturePath,
-    mainFile: 'b.js',
-    compilerName: 'babel',
-    confName: ['.babelrc'],
-    compilerPath
-  })
-  before(function () {
-    generatePackageJson({ [baseFixturePath]: packageJSON })
-    setup(this, [baseFixturePath])
-    this.timeout(1000 * 1000)
-    helper.before()
-  })
-  after(function () {
-    helper.after()
+  this.timeout(1000 * 1000)
+  afterEach(function () {
+    this.helper && this.helper.after && this.helper.after()
+    this.helper = null
   })
   it('bit should transpile component with babel meta compiler', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture')
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {
+        baseFixturePath,
+        confName: ['.babelrc']
+      })
+    )
+    createEnvironment(baseFixturePath, packageJSON)
+    this.helper.before()
+    const transpiled = fs
+      .readFileSync(path.resolve(baseFixturePath, 'dist/b.js'))
+      .toString()
+    expect(_eval(transpiled).run()).to.equal(0)
+  })
+  it('bit should transpile component with default babelrc', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture-default-config')
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {
+        baseFixturePath,
+        confName: []
+      })
+    )
+    createEnvironment(baseFixturePath, packageJSON)
+    this.helper.before()
+    const transpiled = fs
+      .readFileSync(path.resolve(baseFixturePath, 'dist/b.js'))
+      .toString()
+    expect(_eval(transpiled).run()).to.equal(0)
+  })
+  it('bit should allow overriding babelrc', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture-override')
+    const compilerConfig = {
+      metaBabel: {
+        rawConfig: {
+          useDefaultConfig: true
+        },
+        options: {
+          file: compilerPath
+        }
+      }
+    }
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {
+        baseFixturePath,
+        compilerConfig,
+        confName: []
+      })
+    )
+    createEnvironment(baseFixturePath, packageJSON)
+    this.helper.before()
     const transpiled = fs
       .readFileSync(path.resolve(baseFixturePath, 'dist/b.js'))
       .toString()

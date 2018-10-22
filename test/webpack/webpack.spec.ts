@@ -45,6 +45,7 @@ describe('Webpack', function () {
       actionInfo = {
         files,
         configFiles: [config],
+        rawConfig: {},
         context: {
           componentDir: '',
           componentObject: {

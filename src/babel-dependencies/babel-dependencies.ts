@@ -81,10 +81,17 @@ export function babelFindConfiguration (
   info: ExtensionApiOptions,
   name: string
 ) {
-  return findConfiguration(info, {
-    [FindStrategy.pjKeyName]: 'babel',
-    [FindStrategy.fileName]: name,
-    [FindStrategy.default]: defaultConfig,
-    [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js']
-  })
+  const useDefaultConfig = _get(info, 'rawConfig.useDefaultConfig')
+  if (useDefaultConfig) {
+    return findConfiguration(info, {
+      [FindStrategy.default]: defaultConfig
+    })
+  } else {
+    return findConfiguration(info, {
+      [FindStrategy.pjKeyName]: 'babel',
+      [FindStrategy.fileName]: name,
+      [FindStrategy.default]: defaultConfig,
+      [FindStrategy.defaultFilePaths]: ['./.babelrc', './babel.config.js']
+    })
+  }
 }
