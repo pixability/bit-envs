@@ -29,7 +29,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/internal/e2e-helper@0.0.29": {
+    "bit.test-envs/internal/e2e-helper@0.0.30": {
         "files": [
             {
                 "relativePath": "test/e2e-helper.ts",
@@ -41,7 +41,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/internal/test-util@0.0.29": {
+    "bit.test-envs/internal/test-util@0.0.30": {
         "files": [
             {
                 "relativePath": "test/envs-test-utils.ts",
@@ -53,7 +53,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/compilers/webpack@0.0.29": {
+    "bit.test-envs/compilers/webpack@0.0.31": {
         "files": [
             {
                 "relativePath": "src/webpack/README.md",
@@ -165,7 +165,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/testers/mocha@0.0.29": {
+    "bit.test-envs/testers/mocha@0.0.31": {
         "files": [
             {
                 "relativePath": "src/mocha/README.md",
@@ -242,7 +242,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/compilers/babel@0.0.29": {
+    "bit.test-envs/compilers/babel@0.0.31": {
         "files": [
             {
                 "relativePath": "src/babel/README.md",
@@ -364,7 +364,30 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/env-utils/find-configuration@0.0.29": {
+    "bit.test-envs/babel-dependencies@0.0.31": {
+        "files": [
+            {
+                "relativePath": "src/babel-dependencies/babel-dependencies.ts",
+                "test": false,
+                "name": "babel-dependencies.ts"
+            },
+            {
+                "relativePath": "src/babel-dependencies/default-babel-config.ts",
+                "test": false,
+                "name": "default-babel-config.ts"
+            },
+            {
+                "relativePath": "src/babel-dependencies/index.ts",
+                "test": false,
+                "name": "index.ts"
+            }
+        ],
+        "mainFile": "src/babel-dependencies/index.ts",
+        "trackDir": "src/babel-dependencies",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "bit.test-envs/env-utils/find-configuration@0.0.31": {
         "files": [
             {
                 "relativePath": "src/find-configuration/find-configuration.ts",
@@ -431,7 +454,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/testers/jest@0.0.29": {
+    "bit.test-envs/testers/jest@0.0.31": {
         "files": [
             {
                 "relativePath": "src/jest/README.md",
@@ -585,29 +608,6 @@
             }
         ],
         "mainFile": "src/jest/index.ts",
-        "origin": "AUTHORED",
-        "exported": true
-    },
-    "bit.test-envs/babel-dependencies@0.0.29": {
-        "files": [
-            {
-                "relativePath": "src/babel-dependencies/babel-dependencies.ts",
-                "test": false,
-                "name": "babel-dependencies.ts"
-            },
-            {
-                "relativePath": "src/babel-dependencies/default-babel-config.ts",
-                "test": false,
-                "name": "default-babel-config.ts"
-            },
-            {
-                "relativePath": "src/babel-dependencies/index.ts",
-                "test": false,
-                "name": "index.ts"
-            }
-        ],
-        "mainFile": "src/babel-dependencies/index.ts",
-        "trackDir": "src/babel-dependencies",
         "origin": "AUTHORED",
         "exported": true
     },
