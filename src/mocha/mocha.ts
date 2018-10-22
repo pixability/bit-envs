@@ -25,14 +25,22 @@ export function CreateMochaTester (): TesterExtension {
       }
     },
     getDynamicConfig: function (info: ActionTesterOptions) {
-      let config = mochaFindConfiguration(info)
+      const config = mochaFindConfiguration(info)
       const rawConfigFilesRequire = _get(info, 'rawConfig.filesRequire', [])
-      const filesRequire =
+      const rawConfigRequire = _get(info, 'rawConfig.require', [])
+      const configuredRequire =
         config.save && config.config && config.config.mochaRequire
-          ? rawConfigFilesRequire.concat(config.config.mochaRequire)
-          : rawConfigFilesRequire
+      const isFileRequire =
+        configuredRequire && configuredRequire.startsWith('./')
       return config.save
-        ? Object.assign({}, config.config, { filesRequire })
+        ? Object.assign({}, config.config, {
+          filesRequire: configuredRequire && isFileRequire
+            ? rawConfigFilesRequire.concat(configuredRequire)
+            : rawConfigFilesRequire,
+          require: configuredRequire && !isFileRequire
+            ? rawConfigRequire.concat(configuredRequire)
+            : rawConfigRequire
+        })
         : info.rawConfig
     },
     action: function (info: ActionTesterOptions) {
