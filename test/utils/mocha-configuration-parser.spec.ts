@@ -1,5 +1,7 @@
 import { expect } from 'chai'
-import { configurationParser } from '../../src/mocha/configuration-parser'
+import {
+  mochaConfigurationParser
+} from '../../src/find-configuration/mocha-configuration-parser'
 
 const emptyInfo = {
   configFiles: [],
@@ -16,7 +18,7 @@ describe('mocha configuration-parser', function () {
       '--timeout 1000',
       '--retries 42'
     ].join('\n')
-    const parsed = configurationParser(rawConfig, emptyInfo)
+    const parsed = mochaConfigurationParser(rawConfig, emptyInfo)
     expect(parsed).to.deep.equal({
       bail: true,
       grep: 'foo',
@@ -35,7 +37,7 @@ describe('mocha configuration-parser', function () {
       '--retries 42',
       '--require ./foo.js'
     ].join('\n')
-    const parsed = configurationParser(
+    const parsed = mochaConfigurationParser(
       rawConfig,
       Object.assign({}, emptyInfo, { configFiles: [{ relative: './foo.js' }] })
     )
@@ -58,7 +60,7 @@ describe('mocha configuration-parser', function () {
       '--retries 42',
       '--require left-pad'
     ].join('\n')
-    const parsed = configurationParser(rawConfig, emptyInfo)
+    const parsed = mochaConfigurationParser(rawConfig, emptyInfo)
     expect(parsed).to.deep.equal({
       bail: true,
       grep: 'foo',
@@ -78,7 +80,7 @@ describe('mocha configuration-parser', function () {
       '--require ./foo.js',
       '--retries 42'
     ].join('\n')
-    expect(() => configurationParser(rawConfig, emptyInfo)).to.throw(
+    expect(() => mochaConfigurationParser(rawConfig, emptyInfo)).to.throw(
       /add \.\/foo\.js to the files field in the tester configuration/
     )
   })
@@ -95,7 +97,7 @@ describe('mocha configuration-parser', function () {
     const info = Object.assign(
       {}, emptyInfo, { configFiles: [{ relative: './foo.js' }] }
     )
-    expect(() => configurationParser(rawConfig, info)).to.throw(
+    expect(() => mochaConfigurationParser(rawConfig, info)).to.throw(
       /use relative path for \/path\/to\/my\/foo\.js/
     )
   })
@@ -109,7 +111,7 @@ describe('mocha configuration-parser', function () {
       '--retries 42',
       '--killAllHumans true'
     ].join('\n')
-    const parsed = configurationParser(rawConfig, emptyInfo)
+    const parsed = mochaConfigurationParser(rawConfig, emptyInfo)
     expect(parsed).to.deep.equal({
       bail: true,
       grep: 'foo',

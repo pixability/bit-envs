@@ -178,11 +178,6 @@
                 "name": "base-reporter.ts"
             },
             {
-                "relativePath": "src/mocha/configuration-parser.ts",
-                "test": false,
-                "name": "configuration-parser.ts"
-            },
-            {
                 "relativePath": "src/mocha/index.ts",
                 "test": false,
                 "name": "index.ts"
@@ -196,11 +191,6 @@
                 "relativePath": "src/mocha/mocha.ts",
                 "test": false,
                 "name": "mocha.ts"
-            },
-            {
-                "relativePath": "test/mocha/configuration-parser.spec.ts",
-                "test": true,
-                "name": "configuration-parser.spec.ts"
             },
             {
                 "relativePath": "test/mocha/fixture/.babelrc",
@@ -387,6 +377,11 @@
                 "name": "index.ts"
             },
             {
+                "relativePath": "src/find-configuration/mocha-configuration-parser.ts",
+                "test": false,
+                "name": "mocha-configuration-parser.ts"
+            },
+            {
                 "relativePath": "test/utils/configuration.spec.ts",
                 "test": true,
                 "name": "configuration.spec.ts"
@@ -425,6 +420,11 @@
                 "relativePath": "test/utils/fixture-config-package/b.js",
                 "test": false,
                 "name": "b.js"
+            },
+            {
+                "relativePath": "test/utils/mocha-configuration-parser.spec.ts",
+                "test": true,
+                "name": "mocha-configuration-parser.spec.ts"
             }
         ],
         "mainFile": "src/find-configuration/index.ts",
@@ -611,5 +611,5 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "version": "13.0.5-dev.16"
+    "version": "13.0.5-dev.22"
 }

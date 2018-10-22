@@ -3,7 +3,7 @@ import {
   findByName,
   ExtensionApiOptions
 } from '../env-utils'
-import { configurationParser } from '../mocha/configuration-parser'
+import { mochaConfigurationParser } from './mocha-configuration-parser'
 import _ from 'lodash'
 import path from 'path'
 import fs from 'fs-extra'
@@ -165,7 +165,7 @@ function findParser (filePath: string, info: ExtensionApiOptions) {
   return filePath.endsWith('js')
     ? require
     : filePath.endsWith('mocha.opts')
-    ? (target: string) => configurationParser(target, info)
+    ? (target: string) => mochaConfigurationParser(target, info)
     : JSON.parse
 }
 

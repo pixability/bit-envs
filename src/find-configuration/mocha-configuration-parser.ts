@@ -67,7 +67,7 @@ const throwOnAbsolutePaths = (parser: any) => {
   }
 }
 
-export function configurationParser (
+export function mochaConfigurationParser (
   rawConfig: string,
   info: ExtensionApiOptions
 ) {
