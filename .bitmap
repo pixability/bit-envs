@@ -480,7 +480,7 @@
         ],
         "exported": true
     },
-    "bit.test-envs/testers/jest@0.0.33": {
+    "bit.test-envs/testers/jest@0.0.34": {
         "files": [
             {
                 "name": "README.md",
@@ -642,5 +642,5 @@
         ],
         "exported": true
     },
-    "version": "13.0.5-dev.24"
+    "version": "13.0.5-dev.25"
 }

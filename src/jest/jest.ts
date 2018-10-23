@@ -161,7 +161,7 @@ function getDirectory (info: ActionTesterOptions, logger: Logger) {
   const directory =
     _get(info, 'context.workspaceDir') ||
     _get(info, 'context.componentDir') ||
-    _get(info, 'testFiles[0].path')
+    _get(info, 'testFiles[0].base')
   if (!directory) {
     logger.error('Could not find test directory')
     throw new Error('Could not find test directory')
