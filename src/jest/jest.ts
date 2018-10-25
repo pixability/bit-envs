@@ -2,21 +2,22 @@ import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
+import pkgDir from 'pkg-dir'
 import { defaultConfig } from './default-configuration'
 import {
   TesterExtension,
   API,
   ActionTesterOptions,
   ExtensionApiOptions,
-  Logger,
-  createPrivateRequire,
-  cleanPrivateRequire
+  Logger
 } from '../env-utils/'
 import { loadPackageJsonSync, fillDependencyVersion } from '../env-utils'
 import { FindStrategy, findConfiguration } from '../../src/find-configuration'
 import { convertJestFormatToBitFormat } from './result-adapter'
 
 export default CreateJestTester()
+
+const jestBin = `${pkgDir.sync(__dirname)}/scripts/execute-jest-runner.js`
 
 export function CreateJestTester (): TesterExtension {
   const metaJest: TesterExtension = {
@@ -32,27 +33,19 @@ export function CreateJestTester (): TesterExtension {
       return config.save ? config.config : {}
     },
     action: function (info: ActionTesterOptions) {
-      // const configFromFind = jestFindConfiguration(info)
+      const { config } = jestFindConfiguration(info)
       const directory = getDirectory(info, metaJest.logger!)
       const resultHandler = CreateResultFileHandler(directory)
-
       const outputFile = resultHandler.preTest()
-      const privateRequire = createPrivateRequire(
-        directory,
-        'require.resolve(pathToModule)'
-      )
-
-      // const jestPath = require.resolve('jest/bin/jest')
-      const jestPath = privateRequire('jest-cli/bin/jest')
-      cleanPrivateRequire(directory)
       const testFilePath = info.testFiles.map(f => f.path)
-      const oldDir = process.cwd()
-      process.chdir(directory)
+      const testCommand = jestBin + ' ' +
+        `--config '${JSON.stringify(config)}' ` +
+        `--json ${testFilePath.join(' ')} ` +
+        `> ${outputFile}`
       child_process.execSync(
-        `${jestPath} --json ${testFilePath.join(' ')} > ${outputFile}`,
+        testCommand,
         { stdio: [] }
       )
-      process.chdir(oldDir)
       const results = resultHandler.getResults()
       const normalizedResults = convertJestFormatToBitFormat(results)
       resultHandler.postTest()
@@ -170,10 +163,17 @@ function getDirectory (info: ActionTesterOptions, logger: Logger) {
 }
 
 export function jestFindConfiguration (info: ExtensionApiOptions) {
-  return findConfiguration(info, {
-    [FindStrategy.pjKeyName]: 'jest',
-    [FindStrategy.fileName]: 'jest.config.js',
-    [FindStrategy.default]: defaultConfig,
-    [FindStrategy.defaultFilePaths]: ['./jest.config.js']
-  })
+  const useDefaultConfig = _get(info, 'rawConfig.useDefaultConfig', false)
+  if (useDefaultConfig) {
+    return findConfiguration(info, {
+      [FindStrategy.default]: defaultConfig
+    })
+  } else {
+    return findConfiguration(info, {
+      [FindStrategy.pjKeyName]: 'jest',
+      [FindStrategy.fileName]: 'jest.config.js',
+      [FindStrategy.default]: defaultConfig,
+      [FindStrategy.defaultFilePaths]: ['./jest.config.js']
+    })
+  }
 }

@@ -53,7 +53,375 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/babel-dependencies@0.0.32": {
+    "bit.test-envs/compilers/babel@0.0.33": {
+        "files": [
+            {
+                "name": "README.md",
+                "relativePath": "src/babel/README.md",
+                "test": false
+            },
+            {
+                "name": "babel-core.d.ts",
+                "relativePath": "src/babel/babel-core.d.ts",
+                "test": false
+            },
+            {
+                "name": "babel.ts",
+                "relativePath": "src/babel/babel.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "src/babel/index.ts",
+                "test": false
+            },
+            {
+                "name": "babel.spec.ts",
+                "relativePath": "test/babel/babel.spec.ts",
+                "test": true
+            },
+            {
+                "name": "eval.d.ts",
+                "relativePath": "test/babel/eval.d.ts",
+                "test": false
+            },
+            {
+                "name": "a.js",
+                "relativePath": "test/babel/fixture-configuration/a.js",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/babel/fixture-configuration/b.js",
+                "test": false
+            },
+            {
+                "name": ".babelrc.empty",
+                "relativePath": "test/babel/fixture-empty/.babelrc.empty",
+                "test": false
+            },
+            {
+                "name": ".npm-skip",
+                "relativePath": "test/babel/fixture-empty/.npm-skip",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/babel/fixture-empty/b.js",
+                "test": false
+            },
+            {
+                "name": ".babelrc",
+                "relativePath": "test/babel/fixture-resolve/.babelrc",
+                "test": false
+            },
+            {
+                "name": "logo.js",
+                "relativePath": "test/babel/fixture-resolve/logo.js",
+                "test": false
+            },
+            {
+                "name": "logo.svg",
+                "relativePath": "test/babel/fixture-resolve/logo.svg",
+                "test": false
+            },
+            {
+                "name": ".babelrc",
+                "relativePath": "test/babel/fixture/.babelrc",
+                "test": false
+            },
+            {
+                "name": ".babelrc.ignore",
+                "relativePath": "test/babel/fixture/.babelrc.ignore",
+                "test": false
+            },
+            {
+                "name": ".babelrc.only",
+                "relativePath": "test/babel/fixture/.babelrc.only",
+                "test": false
+            },
+            {
+                "name": "a.js",
+                "relativePath": "test/babel/fixture/a.js",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/babel/fixture/b.js",
+                "test": false
+            },
+            {
+                "name": "ignore-list.ts",
+                "relativePath": "test/babel/ignore-list.ts",
+                "test": false
+            },
+            {
+                "name": "private-package-json-resolve.ts",
+                "relativePath": "test/babel/private-package-json-resolve.ts",
+                "test": false
+            },
+            {
+                "name": "private-package-json.ts",
+                "relativePath": "test/babel/private-package-json.ts",
+                "test": false
+            }
+        ],
+        "mainFile": "src/babel/index.ts",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "bit.test-envs/internal/env-utils@0.0.28",
+            "bit.test-envs/internal/test-util@0.0.30",
+            "bit.test-envs/env-utils/find-configuration@0.0.33",
+            "bit.test-envs/babel-dependencies@0.0.33"
+        ],
+        "exported": true
+    },
+    "bit.test-envs/env-utils/find-configuration@0.0.33": {
+        "files": [
+            {
+                "name": "find-configuration.ts",
+                "relativePath": "src/find-configuration/find-configuration.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "src/find-configuration/index.ts",
+                "test": false
+            },
+            {
+                "name": "mocha-configuration-parser.ts",
+                "relativePath": "src/find-configuration/mocha-configuration-parser.ts",
+                "test": false
+            },
+            {
+                "name": "configuration.spec.ts",
+                "relativePath": "test/utils/configuration.spec.ts",
+                "test": true
+            },
+            {
+                "name": ".babelrc",
+                "relativePath": "test/utils/fixture-config-bit-file/.babelrc",
+                "test": false
+            },
+            {
+                "name": "a.js",
+                "relativePath": "test/utils/fixture-config-bit-file/a.js",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/utils/fixture-config-bit-file/b.js",
+                "test": false
+            },
+            {
+                "name": "a.js",
+                "relativePath": "test/utils/fixture-config-bit-raw/a.js",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/utils/fixture-config-bit-raw/b.js",
+                "test": false
+            },
+            {
+                "name": "a.js",
+                "relativePath": "test/utils/fixture-config-package/a.js",
+                "test": false
+            },
+            {
+                "name": "b.js",
+                "relativePath": "test/utils/fixture-config-package/b.js",
+                "test": false
+            },
+            {
+                "name": "mocha-configuration-parser.spec.ts",
+                "relativePath": "test/utils/mocha-configuration-parser.spec.ts",
+                "test": true
+            }
+        ],
+        "mainFile": "src/find-configuration/index.ts",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "bit.test-envs/internal/env-utils@0.0.28",
+            "bit.test-envs/internal/test-util@0.0.30",
+            "bit.test-envs/compilers/babel@0.0.33",
+            "bit.test-envs/babel-dependencies@0.0.33"
+        ],
+        "exported": true
+    },
+    "bit.test-envs/testers/jest@0.0.35": {
+        "files": [
+            {
+                "relativePath": "scripts/execute-jest-runner.js",
+                "test": false,
+                "name": "execute-jest-runner.js"
+            },
+            {
+                "name": "README.md",
+                "relativePath": "src/jest/README.md",
+                "test": false
+            },
+            {
+                "name": "default-configuration.ts",
+                "relativePath": "src/jest/default-configuration.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "src/jest/index.ts",
+                "test": false
+            },
+            {
+                "name": "jest.ts",
+                "relativePath": "src/jest/jest.ts",
+                "test": false
+            },
+            {
+                "name": "result-adapter.ts",
+                "relativePath": "src/jest/result-adapter.ts",
+                "test": false
+            },
+            {
+                "name": "add.ts",
+                "relativePath": "test/jest/fixture-action/add.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "test/jest/fixture-action/index.ts",
+                "test": false
+            },
+            {
+                "name": "jest.config.js",
+                "relativePath": "test/jest/fixture-action/jest.config.js",
+                "test": false
+            },
+            {
+                "name": "sub.ts",
+                "relativePath": "test/jest/fixture-action/sub.ts",
+                "test": false
+            },
+            {
+                "name": "test.spec.ts",
+                "relativePath": "test/jest/fixture-action/test.spec.ts",
+                "test": false
+            },
+            {
+                "name": "test2.spec.ts",
+                "relativePath": "test/jest/fixture-action/test2.spec.ts",
+                "test": false
+            },
+            {
+                "name": "tsconfig.json",
+                "relativePath": "test/jest/fixture-action/tsconfig.json",
+                "test": false
+            },
+            {
+                "name": "add.ts",
+                "relativePath": "test/jest/fixture-configuration/add.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "test/jest/fixture-configuration/index.ts",
+                "test": false
+            },
+            {
+                "name": "sub.ts",
+                "relativePath": "test/jest/fixture-configuration/sub.ts",
+                "test": false
+            },
+            {
+                "name": "add.ts",
+                "relativePath": "test/jest/fixture-e2e/add.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "test/jest/fixture-e2e/index.ts",
+                "test": false
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/jest.config.js",
+                "test": false,
+                "name": "jest.config.js"
+            },
+            {
+                "relativePath": "test/jest/fixture-e2e/setup.js",
+                "test": false,
+                "name": "setup.js"
+            },
+            {
+                "name": "sub.ts",
+                "relativePath": "test/jest/fixture-e2e/sub.ts",
+                "test": false
+            },
+            {
+                "name": "test.spec.ts",
+                "relativePath": "test/jest/fixture-e2e/test.spec.ts",
+                "test": false
+            },
+            {
+                "name": "test2.spec.ts",
+                "relativePath": "test/jest/fixture-e2e/test2.spec.ts",
+                "test": false
+            },
+            {
+                "name": "tsconfig.json",
+                "relativePath": "test/jest/fixture-e2e/tsconfig.json",
+                "test": false
+            },
+            {
+                "relativePath": "test/jest/fixture-override/jest.config.js",
+                "test": false,
+                "name": "jest.config.js"
+            },
+            {
+                "relativePath": "test/jest/fixture-override/setup.js",
+                "test": false,
+                "name": "setup.js"
+            },
+            {
+                "name": ".npm-skip",
+                "relativePath": "test/jest/fixture/.npm-skip",
+                "test": false
+            },
+            {
+                "name": "jest.config.js",
+                "relativePath": "test/jest/fixture/jest.config.js",
+                "test": false
+            },
+            {
+                "name": "jest.spec.ts",
+                "relativePath": "test/jest/jest.spec.ts",
+                "test": true
+            },
+            {
+                "name": "private-package-json-conf.ts",
+                "relativePath": "test/jest/private-package-json-conf.ts",
+                "test": false
+            },
+            {
+                "name": "private-package-json-empty.ts",
+                "relativePath": "test/jest/private-package-json-empty.ts",
+                "test": false
+            },
+            {
+                "name": "private-package-json.ts",
+                "relativePath": "test/jest/private-package-json.ts",
+                "test": false
+            }
+        ],
+        "mainFile": "src/jest/index.ts",
+        "origin": "AUTHORED",
+        "dependencies": [
+            "bit.test-envs/internal/env-utils@0.0.28",
+            "bit.test-envs/internal/test-util@0.0.30",
+            "bit.test-envs/env-utils/find-configuration@0.0.33"
+        ],
+        "exported": true
+    },
+    "bit.test-envs/babel-dependencies@0.0.33": {
         "files": [
             {
                 "name": "babel-dependencies.ts",
@@ -75,11 +443,11 @@
         "origin": "AUTHORED",
         "dependencies": [
             "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/env-utils/find-configuration@0.0.32"
+            "bit.test-envs/env-utils/find-configuration@0.0.33"
         ],
         "exported": true
     },
-    "bit.test-envs/compilers/webpack@0.0.32": {
+    "bit.test-envs/compilers/webpack@0.0.33": {
         "files": [
             {
                 "name": "README.md",
@@ -190,14 +558,14 @@
         "mainFile": "src/webpack/index.ts",
         "origin": "AUTHORED",
         "dependencies": [
-            "bit.test-envs/babel-dependencies@0.0.32",
             "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/env-utils/find-configuration@0.0.32",
-            "bit.test-envs/internal/test-util@0.0.30"
+            "bit.test-envs/internal/test-util@0.0.30",
+            "bit.test-envs/env-utils/find-configuration@0.0.33",
+            "bit.test-envs/babel-dependencies@0.0.33"
         ],
         "exported": true
     },
-    "bit.test-envs/testers/mocha@0.0.32": {
+    "bit.test-envs/testers/mocha@0.0.33": {
         "files": [
             {
                 "name": "README.md",
@@ -274,371 +642,8 @@
         "origin": "AUTHORED",
         "dependencies": [
             "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/env-utils/find-configuration@0.0.32",
-            "bit.test-envs/internal/test-util@0.0.30"
-        ],
-        "exported": true
-    },
-    "bit.test-envs/compilers/babel@0.0.32": {
-        "files": [
-            {
-                "name": "README.md",
-                "relativePath": "src/babel/README.md",
-                "test": false
-            },
-            {
-                "name": "babel-core.d.ts",
-                "relativePath": "src/babel/babel-core.d.ts",
-                "test": false
-            },
-            {
-                "name": "babel.ts",
-                "relativePath": "src/babel/babel.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "src/babel/index.ts",
-                "test": false
-            },
-            {
-                "name": "babel.spec.ts",
-                "relativePath": "test/babel/babel.spec.ts",
-                "test": true
-            },
-            {
-                "name": "eval.d.ts",
-                "relativePath": "test/babel/eval.d.ts",
-                "test": false
-            },
-            {
-                "name": "a.js",
-                "relativePath": "test/babel/fixture-configuration/a.js",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/babel/fixture-configuration/b.js",
-                "test": false
-            },
-            {
-                "name": ".babelrc.empty",
-                "relativePath": "test/babel/fixture-empty/.babelrc.empty",
-                "test": false
-            },
-            {
-                "name": ".npm-skip",
-                "relativePath": "test/babel/fixture-empty/.npm-skip",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/babel/fixture-empty/b.js",
-                "test": false
-            },
-            {
-                "name": ".babelrc",
-                "relativePath": "test/babel/fixture-resolve/.babelrc",
-                "test": false
-            },
-            {
-                "name": "logo.js",
-                "relativePath": "test/babel/fixture-resolve/logo.js",
-                "test": false
-            },
-            {
-                "name": "logo.svg",
-                "relativePath": "test/babel/fixture-resolve/logo.svg",
-                "test": false
-            },
-            {
-                "name": "package.json",
-                "relativePath": "test/babel/fixture-resolve/package.json",
-                "test": false
-            },
-            {
-                "name": ".babelrc",
-                "relativePath": "test/babel/fixture/.babelrc",
-                "test": false
-            },
-            {
-                "name": ".babelrc.ignore",
-                "relativePath": "test/babel/fixture/.babelrc.ignore",
-                "test": false
-            },
-            {
-                "name": ".babelrc.only",
-                "relativePath": "test/babel/fixture/.babelrc.only",
-                "test": false
-            },
-            {
-                "name": "a.js",
-                "relativePath": "test/babel/fixture/a.js",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/babel/fixture/b.js",
-                "test": false
-            },
-            {
-                "name": "ignore-list.ts",
-                "relativePath": "test/babel/ignore-list.ts",
-                "test": false
-            },
-            {
-                "name": "private-package-json-resolve.ts",
-                "relativePath": "test/babel/private-package-json-resolve.ts",
-                "test": false
-            },
-            {
-                "name": "private-package-json.ts",
-                "relativePath": "test/babel/private-package-json.ts",
-                "test": false
-            }
-        ],
-        "mainFile": "src/babel/index.ts",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "bit.test-envs/babel-dependencies@0.0.32",
-            "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/env-utils/find-configuration@0.0.32",
-            "bit.test-envs/internal/test-util@0.0.30"
-        ],
-        "exported": true
-    },
-    "bit.test-envs/env-utils/find-configuration@0.0.32": {
-        "files": [
-            {
-                "name": "find-configuration.ts",
-                "relativePath": "src/find-configuration/find-configuration.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "src/find-configuration/index.ts",
-                "test": false
-            },
-            {
-                "name": "mocha-configuration-parser.ts",
-                "relativePath": "src/find-configuration/mocha-configuration-parser.ts",
-                "test": false
-            },
-            {
-                "name": "configuration.spec.ts",
-                "relativePath": "test/utils/configuration.spec.ts",
-                "test": true
-            },
-            {
-                "name": ".babelrc",
-                "relativePath": "test/utils/fixture-config-bit-file/.babelrc",
-                "test": false
-            },
-            {
-                "name": "a.js",
-                "relativePath": "test/utils/fixture-config-bit-file/a.js",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/utils/fixture-config-bit-file/b.js",
-                "test": false
-            },
-            {
-                "name": "a.js",
-                "relativePath": "test/utils/fixture-config-bit-raw/a.js",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/utils/fixture-config-bit-raw/b.js",
-                "test": false
-            },
-            {
-                "name": "a.js",
-                "relativePath": "test/utils/fixture-config-package/a.js",
-                "test": false
-            },
-            {
-                "name": "b.js",
-                "relativePath": "test/utils/fixture-config-package/b.js",
-                "test": false
-            },
-            {
-                "name": "mocha-configuration-parser.spec.ts",
-                "relativePath": "test/utils/mocha-configuration-parser.spec.ts",
-                "test": true
-            }
-        ],
-        "mainFile": "src/find-configuration/index.ts",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/babel-dependencies@0.0.32",
-            "bit.test-envs/compilers/babel@0.0.32",
-            "bit.test-envs/internal/test-util@0.0.30"
-        ],
-        "exported": true
-    },
-    "bit.test-envs/testers/jest@0.0.34": {
-        "files": [
-            {
-                "name": "README.md",
-                "relativePath": "src/jest/README.md",
-                "test": false
-            },
-            {
-                "name": "default-configuration.ts",
-                "relativePath": "src/jest/default-configuration.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "src/jest/index.ts",
-                "test": false
-            },
-            {
-                "name": "jest.ts",
-                "relativePath": "src/jest/jest.ts",
-                "test": false
-            },
-            {
-                "name": "result-adapter.ts",
-                "relativePath": "src/jest/result-adapter.ts",
-                "test": false
-            },
-            {
-                "name": "add.ts",
-                "relativePath": "test/jest/fixture-action/add.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "test/jest/fixture-action/index.ts",
-                "test": false
-            },
-            {
-                "name": "jest.config.js",
-                "relativePath": "test/jest/fixture-action/jest.config.js",
-                "test": false
-            },
-            {
-                "name": "sub.ts",
-                "relativePath": "test/jest/fixture-action/sub.ts",
-                "test": false
-            },
-            {
-                "name": "test.spec.ts",
-                "relativePath": "test/jest/fixture-action/test.spec.ts",
-                "test": false
-            },
-            {
-                "name": "test2.spec.ts",
-                "relativePath": "test/jest/fixture-action/test2.spec.ts",
-                "test": false
-            },
-            {
-                "name": "tsconfig.json",
-                "relativePath": "test/jest/fixture-action/tsconfig.json",
-                "test": false
-            },
-            {
-                "name": "add.ts",
-                "relativePath": "test/jest/fixture-configuration/add.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "test/jest/fixture-configuration/index.ts",
-                "test": false
-            },
-            {
-                "name": "package.json",
-                "relativePath": "test/jest/fixture-configuration/package.json",
-                "test": false
-            },
-            {
-                "name": "sub.ts",
-                "relativePath": "test/jest/fixture-configuration/sub.ts",
-                "test": false
-            },
-            {
-                "name": "add.ts",
-                "relativePath": "test/jest/fixture-e2e/add.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "test/jest/fixture-e2e/index.ts",
-                "test": false
-            },
-            {
-                "name": "jest.config.js",
-                "relativePath": "test/jest/fixture-e2e/jest.config.js",
-                "test": false
-            },
-            {
-                "name": "setup.js",
-                "relativePath": "test/jest/fixture-e2e/setup.js",
-                "test": false
-            },
-            {
-                "name": "sub.ts",
-                "relativePath": "test/jest/fixture-e2e/sub.ts",
-                "test": false
-            },
-            {
-                "name": "test.spec.ts",
-                "relativePath": "test/jest/fixture-e2e/test.spec.ts",
-                "test": false
-            },
-            {
-                "name": "test2.spec.ts",
-                "relativePath": "test/jest/fixture-e2e/test2.spec.ts",
-                "test": false
-            },
-            {
-                "name": "tsconfig.json",
-                "relativePath": "test/jest/fixture-e2e/tsconfig.json",
-                "test": false
-            },
-            {
-                "name": ".npm-skip",
-                "relativePath": "test/jest/fixture/.npm-skip",
-                "test": false
-            },
-            {
-                "name": "jest.config.js",
-                "relativePath": "test/jest/fixture/jest.config.js",
-                "test": false
-            },
-            {
-                "name": "jest.spec.ts",
-                "relativePath": "test/jest/jest.spec.ts",
-                "test": true
-            },
-            {
-                "name": "private-package-json-conf.ts",
-                "relativePath": "test/jest/private-package-json-conf.ts",
-                "test": false
-            },
-            {
-                "name": "private-package-json-empty.ts",
-                "relativePath": "test/jest/private-package-json-empty.ts",
-                "test": false
-            },
-            {
-                "name": "private-package-json.ts",
-                "relativePath": "test/jest/private-package-json.ts",
-                "test": false
-            }
-        ],
-        "mainFile": "src/jest/index.ts",
-        "origin": "AUTHORED",
-        "dependencies": [
-            "bit.test-envs/internal/env-utils@0.0.28",
-            "bit.test-envs/env-utils/find-configuration@0.0.32",
-            "bit.test-envs/internal/test-util@0.0.30"
+            "bit.test-envs/internal/test-util@0.0.30",
+            "bit.test-envs/env-utils/find-configuration@0.0.33"
         ],
         "exported": true
     },

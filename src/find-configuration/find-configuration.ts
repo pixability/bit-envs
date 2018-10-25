@@ -95,8 +95,10 @@ export const defaultGetBy: { [k: string]: any } = {
   ) {
     return {
       config:
-        options.pjKeyName && Object.keys(_.get(info, `rawConfig.${options.pjKeyName}`, {})).length >
-        0
+        options.pjKeyName &&
+        Object.keys(
+          _.get(info, `rawConfig.${options.pjKeyName}`, {})
+        ).length > 0
           ? _.get(info, `rawConfig.${options.pjKeyName}`, {})
           : null,
       save: false
