@@ -475,7 +475,7 @@
         ],
         "exported": true
     },
-    "bit.test-envs/testers/jest@0.0.36": {
+    "bit.test-envs/testers/jest@0.0.41": {
         "files": [
             {
                 "relativePath": "scripts/execute-jest-runner.js",
