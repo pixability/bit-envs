@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
+import pkgDir from 'pkg-dir'
 import { defaultConfig } from './default-configuration'
 import {
   TesterExtension,
@@ -17,7 +18,7 @@ import { convertJestFormatToBitFormat } from './result-adapter'
 export default CreateJestTester()
 
 const jestBinString = `#!/usr/bin/env node
-require('jest-cli/build/cli').run()
+require('${pkgDir.sync(__dirname)}/node_modules/jest-cli/build/cli').run()
 `
 
 export function CreateJestTester (): TesterExtension {
