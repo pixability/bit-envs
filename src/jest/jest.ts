@@ -17,6 +17,9 @@ import { convertJestFormatToBitFormat } from './result-adapter'
 
 export default CreateJestTester()
 
+// so that it can be required at runtime
+require('jest/cli')
+
 const jestBinString = `#!/usr/bin/env node
 require('${pkgDir.sync(__dirname)}/node_modules/jest-cli/build/cli').run()
 `
