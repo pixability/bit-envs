@@ -2,7 +2,6 @@ import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
 import child_process from 'child_process'
-import pkgDir from 'pkg-dir'
 import { defaultConfig } from './default-configuration'
 import {
   TesterExtension,
@@ -17,7 +16,9 @@ import { convertJestFormatToBitFormat } from './result-adapter'
 
 export default CreateJestTester()
 
-const jestBin = `${pkgDir.sync(__dirname)}/scripts/execute-jest-runner.js`
+const jestBinString = `#!/usr/bin/env node
+require('jest-cli/build/cli').run()
+`
 
 export function CreateJestTester (): TesterExtension {
   const metaJest: TesterExtension = {
@@ -36,9 +37,9 @@ export function CreateJestTester (): TesterExtension {
       const { config } = jestFindConfiguration(info)
       const directory = getDirectory(info, metaJest.logger!)
       const resultHandler = CreateResultFileHandler(directory)
-      const outputFile = resultHandler.preTest()
+      const { executablePath, outputFile } = resultHandler.preTest()
       const testFilePath = info.testFiles.map(f => f.path)
-      const testCommand = jestBin + ' ' +
+      const testCommand = executablePath + ' ' +
         `--config '${JSON.stringify(config)}' ` +
         `--json ${testFilePath.join(' ')} ` +
         `> ${outputFile}`
@@ -120,16 +121,22 @@ function jestFindDynamicDependencies (
   })
 }
 
-function CreateResultFileHandler (directory: string) {
+function CreateResultFileHandler (directory: string) { // TODO: change name
   const resultFileName = 'jestResults.json'
+  const executableFilename = 'execute-jest.js'
   let outputFile = ''
   let bitTmpPath = ''
   return {
     preTest: function () {
       bitTmpPath = path.resolve(directory, '.bitTmp')
       outputFile = path.resolve(directory, '.bitTmp', resultFileName)
+      const executablePath = path.resolve(
+        directory, '.bitTmp', executableFilename
+      )
       !fs.existsSync(bitTmpPath) && fs.mkdirpSync(bitTmpPath)
-      return outputFile
+      fs.writeFileSync(executablePath, jestBinString)
+      fs.chmodSync(executablePath, 0o777) // TODO: proper permissions
+      return { executablePath, outputFile }
     },
     postTest: function () {
       fs.existsSync(outputFile) && fs.unlinkSync(outputFile)
