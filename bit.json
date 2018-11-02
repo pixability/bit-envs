@@ -1,7 +1,7 @@
 {
     "env": {
-        "compiler": "bit.test-envs/typescript/index@0.0.3",
-        "tester": "bit.test-envs/testers/mocha@0.0.26"
+        "compiler": "bit.test-envs/typescript@1.0.0",
+        "tester": "bit.test-envs/testers/mocha@1.0.0"
     },
     "dependencies": {},
     "componentsDefaultDirectory": "components/{namespace}/{name}",

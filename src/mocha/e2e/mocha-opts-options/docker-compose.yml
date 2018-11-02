@@ -1,0 +1,27 @@
+version: '3'
+services:
+  scope:
+    build: ../../../../
+    ports:
+      - "22"
+    volumes:
+      - ~/.ssh/id_rsa.pub:/root/.ssh/authorized_keys
+      - ../../../../node_modules/:/tmp/publisher/node_modules/ # TODO: readonly
+    command: /bin/bash -c "cd /tmp/publisher && npm run build && chown root:root /root/.ssh/authorized_keys && /usr/sbin/sshd -D"
+  author:
+    build: ./author-env
+    volumes:
+      - ~/.ssh:/root/.ssh
+      - ~/.ssh/id_rsa.pub:/tmp/id_rsa.pub
+      - ../../../../../src:/tmp/publisher/src
+    depends_on:
+      - scope
+    command: /bin/bash -c "./wait-for-it.sh -t 0 scope:22 -- ./init.sh && tail -f /dev/null"
+  consumer:
+    build: ./consumer-env
+    command: /bin/bash -c "./wait-for-it.sh -t 0 scope:22 -- ./init.sh && tail -f /dev/null"
+    volumes:
+      - ~/.ssh:/root/.ssh
+      - ~/.ssh/id_rsa.pub:/tmp/id_rsa.pub
+    depends_on:
+      - scope

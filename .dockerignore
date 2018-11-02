@@ -1,0 +1,6 @@
+.git
+**/node_modules
+!.git/bit/objects
+!.git/bit/components
+!.git/bit/scope.json
+dist
