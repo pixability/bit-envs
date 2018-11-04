@@ -448,7 +448,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/testers/jest@0.9.10": {
+    "bit.test-envs/testers/jest@0.9.11": {
         "files": [
             {
                 "relativePath": "scripts/execute-jest-runner.js",

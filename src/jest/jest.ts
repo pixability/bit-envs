@@ -1,3 +1,6 @@
+// so that it can be required at runtime
+import 'jest-cli'
+
 import path from 'path'
 import fs from 'fs-extra'
 import _get from 'lodash.get'
@@ -16,9 +19,6 @@ import { FindStrategy, findConfiguration } from '../../src/find-configuration'
 import { convertJestFormatToBitFormat } from './result-adapter'
 
 export default CreateJestTester()
-
-// so that it can be required at runtime
-require('jest-cli')
 
 const jestBinString = `#!/usr/bin/env node
 require('${pkgDir.sync(__dirname)}/node_modules/jest-cli/build/cli').run()
