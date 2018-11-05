@@ -18,7 +18,7 @@ test('can use component with mocha tester', async t => {
       `bit config set user.token ${loginToken}`,
       'bit build',
       'bit test testers/mocha',
-      'bit tag --all --skip-tests'
+      'bit tag -f testers/mocha --skip-tests --ignore-newest-version'
     ])
     const authorTestResult = await runInAuthor([
       'bit test',
@@ -73,7 +73,7 @@ test('can use component having mocha.opts with mocha tester', async t => {
       `bit config set user.token ${loginToken}`,
       'bit build',
       'bit test testers/mocha',
-      'bit tag --all --skip-tests'
+      'bit tag -f testers/mocha --skip-tests --ignore-newest-version'
     ])
     const authorTestResult = await runInAuthor([
       'bit test',
