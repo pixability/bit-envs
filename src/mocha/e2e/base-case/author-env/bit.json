@@ -1,0 +1,8 @@
+{
+    "env": {
+        "tester": "bit.test-envs/testers/mocha"
+    },
+    "dependencies": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+}
