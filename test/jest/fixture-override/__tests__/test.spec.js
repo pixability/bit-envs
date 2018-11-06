@@ -1,5 +1,5 @@
-import { expect } from 'chai'
-import { run, add, sub } from './index'
+const { expect } = require('chai')
+const { run, add, sub } = require('../index')
 
 describe('basic', function () {
   it('should add/sub properly', function () {
@@ -13,6 +13,6 @@ describe('basic', function () {
   })
   it('did not use local config', function () {
     // setup file not preloaded
-    expect((global as any).jestSetupFilesRun).to.equal(undefined)
+    expect(global.jestSetupFilesRun).to.equal(undefined)
   })
 })

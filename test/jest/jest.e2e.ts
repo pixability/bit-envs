@@ -44,9 +44,13 @@ describe('jest', function () {
         }
       }
     }
-    this.helper = e2eHelper(Object.assign({}, testEnvDefaults, {
-      baseFixturePath, testerConfig
-    }))
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {baseFixturePath, testerConfig}, {
+        testFiles: ['__tests__/test.spec.js'],
+        compFiles: ['index.js', 'add.js', 'sub.js', 'setup.js'],
+        mainFile: 'index.js'
+      })
+    )
     createEnvironment(baseFixturePath, packageJSON)
     const mainCommandResult = this.helper.before().toString()
     expect(mainCommandResult).to.contain('tests passed')
