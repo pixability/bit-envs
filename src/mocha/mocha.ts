@@ -68,8 +68,12 @@ export function CreateMochaTester (): TesterExtension {
           info.testFiles.forEach(testFile => {
             mocha.addFile(testFile.path)
           })
-          mocha.run().on('end', function (this: { testResults: any }) {
-            const results = this.testResults
+          const runner = mocha.run(() => {
+            // we can't use mocha.run().on('end') here because if tests are
+            // synchronous and quick enough (eg. an empty or misconfigured test
+            // suite), it causes a race condition which means the listener
+            // is added after the event has fired, and so tests hang
+            const results = _get(runner, 'testResults', [])
             const rawResults = [].concat.apply(
               [],
               Object.keys(results).map(function (item) {
