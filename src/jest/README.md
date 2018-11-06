@@ -6,7 +6,7 @@ A tester component for authoring components with jest unit testing.
 [import docs](https://docs.bitsrc.io/docs/cli-import.html#import-a-new-environment)
 
 ```bash
-bit import bit.test-envs/testers/jest -c
+bit import bit.test-envs/testers/jest -t
 ```
 
 Then build using [bit test](https://docs.bitsrc.io/docs/cli-test.html).
