@@ -371,83 +371,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "bit.test-envs/testers/mocha@1.0.1": {
-        "files": [
-            {
-                "name": "README.md",
-                "relativePath": "src/mocha/README.md",
-                "test": false
-            },
-            {
-                "name": "base-reporter.ts",
-                "relativePath": "src/mocha/base-reporter.ts",
-                "test": false
-            },
-            {
-                "name": "index.ts",
-                "relativePath": "src/mocha/index.ts",
-                "test": false
-            },
-            {
-                "name": "json-reporter.ts",
-                "relativePath": "src/mocha/json-reporter.ts",
-                "test": false
-            },
-            {
-                "name": "mocha.ts",
-                "relativePath": "src/mocha/mocha.ts",
-                "test": false
-            },
-            {
-                "name": ".babelrc",
-                "relativePath": "test/mocha/fixture/.babelrc",
-                "test": false
-            },
-            {
-                "name": "add.js",
-                "relativePath": "test/mocha/fixture/add.js",
-                "test": false
-            },
-            {
-                "name": "index.js",
-                "relativePath": "test/mocha/fixture/index.js",
-                "test": false
-            },
-            {
-                "name": "setup.js",
-                "relativePath": "test/mocha/fixture/setup.js",
-                "test": false
-            },
-            {
-                "name": "sub.js",
-                "relativePath": "test/mocha/fixture/sub.js",
-                "test": false
-            },
-            {
-                "name": "test.spec.js",
-                "relativePath": "test/mocha/fixture/test.spec.js",
-                "test": false
-            },
-            {
-                "name": "test2.spec.js",
-                "relativePath": "test/mocha/fixture/test2.spec.js",
-                "test": false
-            },
-            {
-                "name": "mocha.spec.ts",
-                "relativePath": "test/mocha/mocha.spec.ts",
-                "test": true
-            },
-            {
-                "name": "private-package-json.ts",
-                "relativePath": "test/mocha/private-package-json.ts",
-                "test": false
-            }
-        ],
-        "mainFile": "src/mocha/mocha.ts",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "bit.test-envs/testers/jest@0.9.11": {
         "files": [
             {
@@ -615,5 +538,82 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "version": "13.0.5-dev.27"
+    "bit.test-envs/testers/mocha@1.0.2": {
+        "files": [
+            {
+                "name": "README.md",
+                "relativePath": "src/mocha/README.md",
+                "test": false
+            },
+            {
+                "name": "base-reporter.ts",
+                "relativePath": "src/mocha/base-reporter.ts",
+                "test": false
+            },
+            {
+                "name": "index.ts",
+                "relativePath": "src/mocha/index.ts",
+                "test": false
+            },
+            {
+                "name": "json-reporter.ts",
+                "relativePath": "src/mocha/json-reporter.ts",
+                "test": false
+            },
+            {
+                "name": "mocha.ts",
+                "relativePath": "src/mocha/mocha.ts",
+                "test": false
+            },
+            {
+                "name": ".babelrc",
+                "relativePath": "test/mocha/fixture/.babelrc",
+                "test": false
+            },
+            {
+                "name": "add.js",
+                "relativePath": "test/mocha/fixture/add.js",
+                "test": false
+            },
+            {
+                "name": "index.js",
+                "relativePath": "test/mocha/fixture/index.js",
+                "test": false
+            },
+            {
+                "name": "setup.js",
+                "relativePath": "test/mocha/fixture/setup.js",
+                "test": false
+            },
+            {
+                "name": "sub.js",
+                "relativePath": "test/mocha/fixture/sub.js",
+                "test": false
+            },
+            {
+                "name": "test.spec.js",
+                "relativePath": "test/mocha/fixture/test.spec.js",
+                "test": false
+            },
+            {
+                "name": "test2.spec.js",
+                "relativePath": "test/mocha/fixture/test2.spec.js",
+                "test": false
+            },
+            {
+                "name": "mocha.spec.ts",
+                "relativePath": "test/mocha/mocha.spec.ts",
+                "test": true
+            },
+            {
+                "name": "private-package-json.ts",
+                "relativePath": "test/mocha/private-package-json.ts",
+                "test": false
+            }
+        ],
+        "mainFile": "src/mocha/mocha.ts",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "version": "13.0.5-dev.28"
 }
