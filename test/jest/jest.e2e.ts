@@ -45,7 +45,7 @@ describe('jest', function () {
       }
     }
     this.helper = e2eHelper(
-      Object.assign({}, testEnvDefaults, {baseFixturePath, testerConfig}, {
+      Object.assign({}, testEnvDefaults, { baseFixturePath, testerConfig }, {
         testFiles: ['__tests__/test.spec.js'],
         compFiles: ['index.js', 'add.js', 'sub.js', 'setup.js'],
         mainFile: 'index.js'

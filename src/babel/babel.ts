@@ -10,6 +10,7 @@ import resolve from 'resolve'
 import path from 'path'
 import * as babel from 'babel-core'
 import _get from 'lodash.get'
+import minimatch from 'minimatch'
 
 export function CreateBabelCompiler (name = '.babelrc') {
   const metaBabelCompiler: CompilerExtension = {
@@ -31,6 +32,7 @@ export function CreateBabelCompiler (name = '.babelrc') {
         babelrcFromfind.config
       )
       const componentDir = info.context && info.context.componentDir
+      const patternsNotToCompile = _get(info, 'rawConfig.skipCompile', [])
 
       if (componentDir) {
         babelrc.plugins = _get(babelrc, 'plugins', []).map(
@@ -48,7 +50,13 @@ export function CreateBabelCompiler (name = '.babelrc') {
       const builtFiles: { files: Array<Vinyl>; errors: Array<any> } = (
         info.files || []
       )
-        .map((file: Vinyl) => runBabel(file, babelrc, info.context.rootDistDir))
+        .map((file: Vinyl) => {
+          return patternsNotToCompile.some((glob: string) => {
+            return minimatch(file.path, glob)
+          })
+            ? { errors: [], files: [file] }
+            : runBabel(file, babelrc, info.context.rootDistDir)
+        })
         .reduce((a: any, b: any): any => {
           return {
             errors: a.errors.concat(b.errors),

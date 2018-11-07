@@ -77,4 +77,38 @@ describe('babel', function () {
       .toString()
     expect(_eval(transpiled).run()).to.equal(0)
   })
+  it('bit should give the option not to compile certain globs', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture-skipcompile')
+    const compilerConfig = {
+      metaBabel: {
+        rawConfig: {
+          skipCompile: ['**/*.flow']
+        },
+        options: {
+          file: compilerPath
+        }
+      }
+    }
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {
+        baseFixturePath,
+        compilerConfig,
+        confName: ['.babelrc'],
+        compFiles: ['foo.js.flow']
+      })
+    )
+    createEnvironment(baseFixturePath, packageJSON)
+    this.helper.before()
+    const transpiled = fs
+      .readFileSync(path.resolve(baseFixturePath, 'dist/b.js'))
+      .toString()
+    const transpiledFoo = fs.readFileSync(
+      path.resolve(baseFixturePath, 'dist/foo.js.flow')
+    )
+    const origFoo = fs.readFileSync(
+      path.resolve(baseFixturePath, 'foo.js.flow')
+    )
+    expect(_eval(transpiled).run()).to.equal(0)
+    expect(transpiledFoo.toString()).to.equal(origFoo.toString())
+  })
 })
