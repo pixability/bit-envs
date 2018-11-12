@@ -1,17 +1,15 @@
 export const defaultConfig = {
-  presets: ['latest', 'react'],
+  presets: [
+    require.resolve('@babel/preset-env'),
+    require.resolve('@babel/preset-react')
+  ],
   sourceMaps: true,
   ast: false,
   minified: false,
   plugins: [
-    ['transform-object-rest-spread', { useBuiltIns: true }],
-    'transform-decorators-legacy',
-    'transform-object-entries',
-    'object-values-to-object-keys',
-    'transform-export-extensions',
-    'transform-class-properties',
-    'transform-async-to-generator',
-    ['transform-react-jsx', { useBuiltIns: true }],
-    ['transform-regenerator', { async: false }]
+    [ require.resolve('@babel/plugin-proposal-decorators'), { legacy: true } ],
+    require.resolve('babel-plugin-object-values-to-object-keys'),
+    require.resolve('@babel/plugin-syntax-export-extensions'),
+    require.resolve('@babel/plugin-proposal-class-properties')
   ]
 }

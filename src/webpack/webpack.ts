@@ -14,7 +14,7 @@ import {
   findByName
 } from '../env-utils'
 import { findConfiguration, FindStrategy } from '../find-configuration'
-import { getBabelDynamicPackageDependencies } from '../babel-dependencies'
+import { getBabelPackageDependencies } from '../babel-dependencies'
 import DefaulftWebapckConfig from './default-config'
 
 export function CreateWebpackCompiler (
@@ -94,10 +94,10 @@ export function CreateWebpackCompiler (
       ) {
         let babelResults = {}
         if (name === 'babel-loader') {
-          babelResults = getBabelDynamicPackageDependencies(
-            metaWebpack.logger!,
-            babelConfigName
-          )(info)
+          babelResults = getBabelPackageDependencies(
+            babelConfigName,
+            info
+          )
         }
 
         fillDependencyVersion(packageJson, name, toFill)

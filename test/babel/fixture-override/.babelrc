@@ -1,7 +1,6 @@
 {
     "presets": [],
     "sourceMaps": true,
-    "ast": false,
     "minified": true,
     "plugins": []
-  }
+}

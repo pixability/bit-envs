@@ -1,7 +1,6 @@
 {
-    "presets": ["env"],
+    "presets": ["@babel/env"],
     "sourceMaps": true,
-    "ast": false,
     "minified": true,
     "plugins": [
     ]

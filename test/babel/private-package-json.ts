@@ -10,14 +10,13 @@ const packageJson = {
   author: '',
   license: 'ISC',
   dependencies: {
-    'babel-plugin-transform-object-rest-spread': '^6.26.0',
-    'babel-preset-env': '^1.6.1',
-    'babel-preset-latest': '^6.24.1',
+    '@babel/plugin-proposal-object-rest-spread': '^7.0.0',
+    '@babel/preset-env': '7.1.5',
     chai: '^4.1.2',
     raven: '^2.4.2'
   },
   devDependencies: {
-    'babel-plugin-transform-async-to-module-method': '^6.24.1',
+    '@babel/plugin-transform-async-to-generator': '7.1.0',
     bluebird: '^3.5.1'
   }
 }

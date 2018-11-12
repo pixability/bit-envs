@@ -72,7 +72,7 @@ export function e2eHelper (i: E2eHelperInfo) {
           }
         }
       }
-      fs.writeFileSync('./bit.json', JSON.stringify(bitJson))
+      fs.writeFileSync('./bit.json', JSON.stringify(bitJson, null, 2))
       return child_process.execSync(
         `${bitPath} ${i.testerPath ? ' test' : ' build'}`,
         options

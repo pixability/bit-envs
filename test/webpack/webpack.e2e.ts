@@ -22,6 +22,10 @@ describe('webpack', function () {
     this.helper && this.helper.after && this.helper.after()
   })
   it('bit should bundle a component with webpack meta bundler', function () {
+    // TODO:
+    // This test runs in a babel6 environment, it's the only place we test such
+    // an environment. Ideally, we should replicate it and make another test of
+    // it more explicitly.
     const baseFixturePath = path.resolve(__dirname, './fixture-e2e')
     this.helper = e2eHelper(Object.assign({}, compilerEnvDefaults, {
       baseFixturePath

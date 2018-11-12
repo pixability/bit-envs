@@ -103,7 +103,10 @@ export function CreateMochaTester (): TesterExtension {
         mochaRequire: string
       ) {
         const requireParts = mochaRequire.split('/')
-        fillDependencyVersion(packageJson, requireParts[0], packages)
+        const packageName = requireParts[0].startsWith('@')
+          ? `${requireParts[0]}/${requireParts[1]}` // scoped package
+          : requireParts[0]
+        fillDependencyVersion(packageJson, packageName, packages)
       })
       return packages
     }

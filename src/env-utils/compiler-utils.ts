@@ -7,17 +7,10 @@ export function loadPackageJsonSync (
   componentDir: string,
   workspaceDir: string
 ) {
-  const packageJsonName = 'package.json'
-  let packageJsonPath
-  if (componentDir) {
-    packageJsonPath = path.join(componentDir, packageJsonName)
-    const packageJson = loadPackageJsonFromPathSync(packageJsonPath)
-    if (packageJson) {
-      return packageJson
-    }
-  }
-
-  packageJsonPath = path.join(workspaceDir, packageJsonName)
+  const packageJsonPath = componentDir
+    ? path.join(componentDir, 'package.json')
+    : path.join(workspaceDir, 'package.json')
+  if (!componentDir && !workspaceDir) return null
   return loadPackageJsonFromPathSync(packageJsonPath)
 }
 

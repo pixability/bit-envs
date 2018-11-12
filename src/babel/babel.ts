@@ -1,14 +1,14 @@
 import { CompilerExtension, API, ExtensionApiOptions } from '../env-utils/types'
 import Vinyl from 'vinyl'
 import {
-  getPluginPackageName,
-  getPresetPackageName,
   babelFindConfiguration,
-  getBabelDynamicPackageDependencies
+  getBabelPackageDependencies,
+  findBabelNameInDeps,
+  findBabelPluginNames
 } from '../babel-dependencies'
 import resolve from 'resolve'
 import path from 'path'
-import * as babel from 'babel-core'
+import * as babel from '@babel/core'
 import _get from 'lodash.get'
 import minimatch from 'minimatch'
 
@@ -25,26 +25,39 @@ export function CreateBabelCompiler (name = '.babelrc') {
       return config.save ? config.config : info.rawConfig
     },
     action: function (info: ExtensionApiOptions) {
-      const babelrcFromfind = babelFindConfiguration(info, name)
+      const babelrcFromFind = babelFindConfiguration(info, name)
       const babelrc = _get(
-        babelrcFromfind,
+        babelrcFromFind,
         'config.babel',
-        babelrcFromfind.config
+        babelrcFromFind.config
       )
       const componentDir = info.context && info.context.componentDir
       const patternsNotToCompile = _get(info, 'rawConfig.skipCompile', [])
-
       if (componentDir) {
-        babelrc.plugins = _get(babelrc, 'plugins', []).map(
-          (pluginName: string | Array<string>) => {
-            const actualPluginName = Array.isArray(pluginName)
-              ? pluginName[0]
-              : pluginName
-            return resolvePlugin(componentDir, actualPluginName)
-          }
+        const dependencies = getBabelPackageDependencies(name, info)
+        const findBabelAddonLocations = (
+          babelType: 'plugin' | 'preset',
+          addons: Array<string>
+        ) => {
+          return addons
+          .map(
+            (name: any) => findBabelNameInDeps(name, babelType, dependencies)
+          )
+          .map((packageName: any) => resolvePackagesFromComponentDir(
+            componentDir,
+            packageName
+          ))
+        }
+        // here we map the plugins and presets to their absolute locations
+        // rather than letting babel control their resolution because then they
+        // might resolve differently in an author/consumer environment
+        babelrc.plugins = findBabelAddonLocations(
+          'plugin',
+          findBabelPluginNames(babelrc.plugins)
         )
-        babelrc.presets = _get(babelrc, 'presets', []).map(
-          (presetName: string) => resolvePreset(componentDir, presetName)
+        babelrc.presets = findBabelAddonLocations(
+          'preset',
+          _get(babelrc, 'presets', [])
         )
       }
       const builtFiles: { files: Array<Vinyl>; errors: Array<any> } = (
@@ -68,23 +81,10 @@ export function CreateBabelCompiler (name = '.babelrc') {
         : Promise.reject(builtFiles.errors)
     },
     getDynamicPackageDependencies: function (info) {
-      return getBabelDynamicPackageDependencies(
-        metaBabelCompiler.logger!,
-        name
-      )(info)
+      return getBabelPackageDependencies(name, info)
     }
   }
   return metaBabelCompiler
-}
-
-function resolvePlugin (componentDir: string, pluginName: string) {
-  const resolvedName = getPluginPackageName(pluginName)
-  return resolvePackagesFromComponentDir(componentDir, resolvedName)
-}
-
-function resolvePreset (componentDir: string, presetName: string) {
-  const resolvedName = getPresetPackageName(presetName)
-  return resolvePackagesFromComponentDir(componentDir, resolvedName)
 }
 
 function resolvePackagesFromComponentDir (
@@ -101,12 +101,19 @@ function resolvePackagesFromComponentDir (
 }
 
 function runBabel (file: Vinyl, options: object, distPath: string) {
+  const ignore = _get(options, 'ignore', undefined)
   const adjustedOptions = Object.assign({}, options, {
-    filename: file.relative
+    filename: file.relative,
+    ignore: ignore
+      ? ignore.map((pattern: string) => {
+        return path.join(path.dirname(file.relative), pattern)
+      })
+      : ignore
   })
   let r
   try {
     r = babel.transform(file.contents!.toString(), adjustedOptions)
+    if (!r) return { files: [], errors: [] }
   } catch (e) {
     return { files: [], errors: [e] }
   }

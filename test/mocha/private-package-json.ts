@@ -6,7 +6,7 @@ const packageJson = {
   scripts: {
     build: 'tsc -d',
     test:
-      'mocha --require babel-core/register --require setup.js ' +
+      'mocha --require @babel/register --require setup.js ' +
       '--require source-map-support/register ./**/*.spec.js',
     clean: 'rimraf ./dist/*'
   },
@@ -15,8 +15,11 @@ const packageJson = {
     mocha: '^5.2.0',
     rimraf: '^2.6.2',
     'source-map-support': '^0.5.6',
-    'babel-core': '^6.26.3',
-    'babel-preset-env': '^1.6.1'
+    '@babel/core': '^7.1.2',
+    '@babel/register': '^7.0.0',
+    '@babel/preset-env': '7.1.5',
+    '@babel/plugin-proposal-object-rest-spread': '^7.0.0',
+    '@babel/plugin-transform-async-to-generator': '^7.1.0'
   },
   dependencies: {}
 }

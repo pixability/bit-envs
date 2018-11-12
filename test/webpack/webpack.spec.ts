@@ -189,9 +189,9 @@ describe('Webpack', function () {
         'my-private-rc'
       )
 
-      const presetEnv = 'babel-preset-env'
-      const restPlugin = 'babel-plugin-transform-object-rest-spread'
-      const asyncPlugin = 'babel-plugin-transform-async-to-module-method'
+      const presetEnv = '@babel/preset-env'
+      const restPlugin = '@babel/plugin-proposal-object-rest-spread'
+      const asyncPlugin = '@babel/plugin-transform-async-to-generator'
       expect(result).to.contain({
         [presetEnv]: getVersion(packageJSON, presetEnv),
         [restPlugin]: getVersion(packageJSON, restPlugin),

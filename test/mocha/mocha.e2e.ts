@@ -28,7 +28,7 @@ describe('mocha', function () {
     const testerConfig = {
       [`meta-tester`]: {
         rawConfig: {
-          require: ['babel-core/register', 'source-map-support/register']
+          require: ['@babel/register', 'source-map-support/register']
         },
         options: {
           file: testerPath
@@ -52,7 +52,7 @@ describe('mocha', function () {
     const testerConfig = {
       [`meta-tester`]: {
         rawConfig: {
-          require: ['babel-core/register', 'source-map-support/register']
+          require: ['@babel/register', 'source-map-support/register']
         },
         options: {
           file: testerPath
@@ -77,7 +77,7 @@ describe('mocha', function () {
       [`meta-tester`]: {
         files: ['./setup.js'],
         rawConfig: {
-          require: ['babel-core/register', 'source-map-support/register']
+          require: ['@babel/register', 'source-map-support/register']
         },
         options: {
           file: testerPath

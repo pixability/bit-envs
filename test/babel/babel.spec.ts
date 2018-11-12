@@ -55,9 +55,9 @@ describe('babel', function () {
       configFiles: [config],
       context
     })
-    const presetEnv = 'babel-preset-env'
-    const restPlugin = 'babel-plugin-transform-object-rest-spread'
-    const asyncPlugin = 'babel-plugin-transform-async-to-module-method'
+    const presetEnv = '@babel/preset-env'
+    const restPlugin = '@babel/plugin-proposal-object-rest-spread'
+    const asyncPlugin = '@babel/plugin-transform-async-to-generator'
     expect(results).to.contain({
       [presetEnv]: getVersion(packageJSON, presetEnv),
       [restPlugin]: getVersion(packageJSON, restPlugin),
