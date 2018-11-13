@@ -8,6 +8,7 @@ const packageJson = {
     'ts-loader': '^4.4.2',
     typescript: '2.7.1',
     'babel-jest': '^23.4.2',
+    'react-dom': '^15.4.1',
     'some-module': '1.1.1',
     'pretty-module': '1.2.3',
     dom: '1.5.6',

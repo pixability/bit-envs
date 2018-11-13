@@ -18,6 +18,7 @@ describe('jest', function () {
     generatePackageJson({
       [fixtureAction]: packageJSON,
       [baseFixturePath]: packageJSONNoAction,
+      [fixtureHardCodedPackages]: packageJSONNoAction,
       [fixtureConfiguration]: packageJSONConf
     })
     setup(this, [baseFixturePath, fixtureAction, fixtureConfiguration])
@@ -25,6 +26,7 @@ describe('jest', function () {
 
   const fixtureAction = path.resolve(__dirname, './fixture-action')
   const baseFixturePath = path.resolve(__dirname, './fixture')
+  const fixtureHardCodedPackages = path.resolve(__dirname, './fixture-packages')
   const fixtureConfiguration = path.resolve(
     __dirname,
     './fixture-configuration'
@@ -57,6 +59,24 @@ describe('jest', function () {
       'some-module': getVersion(packageJSON, 'some-module'),
       dom: getVersion(packageJSON, 'dom'),
       serialize: getVersion(packageJSON, 'serialize')
+    })
+  })
+  it('getDynamicPackageDependencies adds hard coded packages', function () {
+    const packageJSON = packageJSONNoAction
+    const tester = CreateJestTester()
+    const context = {
+      componentDir: fixtureHardCodedPackages
+    }
+    tester.init({
+      api: createApi()
+    })
+    const results = tester.getDynamicPackageDependencies({
+      configFiles: [],
+      context
+    })
+    expect(results).to.contain({
+      'babel-jest': getVersion(packageJSON, 'babel-jest'),
+      'react-dom': getVersion(packageJSON, 'react-dom')
     })
   })
 

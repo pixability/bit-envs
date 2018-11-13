@@ -66,10 +66,8 @@ export function CreateJestTester (): TesterExtension {
         metaJest.logger!.log('Could not find package.json.')
         return packages
       }
-
       const configFromFind = jestFindConfiguration(info)
       const config = _get(configFromFind, 'config.jest', configFromFind.config)
-
       const paths = [
         'transform',
         'preset',
@@ -78,6 +76,7 @@ export function CreateJestTester (): TesterExtension {
         'snapshotSerializers'
       ]
       jestFindDynamicDependencies(config, paths, packageJson, packages)
+      addHardCodedJestDependencies(packageJson, packages)
       return packages
     }
   }
@@ -97,6 +96,14 @@ function parseAndFillDependencyVersion (
     return
   }
   fillDependencyVersion(packageJson, value, toFill)
+}
+
+function addHardCodedJestDependencies (
+  packageJson: object,
+  toFill: { [k: string]: string }
+) {
+  fillDependencyVersion(packageJson, 'babel-jest', toFill)
+  fillDependencyVersion(packageJson, 'react-dom', toFill)
 }
 
 function jestFindDynamicDependencies (
