@@ -40,11 +40,33 @@ export function CreateJestTester (): TesterExtension {
     action: function (info: ActionTesterOptions) {
       const { config } = jestFindConfiguration(info)
       const directory = getDirectory(info, metaJest.logger!)
+      const isAuthorEnvironment =
+        info.context.componentDir === info.context.workspaceDir
+      const replaceRootDir = (value: any): any => {
+        if (typeof value === 'string') {
+          return /node_modules/.test(value)
+            ? value
+            : value.replace(/<rootDir>/, '<rootDir>/.bitTmp')
+        } else if (Array.isArray(value)) {
+          return value.map(v => replaceRootDir(v))
+        } else if (typeof value === 'object') {
+          return Object.keys(value).reduce((obj, key) => {
+            return Object.assign({}, obj, {
+              [key]: replaceRootDir(value[key])
+            })
+          }, value)
+        } else {
+          return value
+        }
+      }
+      const jestConfigWithProperRootPath = isAuthorEnvironment
+        ? config
+        : replaceRootDir(config)
       const resultHandler = CreateResultFileHandler(directory)
       const { executablePath, outputFile } = resultHandler.preTest()
       const testFilePath = info.testFiles.map(f => f.path)
       const testCommand = executablePath + ' ' +
-        `--config '${JSON.stringify(config)}' ` +
+        `--config '${JSON.stringify(jestConfigWithProperRootPath)}' ` +
         `--json ${testFilePath.join(' ')} ` +
         `> ${outputFile}`
       child_process.execSync(
