@@ -8,6 +8,10 @@ import path from 'path'
 
 import _get from 'lodash.get'
 
+const getNameOfAddon = (addon: string) => {
+  return Array.isArray(addon) ? addon[0] : addon
+}
+
 export function getDependencies (
   names: Array<string>,
   babelType: 'plugin' | 'preset',
@@ -23,7 +27,8 @@ export function getDependencies (
   )
   return names
     .reduce((pkgNamesAndVersions: any, name: string) => {
-      if (path.isAbsolute(name)) {
+      const addonName = getNameOfAddon(name)
+      if (path.isAbsolute(addonName)) {
         // since we only need to return names, if this is an absolute path
         // we do not deal with it here (at the time of this writing, we
         // require those packages as part of the environment)
@@ -44,15 +49,13 @@ export function findBabelNameInDeps (
   babelType: 'plugin' | 'preset',
   dependencies: any
 ) {
-  const possiblePackageNames = getPossiblePkgNames(name, babelType)
+  const addonName = getNameOfAddon(name)
+  const possiblePackageNames = getPossiblePkgNames(addonName, babelType)
   return possiblePackageNames.find(name => dependencies[name])
 }
 
 export function findBabelPluginNames (plugins?: Array<string>) {
-  return (plugins || []).map(
-    (pluginName: string | Array<string>) =>
-      Array.isArray(pluginName) ? pluginName[0] : pluginName
-  )
+  return (plugins || []).map(getNameOfAddon)
 }
 
 export function getBabelPackageDependencies (
@@ -65,7 +68,7 @@ export function getBabelPackageDependencies (
     'config.babel',
     babelrcFromFind.config
   )
-  const pluginNames = findBabelPluginNames(babelrc.plugins)
+  const pluginNames = babelrc.plugins || []
   const presetNames = babelrc.presets || []
   const workspaceDir = info.context && info.context.workspaceDir
   const componentDir = info.context && info.context.componentDir
