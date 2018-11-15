@@ -1,0 +1,16 @@
+{
+    "presets": ["env"],
+    "sourceMaps": true,
+    "ast": false,
+    "minified": true,
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread",
+      ["@babel/plugin-transform-async-to-generator", {
+        "module": "bluebird",
+        "method": "coroutine"
+      }]
+    ],
+    "only": [
+
+    ]
+  }

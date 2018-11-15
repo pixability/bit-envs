@@ -36,6 +36,21 @@ describe('babel', function () {
       .toString()
     expect(_eval(transpiled).run()).to.equal(0)
   })
+  it('bit should transpile component with js babelrc file', function () {
+    const baseFixturePath = path.resolve(__dirname, './fixture-babelrc-js')
+    this.helper = e2eHelper(
+      Object.assign({}, testEnvDefaults, {
+        baseFixturePath,
+        confName: ['.babelrc.js']
+      })
+    )
+    createEnvironment(baseFixturePath, packageJSON)
+    this.helper.before()
+    const transpiled = fs
+      .readFileSync(path.resolve(baseFixturePath, 'dist/b.js'))
+      .toString()
+    expect(_eval(transpiled).run()).to.equal(0)
+  })
   it('bit should transpile component with default babelrc', function () {
     const baseFixturePath = path.resolve(__dirname, './fixture-default-config')
     this.helper = e2eHelper(
