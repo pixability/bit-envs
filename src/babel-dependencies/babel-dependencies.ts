@@ -3,8 +3,10 @@ import {
   loadPackageJsonSync
 } from '../env-utils'
 import { findConfiguration, FindStrategy } from '../find-configuration'
-import { defaultConfig } from './default-babel-config'
+// import { defaultConfig } from './default-babel-config'
 import path from 'path'
+
+const defaultConfig = {} // TODO: fix this
 
 import _get from 'lodash.get'
 
@@ -72,10 +74,27 @@ export function getBabelPackageDependencies (
   const packageJson = loadPackageJsonSync(componentDir, workspaceDir || '')
   const pluginDeps = getDependencies(pluginNames, 'plugin', packageJson)
   const presetDeps = getDependencies(presetNames, 'preset', packageJson)
+  const hardCodedDeps = getHardCodedDeps(packageJson)
   return Object.assign({},
+    hardCodedDeps,
     pluginDeps,
     presetDeps
   )
+}
+
+export function getHardCodedDeps (packageJson: any) {
+  const dependencies = _get(packageJson, 'dependencies', {})
+  const devDependencies = _get(packageJson, 'devDependencies', {})
+  const peerDependencies = _get(packageJson, 'peerDependencies', {})
+  const packagesInPkgJson = Object.assign({},
+    peerDependencies,
+    devDependencies,
+    dependencies
+  )
+  return {
+    '@babel/core': packagesInPkgJson['@babel/core'] || '7.0.0',
+    '@babel/cli': packagesInPkgJson['@babel/cli'] || '7.0.0'
+  }
 }
 
 export function getPossiblePkgNames (

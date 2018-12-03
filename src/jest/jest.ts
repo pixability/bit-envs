@@ -25,7 +25,7 @@ require('${pkgDir.sync(__dirname)}/node_modules/jest-cli/build/cli').run()
 `
 
 export function CreateJestTester (): TesterExtension {
-  const metaJest: TesterExtension = {
+  const metaJest: any = {
     init: function ({ api }: { api: API }) {
       metaJest.logger = api.getLogger()
       return {
@@ -37,24 +37,45 @@ export function CreateJestTester (): TesterExtension {
       let config = jestFindConfiguration(info)
       return config.save ? config.config : {}
     },
-    action: function (info: ActionTesterOptions) {
+    action: async function (info: ActionTesterOptions, write: any, exec: any) {
+      if (!info.testFiles || !info.testFiles.length) return {}
       const { config } = jestFindConfiguration(info)
-      const directory = getDirectory(info, metaJest.logger!)
-      const resultHandler = CreateResultFileHandler(directory)
-      const { executablePath, outputFile } = resultHandler.preTest()
-      const testFilePath = info.testFiles.map(f => f.path)
-      const testCommand = executablePath + ' ' +
-        `--config '${JSON.stringify(config)}' ` +
-        `--json ${testFilePath.join(' ')} ` +
-        `> ${outputFile}`
-      child_process.execSync(
-        testCommand,
-        { stdio: [] }
-      )
-      const results = resultHandler.getResults()
-      const normalizedResults = convertJestFormatToBitFormat(results)
-      resultHandler.postTest()
-      return Promise.resolve(normalizedResults)
+      const testFilePath = info.testFiles.map(f => f.relative)
+      // TODO: abs path in sandbox
+      const jestConfigJs = `
+  module.exports = {
+		resolver: require.resolve('jest-pnp-resolver'),
+		transform: {
+			"^.+\\.js$": require.resolve('babel-jest')
+		}
+	}
+      `
+      const babelRcJs = `
+module.exports = {
+  presets: [
+    [require.resolve("@babel/preset-env"), { loose: true, exclude: [/transform-typeof-symbol/] }],
+    require.resolve("@babel/preset-flow")
+  ]
+};
+`
+      // TODO: use the babel env
+      await write({
+        'jest.config.js': jestConfigJs,
+        '.babelrc.js': babelRcJs
+      })
+
+      // TODO: executing with .pnp.js preloaded should be part of the envs
+      const jestEntry = '/home/aram/.cache/yarn/v4/npm-jest-cli-23.0.0-29287498c9d844dcda5aaf011a4c82f9a888836e/node_modules/jest-cli/.bin/jest'
+      const testCommand = `node -r ./.pnp.js ${jestEntry} ` +
+        `--json ${testFilePath.join(' ')}`
+      try {
+        const results = await exec(testCommand)
+        const normalizedResults =
+          convertJestFormatToBitFormat(JSON.parse(results))
+        return normalizedResults
+      } catch (e) {
+        return {}
+      }
     },
     getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
       let packages = {}
@@ -103,7 +124,31 @@ function addHardCodedJestDependencies (
   toFill: { [k: string]: string }
 ) {
   fillDependencyVersion(packageJson, 'babel-jest', toFill)
-  fillDependencyVersion(packageJson, 'react-dom', toFill)
+  fillDependencyVersion(
+    {dependencies: {'jest-cli': '23.0.0'}}, 'jest-cli', toFill
+  )
+  fillDependencyVersion(
+    {dependencies: {'babel-core': '^7.0.0-bridge.0'}}, 'babel-core', toFill
+  )
+  fillDependencyVersion(
+    {dependencies: {'@babel/core': '^7.0.0'}}, '@babel/core', toFill
+  )
+  fillDependencyVersion(
+    {dependencies: {'@babel/preset-env': '^7.1.6'}}, '@babel/preset-env', toFill
+  )
+  fillDependencyVersion(
+    {dependencies: {'@babel/preset-flow': '^7.0.0'}}, '@babel/preset-flow', toFill
+  )
+  // TODO: fix these
+  fillDependencyVersion(
+    {dependencies: {'jest-pnp-resolver': '^1.0.2'}}, 'jest-pnp-resolver', toFill
+  ) // TODO: move this to the isolated env, plugin should not know about this
+  fillDependencyVersion(
+    {dependencies: {'jest-environment-jsdom': '^23.4.0'}}, 'jest-environment-jsdom', toFill
+  ) // TODO: move this to the isolated env, plugin should not know about this
+  fillDependencyVersion(
+    {dependencies: {'execa': '^1.0.0'}}, 'execa', toFill
+  ) // TODO: move this to the isolated env, plugin should not know about this
 }
 
 function jestFindDynamicDependencies (

@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc -d",
+    "watch": "tsc -w",
     "test:watch": "mocha -w --require ts-node/register/transpile-only --require source-map-support/register test/**/*.spec.ts",
     "test": "npm run lint && npm run test-only",
     "test-only": "mocha --require ts-node/register/transpile-only --require source-map-support/register test/**/*.spec.ts",
@@ -63,6 +64,7 @@
     "typescript-eslint-parser": "^20.0.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.2",
@@ -76,6 +78,7 @@
     "@types/minimatch": "^3.0.3",
     "@types/minimist": "^1.2.0",
     "@types/pkg-dir": "^2.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^7.1.5",
     "babel-plugin-object-values-to-object-keys": "^1.0.2",
     "css-loader": "^1.0.0",
