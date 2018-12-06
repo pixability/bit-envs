@@ -68,14 +68,10 @@ module.exports = {
       const jestEntry = '/home/aram/.cache/yarn/v4/npm-jest-cli-23.0.0-29287498c9d844dcda5aaf011a4c82f9a888836e/node_modules/jest-cli/.bin/jest'
       const testCommand = `node -r ./.pnp.js ${jestEntry} ` +
         `--json ${testFilePath.join(' ')}`
-      try {
-        const results = await exec(testCommand)
-        const normalizedResults =
-          convertJestFormatToBitFormat(JSON.parse(results))
-        return normalizedResults
-      } catch (e) {
-        return {}
-      }
+      const results = await exec(testCommand)
+      const normalizedResults =
+        convertJestFormatToBitFormat(JSON.parse(results))
+      return normalizedResults
     },
     getDynamicPackageDependencies: function (info: ExtensionApiOptions) {
       let packages = {}
