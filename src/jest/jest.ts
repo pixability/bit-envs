@@ -7,6 +7,7 @@ import _get from 'lodash.get'
 import child_process from 'child_process'
 import pkgDir from 'pkg-dir'
 import { defaultConfig } from './default-configuration'
+import babelPackageData from './babel-package-data'
 import {
   TesterExtension,
   API,
@@ -24,6 +25,56 @@ const jestBinString = `#!/usr/bin/env node
 require('${pkgDir.sync(__dirname)}/node_modules/jest-cli/build/cli').run()
 `
 
+function convertToBabelSeven (rawConfig) {
+  const config = JSON.parse(rawConfig)
+  const content = `module.exports = function(api) {
+    api.cache.never()
+    return {
+      presets: [
+        ${
+          config.presets // TODO: handle no presets
+            .map(
+              p => Array.isArray(p)
+                ? [p[0].replace(/^babel-preset-/, ''), p[1]]
+                : p.replace(/^babel-preset-/, '')
+            )
+            .map(
+              p => Array.isArray(p)
+                ? `['${babelPackageData.presets[p[0]]}', ${JSON.stringify(p[1])}]`
+                : `'${babelPackageData.presets[p]}'`
+            ).join(', ')
+        }
+      ],
+      plugins: [
+        ${
+          config.plugins // TODO: handle no plugins
+            .map(p => p.replace(/^babel-plugin-/, ''))
+            .map(p => `'${babelPackageData.plugins[p]}'`)
+        }
+      ],
+      env: {
+        ${Object.keys(config.env || {}).map(envName => {
+          return `
+          ['${envName}']: {
+              plugins: [
+                ${Object.keys(config.env[envName].plugins || {})
+                  .map(p => p.replace(/^babel-plugin-/, ''))
+                  .map(p =>
+                    `'${
+                      babelPackageData.plugins[config.env[envName].plugins[p]]
+                    }'`
+                  )
+                  .join(', ')
+                }
+              ]
+            }
+          `})}
+      }
+    }
+  }`
+  return content
+}
+
 export function CreateJestTester (): TesterExtension {
   const metaJest: any = {
     init: function ({ api }: { api: API }) {
@@ -40,13 +91,31 @@ export function CreateJestTester (): TesterExtension {
     action: async function (info: ActionTesterOptions, write: any, exec: any) {
       if (!info.testFiles || !info.testFiles.length) return {}
       const { config } = jestFindConfiguration(info)
-      const testFilePath = info.testFiles.map(f => f.relative)
-      // TODO: abs path in sandbox
+      const testFilesPath = info.testFiles.map(f => f.relative)
+
+      const setupFiles = info.configFiles
+        ? info.configFiles
+          .filter(vinyl => {
+            return `${
+              vinyl.relative ||
+                vinyl.relativePath
+            }`.endsWith('src/setupTests.js') // default CRA unejected location
+          })
+          .map(vinyl => {
+            return `<rootDir>/${vinyl.relative || vinyl.relativePath}`
+          })
+        : []
+      // TODO: what if configFiles has non-setup files?
+      // TODO: auto detect src/setupTests.js without having to place in config
+      const setupFilesString = setupFiles
+        ? `[${setupFiles.map(f => `'${f}'`).join(', ')}]`
+        : '[]'
       const jestConfigJs = `
   module.exports = {
+    setupFiles: ${setupFilesString},
 		resolver: require.resolve('jest-pnp-resolver'),
 		transform: {
-			"^.+\\.js$": require.resolve('babel-jest')
+			"^.+\\.js$": 'babel-jest'
 		}
 	}
       `
@@ -58,16 +127,27 @@ module.exports = {
   ]
 };
 `
-      // TODO: use the babel env
-      await write({
+      let filesToWrite = {
         'jest.config.js': jestConfigJs,
-        '.babelrc.js': babelRcJs
-      })
+        '.babelrc': null // delete existing .babelrc
+      }
+      const existingBabelRc = info.configFiles
+        .find(c => {
+          return c.relative
+            ? c.relative.endsWith('.babelrc')
+            : c.relativePath.endsWith('.babelrc')
+        }) // TODO: other babel names
+
+      const existingBabelRcContent = existingBabelRc.toReadableString().content
+      filesToWrite['.babelrc.js'] = existingBabelRc
+        ? convertToBabelSeven(existingBabelRcContent)
+        : babelRcJs
+      await write(filesToWrite)
 
       // TODO: executing with .pnp.js preloaded should be part of the envs
-      const jestEntry = '/home/aram/.cache/yarn/v4/npm-jest-cli-23.0.0-29287498c9d844dcda5aaf011a4c82f9a888836e/node_modules/jest-cli/.bin/jest'
+      const jestEntry = await exec('node -r ./.pnp.js ./exec-jest-pnp.js')
       const testCommand = `node -r ./.pnp.js ${jestEntry} ` +
-        `--json ${testFilePath.join(' ')}`
+        `--json ${testFilesPath.join(' ')}`
       const results = await exec(testCommand)
       const normalizedResults =
         convertJestFormatToBitFormat(JSON.parse(results))
@@ -124,6 +204,9 @@ function addHardCodedJestDependencies (
     {dependencies: {'jest-cli': '23.0.0'}}, 'jest-cli', toFill
   )
   fillDependencyVersion(
+    {dependencies: {'babel-jest': '23.6.0'}}, 'babel-jest', toFill
+  )
+  fillDependencyVersion(
     {dependencies: {'babel-core': '^7.0.0-bridge.0'}}, 'babel-core', toFill
   )
   fillDependencyVersion(
@@ -133,9 +216,28 @@ function addHardCodedJestDependencies (
     {dependencies: {'@babel/preset-env': '^7.1.6'}}, '@babel/preset-env', toFill
   )
   fillDependencyVersion(
+    {dependencies: {'@babel/preset-react': '^7.0.0'}}, '@babel/preset-react', toFill
+  )
+  fillDependencyVersion(
     {dependencies: {'@babel/preset-flow': '^7.0.0'}}, '@babel/preset-flow', toFill
   )
+  fillDependencyVersion(
+    {
+      dependencies: {'@babel/plugin-proposal-object-rest-spread': '^7.0.0'}
+    }, '@babel/plugin-proposal-object-rest-spread', toFill
+  )
+  fillDependencyVersion(
+    {
+      dependencies: {'@babel/plugin-transform-modules-commonjs': '^7.2.0'}
+    }, '@babel/plugin-transform-modules-commonjs', toFill
+  )
   // TODO: fix these
+  fillDependencyVersion(
+    {dependencies: {'react': '^16.0.0'}}, 'react', toFill
+  ) // TODO: fix this! it's because react is a peer dep of reactstrap
+  fillDependencyVersion(
+    {dependencies: {'react-dom': '^16.0.0'}}, 'react-dom', toFill
+  ) // TODO: fix this! it's because react-dom is a peer dep of reactstrap
   fillDependencyVersion(
     {dependencies: {'jest-pnp-resolver': '^1.0.2'}}, 'jest-pnp-resolver', toFill
   ) // TODO: move this to the isolated env, plugin should not know about this
