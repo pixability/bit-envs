@@ -127,9 +127,38 @@ module.exports = {
   ]
 };
 `
+
+      // TODO: remove the hard-coded babelRc
+      const babelRc = `{
+        "presets": [
+          ["@babel/preset-env"], "@babel/preset-react"
+        ],
+        "plugins": [
+          "@babel/plugin-proposal-object-rest-spread"
+        ],
+        "env": {
+            "lib-dir": {
+                "plugins": [
+                  "@babel/plugin-transform-modules-commonjs"
+                ]
+              }
+            ,
+            "webpack": {
+                "plugins": [
+                  "@babel/plugin-transform-modules-commonjs"
+                ]
+              }
+            ,
+            "test": {
+                "plugins": [
+                  "@babel/plugin-transform-modules-commonjs"
+                ]
+              }
+        }
+      }`;
       let filesToWrite = {
         'jest.config.js': jestConfigJs,
-        '.babelrc': null // delete existing .babelrc
+        '.babelrc': babelRc // TODO: delete the .babelrc once using .babelrc.js
       }
       const existingBabelRc = info.configFiles
         .find(c => {
@@ -139,9 +168,10 @@ module.exports = {
         }) // TODO: other babel names
 
       const existingBabelRcContent = existingBabelRc.toReadableString().content
-      filesToWrite['.babelrc.js'] = existingBabelRc
-        ? convertToBabelSeven(existingBabelRcContent)
-        : babelRcJs
+      // TODO: un-comment once using .babelrc.js
+      // filesToWrite['.babelrc.js'] = existingBabelRc
+      //   ? convertToBabelSeven(existingBabelRcContent)
+      //   : babelRcJs
       await write(filesToWrite)
 
       // TODO: executing with .pnp.js preloaded should be part of the envs
